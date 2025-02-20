@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:jfbfestival/pages/food_page.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -40,9 +42,9 @@ class _HomePageState extends State<HomePage> {
   var selectedIndex = 0;
 
   // TODO(all): "link to your page here"
-  static const List<Widget> widgetOptions = <Widget>[
+  static List<Widget> widgetOptions = <Widget>[
     Placeholder(),
-    Placeholder(),
+    FoodPage(),
     Placeholder(),
     Placeholder(),
   ];
