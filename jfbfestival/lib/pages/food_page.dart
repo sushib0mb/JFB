@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
 
 void main() => runApp(MyApp());
 
@@ -64,25 +66,32 @@ class _FoodPageState extends State<FoodPage> with SingleTickerProviderStateMixin
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
-  List<Map<String, String>> foodBooths = [
-    {'name': 'Tsurumen', 'location': 'Downtown', 'image': 'assets/sushi.jpg', 'info': 'Fresh sushi and rolls'},
-    {'name': 'Miraku Boston', 'location': 'Midtown', 'image': '/Users/jordanlin/JFBProject/JFB/jfbfestival/assets/miraku_boston.png', 'info': 'Smoky grilled meats'},
-    {'name': 'Mimi Chuku', 'location': 'Uptown', 'image': 'assets/taco.jpg', 'info': 'Authentic Mexican tacos'},
-  ];
-
+  List<Map<String, String>> foodBooths = [];
   List<Map<String, String>> filteredBooths = [];
   List<String> selectedFilters = [];
 
   @override
   void initState() {
     super.initState();
-    filteredBooths = foodBooths;
     _animationController = AnimationController(
       duration: Duration(milliseconds: 500),
       vsync: this,
     );
     _fadeAnimation = CurvedAnimation(parent: _animationController, curve: Curves.easeIn);
-    _animationController.forward();
+
+    loadBooths().then((data) {
+      setState(() {
+        foodBooths = data;
+        filteredBooths = data;
+      });
+      _animationController.forward();
+    });
+  }
+
+  Future<List<Map<String, String>>> loadBooths() async {
+    String jsonString = await rootBundle.loadString('assets/food_booths.json');
+    List<dynamic> jsonResponse = json.decode(jsonString);
+    return jsonResponse.map((item) => Map<String, String>.from(item)).toList();
   }
 
   @override
