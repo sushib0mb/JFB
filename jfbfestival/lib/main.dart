@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:jfbfestival/pages/food_page.dart';
 
-
 void main() {
   runApp(MyApp());
 }
@@ -83,7 +82,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
         currentIndex: selectedIndex,
-        selectedItemColor: const Color.fromARGB(255, 67, 67, 225),
+        selectedItemColor: const Color.fromARGB(255, 255, 255, 255),
         onTap: _onItemTapped,
       ),
     );
