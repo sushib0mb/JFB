@@ -75,6 +75,11 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_web_plugins:
+    dependency: transitive
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   leak_tracker:
     dependency: transitive
     description:
@@ -131,6 +136,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.16.0"
+  motion:
+    dependency: "direct main"
+    description:
+      name: motion
+      sha256: e2fc997a20016cae52bb7cf717ea37890fd9f7c193cf1d90599d026f5660ad2e
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
+  motion_platform_interface:
+    dependency: transitive
+    description:
+      name: motion_platform_interface
+      sha256: "29e1a33a2f0e5d4c0eacacd54b5ae7f5a4924d5e0b52c2a3bb815955fbb4ba32"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
+  motion_web:
+    dependency: transitive
+    description:
+      name: motion_web
+      sha256: a487f4bc56c3b968b052e4e3cbb15f00506787b9f2983328ddee455c6287675d
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   nested:
     dependency: transitive
     description:
@@ -147,6 +176,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
+  plugin_platform_interface:
+    dependency: transitive
+    description:
+      name: plugin_platform_interface
+      sha256: "4820fbfdb9478b1ebae27888254d445073732dae3d6ea81f0b7e06d5dedc3f02"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.8"
   provider:
     dependency: "direct main"
     description:
@@ -224,6 +261,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "14.3.1"
+  web:
+    dependency: transitive
+    description:
+      name: web
+      sha256: cd3543bd5798f6ad290ea73d210f423502e71900302dde696f8bff84bf89a1cb
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
 sdks:
   dart: ">=3.7.0 <4.0.0"
-  flutter: ">=3.18.0-18.0.pre.54"
+  flutter: ">=3.19.0"
