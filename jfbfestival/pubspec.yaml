@@ -30,7 +30,6 @@ flutter:
 
   assets:
     - assets/miraku_boston.png
-    - assets/food_booths.json
   
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
