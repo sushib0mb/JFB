@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:jfbfestival/pages/food_page.dart';
+import 'package:jfbfestival/pages/home_page.dart';  
 
 void main() {
   runApp(MyApp());
@@ -9,7 +10,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  @override
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
             seedColor: const Color.fromARGB(255, 116, 252, 43),
           ),
         ),
-        home: HomePage(),
+        home: HomePage(), // Set HomePage as the initial page
       ),
     );
   }
@@ -40,9 +40,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   var selectedIndex = 0;
 
-  // TODO(all): "link to your page here"
+  // Remove HomePage from here because it's already the home screen.
   static List<Widget> widgetOptions = <Widget>[
-    Placeholder(),
+    HomePage2(),  // Use Placeholder for Home, since it's already the first screen
     FoodPage(),
     Placeholder(),
     Placeholder(),
