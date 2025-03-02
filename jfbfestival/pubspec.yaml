@@ -31,7 +31,7 @@ flutter:
   assets:
     - assets/miraku_boston.png
     - assets/JFBLogo.png
-    - assets/JFBHomePage.png
+    - assets/JFBHomeImage.png
   
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
