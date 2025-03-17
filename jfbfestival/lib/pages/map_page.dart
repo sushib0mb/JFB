@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 
 class MapPage extends StatefulWidget {
+  const MapPage({super.key});
+
   @override
   _MapPageState createState() => _MapPageState();
 }
 
 class _MapPageState extends State<MapPage> {
-  bool Window = false; 
+  bool _isMiniWindowVisible = false;
 
-  void InfoWindow() {
+  void _toggleMiniWindow() {
     setState(() {
-      Window = !Window;
+      _isMiniWindowVisible = !_isMiniWindowVisible;
     });
   }
 
@@ -18,72 +20,69 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Map Page'),
+        title: Text('Map'),
         actions: [
-          // Button to show/hide the info window
           IconButton(
-            icon: Icon(Icons.info_outline),
-            onPressed: InfoWindow,
+            icon: Icon(Icons.info),
+            onPressed: _toggleMiniWindow,
           ),
         ],
       ),
       body: Stack(
         children: [
-          // Main map view (still centered)
           Center(
-            child: Image.asset(
-              'assets/map.png',
-              width: 400,
-              height: 400,
-              fit: BoxFit.cover,
-            ),
+            child: Image.asset('assets/map.png'),  
           ),
-          
-          
-          if (Window)
-            Positioned.fill(  // This makes the info window take up most of the screen
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: GestureDetector(
-                onTap: InfoWindow, // Close the info window when tapped
-                child: Material(
-                  color: Colors.white.withOpacity(0.8), // Slight transparency for overlay
-                  elevation: 8,
-                  child: Container(
-                    padding: EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Map Information',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                              ),
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.close),
-                              onPressed: InfoWindow, 
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 8),
-                        Expanded(
-                          child: SingleChildScrollView(
-                            child: Text(
-                              'Put Something here\n',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ),
-                        ),
-                      ],
+          if (_isMiniWindowVisible)
+            Positioned(
+              bottom: 80,
+              left: 20,
+              right: 20,
+              child: Container(
+                height: 600,
+                padding: EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.8), 
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 10,
+                      spreadRadius: 5,
                     ),
-                  ),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      'Services',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        print('Lost and Found');
+                      },
+                      child: Text('Lost and Found'),
+                    ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        print('Help Center');
+                      },
+                      child: Text('Help Center'),
+                    ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        print('Toilet');
+                      },
+                      child: Text('Toilet'),
+                    ),
+                  ],
                 ),
               ),
             ),
