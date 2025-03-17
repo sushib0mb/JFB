@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:jfbfestival/pages/food_page.dart';
 import 'package:jfbfestival/pages/home_page.dart';
 import 'package:jfbfestival/pages/timetable_page.dart';
+import 'package:jfbfestival/pages/map_page.dart'; 
 
 void main() {
   runApp(MyApp());
@@ -39,14 +40,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var selectedIndex = 0;
+  var selectedIndex = 2;
 
   // Remove HomePage from here because it's already the home screen.
   static List<Widget> widgetOptions = <Widget>[
     HomePage2(), // Use Placeholder for Home, since it's already the first screen
     FoodPage(),
     TimetablePage(),
-    Placeholder(),
+    MapPage(), 
   ];
 
   void _onItemTapped(int index) {
