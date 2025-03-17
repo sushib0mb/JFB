@@ -39,7 +39,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var selectedIndex = 2;
+  var selectedIndex = 0;
 
   // Remove HomePage from here because it's already the home screen.
   static List<Widget> widgetOptions = <Widget>[
