@@ -8,11 +8,24 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  bool _isMiniWindowVisible = false;
+  String _currentMap = 'assets/map.png'; 
+  bool _isMiniWindowVisible = false; 
+  void _changeMap(String newMap) {
+    setState(() {
+      _currentMap = newMap;
+      _isMiniWindowVisible = false; 
+    });
+  }
 
   void _toggleMiniWindow() {
     setState(() {
       _isMiniWindowVisible = !_isMiniWindowVisible;
+    });
+  }
+
+  void _hideMiniWindow() {
+    setState(() {
+      _isMiniWindowVisible = false;
     });
   }
 
@@ -21,9 +34,10 @@ class _MapPageState extends State<MapPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Map'),
+        backgroundColor: Colors.teal,
         actions: [
           IconButton(
-            icon: Icon(Icons.info),
+            icon: Image.asset('assets/Filter.png', width: 35, height: 35),
             onPressed: _toggleMiniWindow,
           ),
         ],
@@ -31,58 +45,71 @@ class _MapPageState extends State<MapPage> {
       body: Stack(
         children: [
           Center(
-            child: Image.asset('assets/map.png'),  
+            child: Image.asset(_currentMap),
           ),
+
+
           if (_isMiniWindowVisible)
-            Positioned(
-              bottom: 80,
-              left: 20,
-              right: 20,
+            GestureDetector(
+              onTap: _hideMiniWindow, 
+              behavior: HitTestBehavior.opaque, 
               child: Container(
-                height: 600,
-                padding: EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.8), 
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      blurRadius: 10,
-                      spreadRadius: 5,
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      'Services',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                color: Colors.black.withOpacity(0.3), 
+                child: Center(
+                  child: GestureDetector(
+                    onTap: () {}, 
+                    child: Container(
+                      width: 300,
+                      padding: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 10,
+                            spreadRadius: 5,
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Services',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          ElevatedButton(
+                            onPressed: () => _changeMap(
+                                _currentMap == 'assets/map1.png' ? 'assets/map.png' : 'assets/map1.png'),
+                            child: Text(_currentMap == 'assets/map1.png'
+                                ? 'Back to Original Map'
+                                : 'Lost and Found'),
+                          ),
+                          SizedBox(height: 20),
+                          ElevatedButton(
+                            onPressed: () => _changeMap(
+                                _currentMap == 'assets/map3.png' ? 'assets/map.png' : 'assets/map3.png'),
+                            child: Text(_currentMap == 'assets/map3.png'
+                                ? 'Back to Original Map'
+                                : 'Help Center'),
+                          ),
+                          SizedBox(height: 20),
+                          ElevatedButton(
+                            onPressed: () => _changeMap(
+                                _currentMap == 'assets/map2.png' ? 'assets/map.png' : 'assets/map2.png'),
+                            child: Text(_currentMap == 'assets/map2.png'
+                                ? 'Back to Original Map'
+                                : 'Toilet'),
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        print('Lost and Found');
-                      },
-                      child: Text('Lost and Found'),
-                    ),
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        print('Help Center');
-                      },
-                      child: Text('Help Center'),
-                    ),
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        print('Toilet');
-                      },
-                      child: Text('Toilet'),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
