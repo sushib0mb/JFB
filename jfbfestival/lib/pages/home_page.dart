@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class HomePage2 extends StatelessWidget {
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,9 +24,7 @@ class HomePage2 extends StatelessWidget {
           ),
 
           // Divider between sections
-          SliverToBoxAdapter(
-            child: Divider(thickness: 5, color: Colors.black),
-          ),
+          SliverToBoxAdapter(child: Divider(thickness: 5, color: Colors.black)),
 
           // Second section: Information
           SliverToBoxAdapter(
@@ -36,8 +34,13 @@ class HomePage2 extends StatelessWidget {
                 print("Information tapped");
               },
               child: Container(
-                margin: EdgeInsets.all(10.0), // Adding margin to space out sections
-                padding: const EdgeInsets.symmetric(vertical: 100.0, horizontal: 20.0), // Increased vertical padding for larger sections
+                margin: EdgeInsets.all(
+                  10.0,
+                ), // Adding margin to space out sections
+                padding: const EdgeInsets.symmetric(
+                  vertical: 100.0,
+                  horizontal: 20.0,
+                ), // Increased vertical padding for larger sections
                 decoration: BoxDecoration(
                   color: Colors.red[200], // Light red background
                   borderRadius: BorderRadius.circular(15.0), // Rounded corners
@@ -64,9 +67,7 @@ class HomePage2 extends StatelessWidget {
           ),
 
           // Divider between sections
-          SliverToBoxAdapter(
-            child: Divider(thickness: 5, color: Colors.black),
-          ),
+          SliverToBoxAdapter(child: Divider(thickness: 5, color: Colors.black)),
 
           // Third section: SNS
           SliverToBoxAdapter(
@@ -76,8 +77,13 @@ class HomePage2 extends StatelessWidget {
                 print("SNS tapped");
               },
               child: Container(
-                margin: EdgeInsets.all(10.0), // Adding margin to space out sections
-                padding: const EdgeInsets.symmetric(vertical: 100.0, horizontal: 20.0), // Increased vertical padding for larger sections
+                margin: EdgeInsets.all(
+                  10.0,
+                ), // Adding margin to space out sections
+                padding: const EdgeInsets.symmetric(
+                  vertical: 100.0,
+                  horizontal: 20.0,
+                ), // Increased vertical padding for larger sections
                 decoration: BoxDecoration(
                   color: Colors.green[200], // Light green background
                   borderRadius: BorderRadius.circular(15.0), // Rounded corners
@@ -104,9 +110,7 @@ class HomePage2 extends StatelessWidget {
           ),
 
           // Divider between sections
-          SliverToBoxAdapter(
-            child: Divider(thickness: 5, color: Colors.black),
-          ),
+          SliverToBoxAdapter(child: Divider(thickness: 5, color: Colors.black)),
 
           // Fourth section: Sponsors
           SliverToBoxAdapter(
@@ -116,8 +120,13 @@ class HomePage2 extends StatelessWidget {
                 print("Sponsors tapped");
               },
               child: Container(
-                margin: EdgeInsets.all(10.0), // Adding margin to space out sections
-                padding: const EdgeInsets.symmetric(vertical: 100.0, horizontal: 20.0), // Increased vertical padding for larger sections
+                margin: EdgeInsets.all(
+                  10.0,
+                ), // Adding margin to space out sections
+                padding: const EdgeInsets.symmetric(
+                  vertical: 100.0,
+                  horizontal: 20.0,
+                ), // Increased vertical padding for larger sections
                 decoration: BoxDecoration(
                   color: Colors.blue[200], // Light blue background
                   borderRadius: BorderRadius.circular(15.0), // Rounded corners

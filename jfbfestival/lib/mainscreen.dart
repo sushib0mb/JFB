@@ -54,7 +54,7 @@ class _MainScreenState extends State<MainScreen> {
           // Main content pages
           IndexedStack(
             index: selectedIndex,
-            children: [HomePage2(), FoodPage(), TimetablePage(), MapPage()],
+            children: [HomePage(), FoodPage(), TimetablePage(), MapPage()],
           ),
           // Bottom bar on top of everything
           Align(
