@@ -1,0 +1,256 @@
+import 'dart:ui';
+
+import 'package:flutter/material.dart';
+import 'package:jfbfestival/pages/food_page.dart';
+import 'package:jfbfestival/pages/home_page.dart';
+import 'package:jfbfestival/pages/timetable_page.dart';
+import 'package:jfbfestival/pages/map_page.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: const MainScreen(),
+    );
+  }
+}
+
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
+
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  int selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Stack(
+        children: [
+          // Top bar on top of everything
+          // Align(
+          //   alignment:
+          //       Alignment
+          //           .topCenter, // Align the top bar at the top of the screen
+          //   child: TopBar(), // Your custom TopBar widget
+          // ),
+          // Main content pages
+          IndexedStack(
+            index: selectedIndex,
+            children: [HomePage2(), FoodPage(), TimetablePage(), MapPage()],
+          ),
+          // Bottom bar on top of everything
+          Align(
+            alignment:
+                Alignment
+                    .bottomCenter, // Align the bottom bar at the bottom of the screen
+            child: BottomBar(
+              selectedIndex: selectedIndex,
+              onItemTapped: _onItemTapped,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// class TopBar extends StatelessWidget {}
+
+class BottomBar extends StatelessWidget {
+  final int selectedIndex;
+  final Function(int) onItemTapped;
+
+  const BottomBar({
+    required this.selectedIndex,
+    required this.onItemTapped,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    // Get the screen width and calculate the width of the bottom bar
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    // Define the padding for the left and right sides
+    final sidePadding = screenWidth * 0.03; // Adjust the value as needed
+
+    // Adjust the width of the bottom bar to account for side padding
+    final bottomBarWidth =
+        screenWidth - 2 * sidePadding; // Subtracting padding on both sides
+
+    // Icon size
+    final iconSize = 74.0; // Width and height of each icon
+    final numberOfIcons = 4; // Number of icons in the bottom bar
+
+    // Calculate total width of all icons (icons + space between them)
+    final totalIconsWidth = iconSize * numberOfIcons;
+
+    // Calculate the remaining space in the bottom bar
+    final remainingSpace = bottomBarWidth - totalIconsWidth;
+
+    // Calculate dynamic spacing based on the remaining space
+    final dynamicSpacing =
+        remainingSpace / (numberOfIcons + 1); // +1 for the edges
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: sidePadding),
+      child: Container(
+        width: bottomBarWidth,
+        height: 94.74,
+        margin: const EdgeInsets.only(bottom: 20),
+        child: Stack(
+          children: [
+            // Semi-transparent background with blur
+            Positioned.fill(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            // Navigation buttons
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Dynamic spacing for each icon
+                  SizedBox(width: dynamicSpacing),
+                  ImageButton(
+                    index: 0,
+                    defaultImage: "assets/bottomBar/Home.png",
+                    pressedImage: "assets/bottomBar/Home(Frame).png",
+                    selectedIndex: selectedIndex,
+                    onSelect: onItemTapped,
+                  ),
+                  SizedBox(width: dynamicSpacing),
+                  ImageButton(
+                    index: 1,
+                    defaultImage: "assets/bottomBar/Food.png",
+                    pressedImage: "assets/bottomBar/Food(Frame).png",
+                    selectedIndex: selectedIndex,
+                    onSelect: onItemTapped,
+                  ),
+                  SizedBox(width: dynamicSpacing),
+                  ImageButton(
+                    index: 2,
+                    defaultImage: "assets/bottomBar/Timetable.png",
+                    pressedImage: "assets/bottomBar/Timetable(Frame).png",
+                    selectedIndex: selectedIndex,
+                    onSelect: onItemTapped,
+                  ),
+                  SizedBox(width: dynamicSpacing),
+                  ImageButton(
+                    index: 3,
+                    defaultImage: "assets/bottomBar/Map.png",
+                    pressedImage: "assets/bottomBar/Map(Frame).png",
+                    selectedIndex: selectedIndex,
+                    onSelect: onItemTapped,
+                  ),
+                  SizedBox(width: dynamicSpacing),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ImageButton extends StatefulWidget {
+  final int index;
+  final String defaultImage;
+  final String pressedImage;
+  final int selectedIndex;
+  final Function(int) onSelect;
+
+  const ImageButton({
+    required this.index,
+    required this.defaultImage,
+    required this.pressedImage,
+    required this.selectedIndex,
+    required this.onSelect,
+    super.key,
+  });
+
+  @override
+  _ImageButtonState createState() => _ImageButtonState();
+}
+
+class _ImageButtonState extends State<ImageButton> {
+  bool isPressed = false;
+
+  // Handle tap events
+  void _onTapDown(TapDownDetails details) {
+    setState(() {
+      isPressed = true;
+    });
+  }
+
+  void _onTapUp(TapUpDetails details) {
+    setState(() {
+      isPressed = false;
+    });
+  }
+
+  void _onTapCancel() {
+    setState(() {
+      isPressed = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isSelected = widget.selectedIndex == widget.index;
+    final imageToShow = isPressed ? widget.pressedImage : widget.defaultImage;
+    final iconSize = 67.0;
+
+    return GestureDetector(
+      onTapDown: _onTapDown,
+      onTapUp: _onTapUp,
+      onTapCancel: _onTapCancel,
+      onTap: () => widget.onSelect(widget.index),
+      child: Container(
+        width: 74,
+        height: 74,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color:
+              isSelected && !isPressed
+                  ? Colors.white.withOpacity(0.7)
+                  : Colors.transparent,
+        ),
+        child: Center(
+          child: ClipOval(
+            child: Image.asset(imageToShow, width: iconSize, height: iconSize),
+          ),
+        ),
+      ),
+    );
+  }
+}

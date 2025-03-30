@@ -33,7 +33,18 @@ flutter:
     - assets/JFBLogo.png
     - assets/JFBHomeImage.png
     - assets/map.png
-  
+    - assets/Filter.png
+
+    - assets/bottomBar/Map.png
+    - assets/bottomBar/Timetable.png
+    - assets/bottomBar/Home.png
+    - assets/bottomBar/Food.png
+    - assets/bottomBar/Map(Frame).png
+    - assets/bottomBar/Timetable(Frame).png
+    - assets/bottomBar/Home(Frame).png
+    - assets/bottomBar/Food(Frame).png
+    - assets/bottomBar/Home(Selected).png
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
