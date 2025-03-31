@@ -3,8 +3,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:jfbfestival/pages/food_page.dart';
 import 'package:jfbfestival/pages/home_page.dart';
-import 'package:jfbfestival/pages/timetable_page.dart';
+// import 'package:jfbfestival/pages/timetable_page.dart';
 import 'package:jfbfestival/pages/map_page.dart';
+
+import 'package:jfbfestival/pages/timetableNew.dart';
 
 void main() {
   runApp(const MyApp());
@@ -44,23 +46,13 @@ class _MainScreenState extends State<MainScreen> {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // Top bar on top of everything
-          // Align(
-          //   alignment:
-          //       Alignment
-          //           .topCenter, // Align the top bar at the top of the screen
-          //   child: TopBar(), // Your custom TopBar widget
-          // ),
-          // Main content pages
           IndexedStack(
             index: selectedIndex,
-            children: [HomePage(), FoodPage(), TimetablePage(), MapPage()],
+            children: [HomePage(), FoodPage(), FestivalSchedule(), MapPage()],
           ),
-          // Bottom bar on top of everything
+          SafeArea(child: TopBar(selectedIndex: selectedIndex)),
           Align(
-            alignment:
-                Alignment
-                    .bottomCenter, // Align the bottom bar at the bottom of the screen
+            alignment: Alignment.bottomCenter,
             child: BottomBar(
               selectedIndex: selectedIndex,
               onItemTapped: _onItemTapped,
@@ -72,7 +64,69 @@ class _MainScreenState extends State<MainScreen> {
   }
 }
 
-// class TopBar extends StatelessWidget {}
+class TopBar extends StatelessWidget {
+  final int selectedIndex;
+  const TopBar({super.key, required this.selectedIndex});
+
+  final double logoSize = 70.0;
+  final double boxSize = 50.0; // Size of the rounded boxes
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 10),
+      child: Stack(
+        alignment: Alignment.topCenter,
+        children: [
+          // Conditionally display two rounded boxes when selectedIndex is 2
+          if (selectedIndex == 2) ...[
+            Positioned(
+              left:
+                  MediaQuery.of(context).size.width * 0.3, // Adjust positioning
+              top: 10,
+              child: _roundedBox(),
+            ),
+            Positioned(
+              right:
+                  MediaQuery.of(context).size.width * 0.3, // Adjust positioning
+              top: 10,
+              child: _roundedBox(),
+            ),
+          ],
+          Align(
+            alignment: Alignment.topCenter,
+            child: Container(
+              width: logoSize,
+              height: logoSize,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.transparent, // Background color for the circle
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ClipOval(
+                  child: Image.asset('assets/JFBLogo.png', fit: BoxFit.cover),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Helper method to create rounded boxes
+  Widget _roundedBox() {
+    return Container(
+      width: boxSize,
+      height: boxSize,
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(15),
+      ),
+    );
+  }
+}
 
 class BottomBar extends StatelessWidget {
   final int selectedIndex;

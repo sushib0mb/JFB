@@ -26,7 +26,7 @@ class TimetablePage extends StatelessWidget {
       body: Column(
         children: [
           // Custom AppBar
-          const SizedBox(height: 150, child: TopBarWidget()),
+          const SizedBox(height: 90, child: TopBarWidget()),
 
           // Buttons spanning both panels
           Container(
@@ -113,7 +113,7 @@ class TimetablePage extends StatelessWidget {
                   flex: 1,
                   child: ScrollConfiguration(
                     behavior: ScrollBehavior().copyWith(
-                      scrollbars: false,
+                      scrollbars: true,
                     ), // Hide scrollbar
                     child: ListView.builder(
                       controller: scrollControllerLeft,
@@ -130,31 +130,6 @@ class TimetablePage extends StatelessWidget {
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-
-                // Right panel - Scrollable events
-                Expanded(
-                  flex: 2,
-                  child: ScrollConfiguration(
-                    behavior: ScrollBehavior().copyWith(scrollbars: false),
-                    child: ListView.builder(
-                      controller: scrollControllerRight,
-                      physics: const ClampingScrollPhysics(),
-                      itemCount: 10,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          height: 100,
-                          color: index.isEven ? Colors.grey[300] : Colors.white,
-                          child: Center(
-                            child: Text(
-                              "Event $index",
-                              style: const TextStyle(fontSize: 18),
                             ),
                           ),
                         );
@@ -187,25 +162,36 @@ class TopBarWidget extends StatelessWidget {
 
         // Left Oval Button
         Positioned(
-          left: MediaQuery.of(context).size.width / 2 - 145, // Adjust position
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(30),
-            child: ElevatedButton(
-              onPressed: () {
-                print("Left button pressed");
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
+          left: MediaQuery.of(context).size.width * 0.2, // Adjust position
+          child: GestureDetector(
+            onTap: () {
+              print("Left button pressed");
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.4,
+              height: 60,
+              decoration: ShapeDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment(0.00, 0.50),
+                  end: Alignment(1.00, 0.50),
+                  colors: [
+                    Color.fromARGB(255, 255, 131, 135),
+                    Color.fromARGB(255, 176, 113, 116),
+                    Color.fromARGB(255, 96, 96, 96),
+                  ],
                 ),
-                padding: const EdgeInsets.symmetric(
-                  vertical: 30,
-                ), // Only vertical padding
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(100),
+                ),
               ),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 30, right: 60),
-                child: const Text("一日目", style: TextStyle(fontSize: 20)),
+              alignment: Alignment.center, // Center the text inside
+              child: const Text(
+                "Day 1",
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white, // Ensure contrast with the background
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
@@ -232,24 +218,6 @@ class TopBarWidget extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(left: 60, right: 30),
                 child: const Text("二日目", style: TextStyle(fontSize: 20)),
-              ),
-            ),
-          ),
-        ),
-
-        // Center Logo
-        ClipOval(
-          child: Container(
-            width: 100,
-            height: 100,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(2.0),
-              child: CircleAvatar(
-                backgroundImage: AssetImage('assets/JFBLogo.png'),
               ),
             ),
           ),
