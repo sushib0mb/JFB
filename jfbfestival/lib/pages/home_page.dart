@@ -9,7 +9,7 @@ class HomePage extends StatelessWidget {
           // First section: Logo in SliverAppBar
           SliverAppBar(
             pinned: true, // Keeps the logo pinned at the top
-            expandedHeight: 150, // Adjusted height for the expanded logo
+            expandedHeight: 150, // Adjnusted height for the expanded logo
             flexibleSpace: FlexibleSpaceBar(
               background: Padding(
                 padding: const EdgeInsets.all(10.0),

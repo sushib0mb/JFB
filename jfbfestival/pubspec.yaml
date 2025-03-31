@@ -12,7 +12,7 @@ dependencies:
     sdk: flutter
   motion: ^2.0.1
   provider: ^6.0.0
-
+  flutter_blur: ^0.0.2 
   cupertino_icons: ^1.0.8
 
 dev_dependencies:
@@ -34,6 +34,20 @@ flutter:
     - assets/JFBHomeImage.png
     - assets/map.png
     - assets/Filter.png
+    - assets/payments/Cash.png
+    - assets/payments/Zelle.png
+    - assets/payments/Venmo.png
+    - assets/allergens/sesame.png
+    - assets/allergens/shellfish.png
+    - assets/allergens/tree nut.png
+    - assets/allergens/milk.png
+    - assets/allergens/fish.png
+    - assets/allergens/soy.png
+    - assets/allergens/egg.png
+    - assets/vegan.png
+    - assets/allergens/Egg(frame).png
+
+
 
     - assets/bottomBar/Map.png
     - assets/bottomBar/Timetable.png
