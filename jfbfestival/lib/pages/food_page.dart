@@ -12,9 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Food Vendors',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue),
       home: const FoodPage(),
     );
   }
@@ -24,46 +22,46 @@ class FoodPage extends StatelessWidget {
   const FoodPage({super.key});
 
   final List<FoodBooth> booths = const [
-    FoodBooth(
-      "Wakazo Gyoza",
-      "D7",
-      "Food Genre",
-      "assets/miraku_boston.png",
-      "assets/JFB-19.png",
-      true,
-      ["Cash", "Venmo", "Zelle", "PayPal"],
-      ["Egg", "Wheat", "Peanut", "Milk", "Soy", "Tree Nut", "Fish", "Shellfish", "Sesame"],
-    ),
-    FoodBooth(
-      "McDonald's",
-      "M1",
-      "Fast Food",
-      "assets/mcdonald-s-golden-arches-svg-1.png",
-      "assets/JFB-19.png",
-      false,
-      ["Cash", "Venmo"],
-      ["Milk", "Wheat"],
-    ),
-    FoodBooth(
-      "Sukiya",
-      "C6",
-      "Fast Food",
-      "assets/sukiya-logo-svg-1.png",
-      "assets/JFB-19.png",
-      false,
-      ["Cash"],
-      ["Milk", "Wheat"],
-    ),
-    FoodBooth(
-      "Doutor Coffee",
-      "F4",
-      "Coffee",
-      "assets/61e7ace5a84bd79c5fc643799f045fd0-c1386ca9179105eae23bdd086d44de15-1.png",
-      "assets/JFB-19.png",
-      true,
-      ["Cash", "PayPal"],
-      ["Milk"],
-    ),
+    // FoodBooth(
+    //   "Wakazo Gyoza",
+    //   "D7",
+    //   "Food Genre",
+    //   "assets/miraku_boston.png",
+    //   "assets/JFB-19.png",
+    //   true,
+    //   ["Cash", "Venmo", "Zelle", "PayPal"],
+    //   ["Egg", "Wheat", "Peanut", "Milk", "Soy", "Tree Nut", "Fish", "Shellfish", "Sesame"],
+    // ),
+    // FoodBooth(
+    //   "McDonald's",
+    //   "M1",
+    //   "Fast Food",
+    //   "assets/mcdonald-s-golden-arches-svg-1.png",
+    //   "assets/JFB-19.png",
+    //   false,
+    //   ["Cash", "Venmo"],
+    //   ["Milk", "Wheat"],
+    // ),
+    // FoodBooth(
+    //   "Sukiya",
+    //   "C6",
+    //   "Fast Food",
+    //   "assets/sukiya-logo-svg-1.png",
+    //   "assets/JFB-19.png",
+    //   false,
+    //   ["Cash"],
+    //   ["Milk", "Wheat"],
+    // ),
+    // FoodBooth(
+    //   "Doutor Coffee",
+    //   "F4",
+    //   "Coffee",
+    //   "assets/61e7ace5a84bd79c5fc643799f045fd0-c1386ca9179105eae23bdd086d44de15-1.png",
+    //   "assets/JFB-19.png",
+    //   true,
+    //   ["Cash", "PayPal"],
+    //   ["Milk"],
+    // ),
   ];
 
   @override
@@ -84,7 +82,7 @@ class FoodPage extends StatelessWidget {
               ),
             ),
           ),
-          
+
           // Top gradient
           Positioned(
             top: 0,
@@ -106,7 +104,7 @@ class FoodPage extends StatelessWidget {
               ),
             ),
           ),
-          
+
           // Bottom gradient
           Positioned(
             bottom: 0,
@@ -131,7 +129,7 @@ class FoodPage extends StatelessWidget {
               ),
             ),
           ),
-          
+
           // Festival logo
           Positioned(
             top: 20,
@@ -159,7 +157,7 @@ class FoodPage extends StatelessWidget {
               ),
             ),
           ),
-          
+
           // Filter button
           Positioned(
             top: 60,
@@ -181,7 +179,7 @@ class FoodPage extends StatelessWidget {
               child: const Icon(Icons.filter_alt_outlined),
             ),
           ),
-          
+
           // Scroll indicator
           Positioned(
             top: 55,
@@ -195,7 +193,7 @@ class FoodPage extends StatelessWidget {
               ),
             ),
           ),
-          
+
           // Main content card
           Positioned(
             top: 149,
@@ -217,13 +215,18 @@ class FoodPage extends StatelessWidget {
                         context: context,
                         isScrollControlled: true,
                         backgroundColor: Colors.transparent,
-                        builder: (context) => FoodBoothDetails(booth: booths[index]),
+                        builder:
+                            (context) => FoodBoothDetails(booth: booths[index]),
                       );
                     },
                     child: Container(
                       width: 290,
                       height: 290,
-                      margin: const EdgeInsets.only(top: 28, left: 24, right: 24),
+                      margin: const EdgeInsets.only(
+                        top: 28,
+                        left: 24,
+                        right: 24,
+                      ),
                       child: Stack(
                         children: [
                           Positioned(
@@ -276,10 +279,14 @@ class FoodPage extends StatelessWidget {
                                         height: 28,
                                         decoration: BoxDecoration(
                                           color: Colors.black.withOpacity(0.05),
-                                          borderRadius: BorderRadius.circular(25),
+                                          borderRadius: BorderRadius.circular(
+                                            25,
+                                          ),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: Colors.black.withOpacity(0.45),
+                                              color: Colors.black.withOpacity(
+                                                0.45,
+                                              ),
                                               blurRadius: 5,
                                               spreadRadius: 0,
                                               offset: Offset.zero,
@@ -337,9 +344,8 @@ class FoodPage extends StatelessWidget {
               ),
             ),
           ),
-          
+
           // Bottom navigation bar
-          
         ],
       ),
     );
@@ -367,6 +373,7 @@ class FoodBooth {
     this.allergens,
   );
 }
+
 class FoodBoothDetails extends StatelessWidget {
   final FoodBooth booth;
 
@@ -383,7 +390,7 @@ class FoodBoothDetails extends StatelessWidget {
             child: Container(color: Colors.white.withOpacity(0.02)),
           ),
         ),
-        
+
         // Main Content with Logo Overlay
         Stack(
           children: [
@@ -449,10 +456,7 @@ class FoodBoothDetails extends StatelessWidget {
                                   color: Colors.white,
                                   fontWeight: FontWeight.normal,
                                   shadows: [
-                                    Shadow(
-                                      blurRadius: 5,
-                                      color: Colors.black,
-                                    ),
+                                    Shadow(blurRadius: 5, color: Colors.black),
                                   ],
                                 ),
                               ),
@@ -464,10 +468,7 @@ class FoodBoothDetails extends StatelessWidget {
                                   color: Colors.white,
                                   fontWeight: FontWeight.w300,
                                   shadows: [
-                                    Shadow(
-                                      blurRadius: 5,
-                                      color: Colors.black,
-                                    ),
+                                    Shadow(blurRadius: 5, color: Colors.black),
                                   ],
                                 ),
                               ),
@@ -476,7 +477,7 @@ class FoodBoothDetails extends StatelessWidget {
                           ),
                         ),
                       ),
-                      
+
                       // Rest of the content...
                       Padding(
                         padding: const EdgeInsets.only(top: 250),
@@ -484,11 +485,20 @@ class FoodBoothDetails extends StatelessWidget {
                           controller: controller,
                           child: Column(
                             children: [
-                              _buildSection("Payment", _buildPaymentOptions(booth.payments)),
+                              _buildSection(
+                                "Payment",
+                                _buildPaymentOptions(booth.payments),
+                              ),
                               const SizedBox(height: 20),
-                              _buildSection("Veganism", _buildVeganism(booth.isVegan)),
+                              _buildSection(
+                                "Veganism",
+                                _buildVeganism(booth.isVegan),
+                              ),
                               const SizedBox(height: 20),
-                              _buildSection("Allergens", _buildAllergens(booth.allergens)),
+                              _buildSection(
+                                "Allergens",
+                                _buildAllergens(booth.allergens),
+                              ),
                               const SizedBox(height: 40),
                             ],
                           ),
@@ -580,13 +590,29 @@ class FoodBoothDetails extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _buildPaymentItem("Venmo", "assets/payments/Venmo.png", payments.contains("Venmo")),
-            _buildPaymentItem("Zelle", "assets/payments/Zelle.png", payments.contains("Zelle")),
-            _buildPaymentItem("PayPal", "assets/paypal-logo-icon-2014-svg-1.png", payments.contains("PayPal")),
+            _buildPaymentItem(
+              "Venmo",
+              "assets/payments/Venmo.png",
+              payments.contains("Venmo"),
+            ),
+            _buildPaymentItem(
+              "Zelle",
+              "assets/payments/Zelle.png",
+              payments.contains("Zelle"),
+            ),
+            _buildPaymentItem(
+              "PayPal",
+              "assets/paypal-logo-icon-2014-svg-1.png",
+              payments.contains("PayPal"),
+            ),
           ],
         ),
         const SizedBox(height: 16),
-        _buildPaymentItem("Cash", "assets/payments/Cash.png", payments.contains("Cash")),
+        _buildPaymentItem(
+          "Cash",
+          "assets/payments/Cash.png",
+          payments.contains("Cash"),
+        ),
       ],
     );
   }
@@ -689,46 +715,48 @@ class FoodBoothDetails extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       crossAxisCount: 3,
       childAspectRatio: 1.5,
-      children: allAllergens.map((allergen) {
-        final hasAllergen = allergens.contains(allergen["name"]);
-        return Column(
-          children: [
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.25),
-                    blurRadius: 10,
-                    spreadRadius: 0,
+      children:
+          allAllergens.map((allergen) {
+            final hasAllergen = allergens.contains(allergen["name"]);
+            return Column(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.25),
+                        blurRadius: 10,
+                        spreadRadius: 0,
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              child: Center(
-                child: Image.asset(
-                  allergen["icon"]!,
-                  width: 42,
-                  height: 42,
-                  color: hasAllergen ? null : Colors.grey.withOpacity(0.5),
-                  colorBlendMode: BlendMode.modulate,
+                  child: Center(
+                    child: Image.asset(
+                      allergen["icon"]!,
+                      width: 42,
+                      height: 42,
+                      color: hasAllergen ? null : Colors.grey.withOpacity(0.5),
+                      colorBlendMode: BlendMode.modulate,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              allergen["name"]!,
-              style: TextStyle(
-                fontSize: 14,
-                color: hasAllergen ? Colors.black : Colors.grey[400],
-                fontWeight: hasAllergen ? FontWeight.normal : FontWeight.normal,
-              ),
-            ),
-          ],
-        );
-      }).toList(),
+                const SizedBox(height: 4),
+                Text(
+                  allergen["name"]!,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: hasAllergen ? Colors.black : Colors.grey[400],
+                    fontWeight:
+                        hasAllergen ? FontWeight.normal : FontWeight.normal,
+                  ),
+                ),
+              ],
+            );
+          }).toList(),
     );
   }
 }

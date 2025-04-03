@@ -48,7 +48,7 @@ class _MainScreenState extends State<MainScreen> {
         children: [
           IndexedStack(
             index: selectedIndex,
-            children: [HomePage(), FoodPage(), FestivalSchedule(), MapPage()],
+            children: [HomePage(), FoodPage(), TimeTableView(), MapPage()],
           ),
           SafeArea(child: TopBar(selectedIndex: selectedIndex)),
           Align(

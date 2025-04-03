@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: Scaffold(
-      backgroundColor: Colors.white,
-      body: TimeTableView(),
+  runApp(
+    MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(backgroundColor: Colors.white, body: TimeTableView()),
     ),
-  ));
+  );
 }
 
 /// データモデル
@@ -34,11 +33,7 @@ class EventItem {
   final String time;
   final String image; // Flutter ではアイコン名や画像パスに置き換え
 
-  EventItem({
-    required this.title,
-    required this.time,
-    required this.image,
-  });
+  EventItem({required this.title, required this.time, required this.image});
 }
 
 class ScheduleItem {
@@ -46,11 +41,7 @@ class ScheduleItem {
   final EventItem? stage1Event;
   final EventItem? stage2Event;
 
-  ScheduleItem({
-    required this.time,
-    this.stage1Event,
-    this.stage2Event,
-  });
+  ScheduleItem({required this.time, this.stage1Event, this.stage2Event});
 }
 
 /// メインビュー：タイムテーブル
@@ -116,15 +107,16 @@ class _TimeTableViewState extends State<TimeTableView> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(25),
                   gradient: LinearGradient(
-                    colors: selectedDay == 1
-                        ? [
-                            const Color.fromRGBO(191, 28, 36, 0.15),
-                            const Color.fromRGBO(10, 56, 117, 0.15),
-                          ]
-                        : [
-                            const Color.fromRGBO(10, 56, 117, 0.15),
-                            const Color.fromRGBO(191, 28, 36, 0.15),
-                          ],
+                    colors:
+                        selectedDay == 1
+                            ? [
+                              const Color.fromRGBO(191, 28, 36, 0.15),
+                              const Color.fromRGBO(10, 56, 117, 0.15),
+                            ]
+                            : [
+                              const Color.fromRGBO(10, 56, 117, 0.15),
+                              const Color.fromRGBO(191, 28, 36, 0.15),
+                            ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -136,10 +128,13 @@ class _TimeTableViewState extends State<TimeTableView> {
                     Expanded(
                       child: ListView.separated(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 10),
+                          horizontal: 16,
+                          vertical: 10,
+                        ),
                         itemCount: scheduleData.length,
-                        separatorBuilder: (context, index) =>
-                            Divider(color: Colors.grey.shade300, height: 1),
+                        separatorBuilder:
+                            (context, index) =>
+                                Divider(color: Colors.grey.shade300, height: 1),
                         itemBuilder: (context, index) {
                           return ScheduleRow(
                             scheduleItem: scheduleData[index],
@@ -156,7 +151,7 @@ class _TimeTableViewState extends State<TimeTableView> {
                   ],
                 ),
               ),
-            )
+            ),
           ],
         ),
         // イベント詳細ポップアップ
@@ -189,7 +184,7 @@ class _TimeTableViewState extends State<TimeTableView> {
           // Day 1 ボタン
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              primary: selectedDay == 1 ? Colors.red : Colors.white,
+              backgroundColor: selectedDay == 1 ? Colors.red : Colors.white,
               shape: const StadiumBorder(),
               elevation: selectedDay == 1 ? 5 : 2,
             ),
@@ -219,10 +214,7 @@ class _TimeTableViewState extends State<TimeTableView> {
                 end: Alignment.bottomCenter,
               ),
               boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  blurRadius: 3,
-                )
+                BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 3),
               ],
             ),
             alignment: Alignment.center,
@@ -238,7 +230,7 @@ class _TimeTableViewState extends State<TimeTableView> {
           // Day 2 ボタン
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              primary: selectedDay == 2 ? Colors.blue : Colors.white,
+              backgroundColor: selectedDay == 2 ? Colors.blue : Colors.white,
               shape: const StadiumBorder(),
               elevation: selectedDay == 2 ? 5 : 2,
             ),
@@ -336,13 +328,12 @@ class ScheduleRow extends StatelessWidget {
               children: [
                 Text(
                   timeText,
-                  style:
-                      const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-                Text(
-                  ampm,
-                  style: const TextStyle(fontSize: 14),
-                ),
+                Text(ampm, style: const TextStyle(fontSize: 14)),
               ],
             ),
           ),
@@ -353,20 +344,20 @@ class ScheduleRow extends StatelessWidget {
               children: [
                 scheduleItem.stage1Event != null
                     ? PerformanceBox(
-                        eventItem: scheduleItem.stage1Event!,
-                        onTap: onEventTap,
-                      )
+                      eventItem: scheduleItem.stage1Event!,
+                      onTap: onEventTap,
+                    )
                     : Container(width: 140, height: 60),
                 const SizedBox(width: 10),
                 scheduleItem.stage2Event != null
                     ? PerformanceBox(
-                        eventItem: scheduleItem.stage2Event!,
-                        onTap: onEventTap,
-                      )
+                      eventItem: scheduleItem.stage2Event!,
+                      onTap: onEventTap,
+                    )
                     : Container(width: 140, height: 60),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
@@ -378,11 +369,8 @@ class PerformanceBox extends StatefulWidget {
   final EventItem eventItem;
   final Function(EventItem) onTap;
 
-  const PerformanceBox({
-    Key? key,
-    required this.eventItem,
-    required this.onTap,
-  }) : super(key: key);
+  const PerformanceBox({Key? key, required this.eventItem, required this.onTap})
+    : super(key: key);
 
   @override
   _PerformanceBoxState createState() => _PerformanceBoxState();
@@ -436,7 +424,9 @@ class _PerformanceBoxState extends State<PerformanceBox>
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
-                        color: Colors.black.withOpacity(0.2), blurRadius: 2)
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 2,
+                    ),
                   ],
                 ),
                 child: const Icon(Icons.image),
@@ -482,11 +472,8 @@ class EventDetailView extends StatefulWidget {
   final EventItem event;
   final VoidCallback onClose;
 
-  const EventDetailView({
-    Key? key,
-    required this.event,
-    required this.onClose,
-  }) : super(key: key);
+  const EventDetailView({Key? key, required this.event, required this.onClose})
+    : super(key: key);
 
   @override
   _EventDetailViewState createState() => _EventDetailViewState();
@@ -503,19 +490,24 @@ class _EventDetailViewState extends State<EventDetailView>
   void initState() {
     super.initState();
     // アニメーションコントローラーの設定
-    _controller =
-        AnimationController(vsync: this, duration: const Duration(milliseconds: 500));
-    _cardOffsetAnimation = Tween<double>(begin: 1000, end: 0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
     );
+    _cardOffsetAnimation = Tween<double>(
+      begin: 1000,
+      end: 0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
     _opacityAnimation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
-          parent: _controller,
-          curve: const Interval(0.2, 0.5, curve: Curves.easeIn)),
+        parent: _controller,
+        curve: const Interval(0.2, 0.5, curve: Curves.easeIn),
+      ),
     );
-    _headerScaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
+    _headerScaleAnimation = Tween<double>(
+      begin: 0.8,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
     _controller.forward();
   }
 
@@ -560,7 +552,7 @@ class _EventDetailViewState extends State<EventDetailView>
                       BoxShadow(
                         color: Colors.black.withOpacity(0.3),
                         blurRadius: 10,
-                      )
+                      ),
                     ],
                   ),
                   child: Column(
@@ -598,9 +590,10 @@ class _EventDetailViewState extends State<EventDetailView>
                                   color: Colors.white,
                                   shadows: [
                                     Shadow(
-                                        color: Colors.black54,
-                                        offset: Offset(0, 1),
-                                        blurRadius: 2)
+                                      color: Colors.black54,
+                                      offset: Offset(0, 1),
+                                      blurRadius: 2,
+                                    ),
                                   ],
                                 ),
                               ),
@@ -648,7 +641,11 @@ class _EventDetailViewState extends State<EventDetailView>
                       Align(
                         alignment: Alignment.topRight,
                         child: IconButton(
-                          icon: const Icon(Icons.close, size: 30, color: Colors.white),
+                          icon: const Icon(
+                            Icons.close,
+                            size: 30,
+                            color: Colors.white,
+                          ),
                           onPressed: _close,
                         ),
                       ),
