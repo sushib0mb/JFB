@@ -31,6 +31,7 @@ flutter:
   assets:
     - assets/miraku_boston.png
     - assets/JFBLogo.png
+    - assets/JFB-27.jpg
     - assets/JFBHomeImage.png
     - assets/map.png
     - assets/Filter.png
