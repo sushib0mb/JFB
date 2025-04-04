@@ -4,155 +4,163 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          // First section: Logo in SliverAppBar
-          SliverAppBar(
-            pinned: true, // Keeps the logo pinned at the top
-            expandedHeight: 150, // Adjnusted height for the expanded logo
-            flexibleSpace: FlexibleSpaceBar(
-              background: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Center(
-                  child: CircleAvatar(
-                    radius: 50.0, // Smaller logo size
-                    backgroundImage: AssetImage('assets/JFBLogo.png'),
-                  ),
-                ),
-              ),
-            ),
-          ),
-
-          // Divider between sections
-          SliverToBoxAdapter(child: Divider(thickness: 5, color: Colors.black)),
-
-          // Second section: Information
-          SliverToBoxAdapter(
-            child: InkWell(
-              onTap: () {
-                // Action for when the Information section is tapped
-                print("Information tapped");
-              },
-              child: Container(
-                margin: EdgeInsets.all(
-                  10.0,
-                ), // Adding margin to space out sections
-                padding: const EdgeInsets.symmetric(
-                  vertical: 100.0,
-                  horizontal: 20.0,
-                ), // Increased vertical padding for larger sections
-                decoration: BoxDecoration(
-                  color: Colors.red[200], // Light red background
-                  borderRadius: BorderRadius.circular(15.0), // Rounded corners
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      blurRadius: 10,
-                      offset: Offset(0, 4), // Shadow direction
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: Text(
-                    'Information',
-                    style: TextStyle(
-                      fontSize: 50.0, // Increased font size for emphasis
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-
-          // Divider between sections
-          SliverToBoxAdapter(child: Divider(thickness: 5, color: Colors.black)),
-
-          // Third section: SNS
-          SliverToBoxAdapter(
-            child: InkWell(
-              onTap: () {
-                // Action for when the SNS section is tapped
-                print("SNS tapped");
-              },
-              child: Container(
-                margin: EdgeInsets.all(
-                  10.0,
-                ), // Adding margin to space out sections
-                padding: const EdgeInsets.symmetric(
-                  vertical: 100.0,
-                  horizontal: 20.0,
-                ), // Increased vertical padding for larger sections
-                decoration: BoxDecoration(
-                  color: Colors.green[200], // Light green background
-                  borderRadius: BorderRadius.circular(15.0), // Rounded corners
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      blurRadius: 10,
-                      offset: Offset(0, 4), // Shadow direction
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: Text(
-                    'SNS',
-                    style: TextStyle(
-                      fontSize: 50.0, // Increased font size for emphasis
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-
-          // Divider between sections
-          SliverToBoxAdapter(child: Divider(thickness: 5, color: Colors.black)),
-
-          // Fourth section: Sponsors
-          SliverToBoxAdapter(
-            child: InkWell(
-              onTap: () {
-                // Action for when the Sponsors section is tapped
-                print("Sponsors tapped");
-              },
-              child: Container(
-                margin: EdgeInsets.all(
-                  10.0,
-                ), // Adding margin to space out sections
-                padding: const EdgeInsets.symmetric(
-                  vertical: 100.0,
-                  horizontal: 20.0,
-                ), // Increased vertical padding for larger sections
-                decoration: BoxDecoration(
-                  color: Colors.blue[200], // Light blue background
-                  borderRadius: BorderRadius.circular(15.0), // Rounded corners
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      blurRadius: 10,
-                      offset: Offset(0, 4), // Shadow direction
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: Text(
-                    'Sponsors',
-                    style: TextStyle(
-                      fontSize: 50.0, // Increased font size for emphasis
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white.withOpacity(0.9),
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.grey,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.restaurant), label: 'Food'),
+          BottomNavigationBarItem(icon: Icon(Icons.schedule), label: 'Events'),
+          BottomNavigationBarItem(icon: Icon(Icons.location_on), label: 'Map'),
         ],
       ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Top Section with Background Image and Overlays
+            Stack(
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height * 0.5,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/JFB-27.jpg"),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 20,
+                  left: 20,
+                  child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    radius: 25,
+                    child: Icon(Icons.language, color: Colors.black),
+                  ),
+                ),
+                Positioned(
+                  top: 20,
+                  right: 20,
+                  child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    radius: 25,
+                    child: Icon(Icons.translate, color: Colors.black),
+                  ),
+                ),
+              ],
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      // Event Cards
+                      _buildEventCard("Kitano Gagaku E...", "Stage 1", "11:30-12:00", true),
+                      _buildEventCard("JAL Advertising", "Stage 2", "11:30-11:40", true),
+                      
+                      SizedBox(height: 20),
+
+                      // Sponsors Section
+                      _buildSponsorSection(),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Event Card Widget
+  Widget _buildEventCard(String title, String stage, String time, bool ongoing) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Container(
+        padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 5,
+              spreadRadius: 2,
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.mic, color: Colors.black),
+                SizedBox(width: 10),
+                Text(stage, style: TextStyle(color: Colors.pinkAccent, fontWeight: FontWeight.bold)),
+              ],
+            ),
+            SizedBox(height: 5),
+            Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(time, style: TextStyle(color: Colors.grey)),
+            if (ongoing)
+              Padding(
+                padding: const EdgeInsets.only(top: 5.0),
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.orange,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Text("Going on now!", style: TextStyle(color: Colors.white)),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Sponsor Section Widget
+  Widget _buildSponsorSection() {
+    List<String> sponsors = [
+      "Takeda", "Japan Airlines", "Meet Boston", "Sanipak",
+      "Chop Value", "Mitsubishi Corporation", "Senko", "Open Water"
+    ];
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Sponsors", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        SizedBox(height: 10),
+        GridView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 3.5,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+          ),
+          itemCount: sponsors.length,
+          itemBuilder: (context, index) {
+            return Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 3)],
+              ),
+              child: Center(child: Text(sponsors[index], style: TextStyle(fontSize: 16))),
+            );
+          },
+        ),
+      ],
     );
   }
 }
