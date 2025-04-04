@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(fontFamily: 'Fredoka'),
       home: const MainScreen(),
     );
   }
@@ -79,7 +80,7 @@ class TopBar extends StatelessWidget {
       child: Stack(
         alignment: Alignment.topCenter,
         children: [
-          if (selectedIndex == 1) ...[
+          if (selectedIndex == 2) ...[
             Positioned(
               left: MediaQuery.of(context).size.width * 0.06, // Adjust position
               top: MediaQuery.of(context).size.height * 0.002,

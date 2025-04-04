@@ -1,14 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(
-    MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(backgroundColor: Colors.white, body: TimeTableView()),
-    ),
-  );
-}
-
 /// データモデル
 class Event {
   final String name;
@@ -45,12 +36,14 @@ class ScheduleItem {
 }
 
 /// メインビュー：タイムテーブル
-class TimeTableView extends StatefulWidget {
+class TimetablePage extends StatefulWidget {
+  const TimetablePage({super.key});
+
   @override
-  _TimeTableViewState createState() => _TimeTableViewState();
+  _TimetablePageState createState() => _TimetablePageState();
 }
 
-class _TimeTableViewState extends State<TimeTableView> {
+class _TimetablePageState extends State<TimetablePage> {
   int selectedDay = 1;
   int selectedStage = 1;
   EventItem? selectedEvent;
@@ -95,198 +88,226 @@ class _TimeTableViewState extends State<TimeTableView> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Column(
-          children: [
-            const SizedBox(height: 10),
-            _buildDaySelectionView(),
-            Expanded(
-              child: Container(
-                margin: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  gradient: LinearGradient(
-                    colors:
-                        selectedDay == 1
-                            ? [
-                              const Color.fromRGBO(191, 28, 36, 0.15),
-                              const Color.fromRGBO(10, 56, 117, 0.15),
-                            ]
-                            : [
-                              const Color.fromRGBO(10, 56, 117, 0.15),
-                              const Color.fromRGBO(191, 28, 36, 0.15),
-                            ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+    final topPadding =
+        MediaQuery.of(context).size.height * 0.082 +
+        MediaQuery.of(context).padding.top +
+        MediaQuery.of(context).size.height * 0.02;
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Stack(
+        children: [
+          Column(
+            children: [
+              SizedBox(height: topPadding),
+              // _buildDaySelectionView(),
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    // Gradient of timetable background
+                    gradient: LinearGradient(
+                      colors:
+                          selectedDay == 1
+                              ? [
+                                const Color.fromRGBO(191, 28, 36, 0.15),
+                                const Color.fromRGBO(10, 56, 117, 0.15),
+                              ]
+                              : [
+                                const Color.fromRGBO(10, 56, 117, 0.15),
+                                const Color.fromRGBO(191, 28, 36, 0.15),
+                              ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                  ),
+                  // Build contents of timetable
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: MediaQuery.of(context).size.height * 0.0725,
+                        ),
+                        child: _buildStageHeader(),
+                      ),
+                      Divider(color: Colors.grey.shade300, height: 1),
+                      Expanded(
+                        child: ListView.separated(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 10,
+                          ),
+                          itemCount: scheduleData.length,
+                          separatorBuilder:
+                              (context, index) => Divider(
+                                color: Colors.grey.shade300,
+                                height: 1,
+                              ),
+                          itemBuilder: (context, index) {
+                            return ScheduleRow(
+                              scheduleItem: scheduleData[index],
+                              onEventTap: (event) {
+                                setState(() {
+                                  selectedEvent = event;
+                                  isShowingDetail = true;
+                                });
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                child: Column(
-                  children: [
-                    _buildStageHeader(),
-                    Divider(color: Colors.grey.shade300, height: 1),
-                    Expanded(
-                      child: ListView.separated(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 10,
-                        ),
-                        itemCount: scheduleData.length,
-                        separatorBuilder:
-                            (context, index) =>
-                                Divider(color: Colors.grey.shade300, height: 1),
-                        itemBuilder: (context, index) {
-                          return ScheduleRow(
-                            scheduleItem: scheduleData[index],
-                            onEventTap: (event) {
-                              setState(() {
-                                selectedEvent = event;
-                                isShowingDetail = true;
-                              });
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
               ),
-            ),
-          ],
-        ),
-        // イベント詳細ポップアップ
-        if (isShowingDetail && selectedEvent != null)
-          EventDetailView(
-            event: selectedEvent!,
-            onClose: () {
-              setState(() {
-                isShowingDetail = false;
-                selectedEvent = null;
-              });
-            },
+            ],
           ),
-      ],
-    );
-  }
-
-  /// 日付選択ビュー
-  Widget _buildDaySelectionView() {
-    return Container(
-      height: 60,
-      margin: const EdgeInsets.symmetric(horizontal: 20),
-      decoration: BoxDecoration(
-        color: Colors.grey.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(25),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          // Day 1 ボタン
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: selectedDay == 1 ? Colors.red : Colors.white,
-              shape: const StadiumBorder(),
-              elevation: selectedDay == 1 ? 5 : 2,
+          // イベント詳細ポップアップ
+          if (isShowingDetail && selectedEvent != null)
+            EventDetailView(
+              event: selectedEvent!,
+              onClose: () {
+                setState(() {
+                  isShowingDetail = false;
+                  selectedEvent = null;
+                });
+              },
             ),
-            onPressed: () {
-              setState(() {
-                selectedDay = 1;
-              });
-            },
-            child: Text(
-              "Day 1",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: selectedDay == 1 ? Colors.white : Colors.black,
-              ),
-            ),
-          ),
-          // 祭りロゴ
-          Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                colors: [Colors.white, Colors.grey.withOpacity(0.2)],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-              boxShadow: [
-                BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 3),
-              ],
-            ),
-            alignment: Alignment.center,
-            child: const Text(
-              "祭",
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.red,
-              ),
-            ),
-          ),
-          // Day 2 ボタン
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: selectedDay == 2 ? Colors.blue : Colors.white,
-              shape: const StadiumBorder(),
-              elevation: selectedDay == 2 ? 5 : 2,
-            ),
-            onPressed: () {
-              setState(() {
-                selectedDay = 2;
-              });
-            },
-            child: Text(
-              "Day 2",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: selectedDay == 2 ? Colors.white : Colors.black,
-              ),
-            ),
-          ),
         ],
       ),
     );
   }
 
+  /// 日付選択ビュー
+  // Widget _buildDaySelectionView() {
+  //   return Container(
+  //     height: 60,
+  //     margin: const EdgeInsets.symmetric(horizontal: 20),
+  //     decoration: BoxDecoration(
+  //       color: Colors.grey.withOpacity(0.1),
+  //       borderRadius: BorderRadius.circular(25),
+  //     ),
+  //     child: Row(
+  //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //       children: [
+  //         // Day 1 ボタン
+  //         ElevatedButton(
+  //           style: ElevatedButton.styleFrom(
+  //             backgroundColor: selectedDay == 1 ? Colors.red : Colors.white,
+  //             shape: const StadiumBorder(),
+  //             elevation: selectedDay == 1 ? 5 : 2,
+  //           ),
+  //           onPressed: () {
+  //             setState(() {
+  //               selectedDay = 1;
+  //             });
+  //           },
+  //           child: Text(
+  //             "Day 1",
+  //             style: TextStyle(
+  //               fontSize: 20,
+  //               fontWeight: FontWeight.bold,
+  //               color: selectedDay == 1 ? Colors.white : Colors.black,
+  //             ),
+  //           ),
+  //         ),
+  //         // 祭りロゴ
+  //         Container(
+  //           width: 50,
+  //           height: 50,
+  //           decoration: BoxDecoration(
+  //             shape: BoxShape.circle,
+  //             gradient: LinearGradient(
+  //               colors: [Colors.white, Colors.grey.withOpacity(0.2)],
+  //               begin: Alignment.topCenter,
+  //               end: Alignment.bottomCenter,
+  //             ),
+  //             boxShadow: [
+  //               BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 3),
+  //             ],
+  //           ),
+  //           alignment: Alignment.center,
+  //           child: const Text(
+  //             "祭",
+  //             style: TextStyle(
+  //               fontSize: 28,
+  //               fontWeight: FontWeight.bold,
+  //               color: Colors.red,
+  //             ),
+  //           ),
+  //         ),
+  //         // Day 2 ボタン
+  //         ElevatedButton(
+  //           style: ElevatedButton.styleFrom(
+  //             backgroundColor: selectedDay == 2 ? Colors.blue : Colors.white,
+  //             shape: const StadiumBorder(),
+  //             elevation: selectedDay == 2 ? 5 : 2,
+  //           ),
+  //           onPressed: () {
+  //             setState(() {
+  //               selectedDay = 2;
+  //             });
+  //           },
+  //           child: Text(
+  //             "Day 2",
+  //             style: TextStyle(
+  //               fontSize: 20,
+  //               fontWeight: FontWeight.bold,
+  //               color: selectedDay == 2 ? Colors.white : Colors.black,
+  //             ),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
   /// ステージヘッダー
   Widget _buildStageHeader() {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.width;
+    double baseFontSize = 25;
+    double responsiveFontSize = baseFontSize * (screenWidth / 375);
+    double stageHeaderWidth = screenWidth * 0.67;
+    double stageHeaderHeight = screenHeight * 0.11;
+
     return Padding(
-      padding: const EdgeInsets.only(top: 15, bottom: 10),
+      padding: const EdgeInsets.only(top: 25, bottom: 10),
       child: Container(
-        width: 280,
-        height: 50,
+        width: stageHeaderWidth,
+        height: stageHeaderHeight,
         decoration: BoxDecoration(
           color: Colors.grey.withOpacity(0.5),
           borderRadius: BorderRadius.circular(25),
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: const [
+          mainAxisAlignment: MainAxisAlignment.center, // <- changed
+          children: [
             Text(
               "Stage 1",
               style: TextStyle(
-                fontSize: 24,
+                fontSize: responsiveFontSize,
                 fontWeight: FontWeight.w500,
                 color: Colors.white,
               ),
             ),
-            // 区切り線
+            SizedBox(width: 20), // <- you can tweak this width as needed
             SizedBox(
-              width: 2,
+              width: 4,
               height: 30,
               child: DecoratedBox(
-                decoration: BoxDecoration(color: Colors.white),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.white,
+                ),
               ),
             ),
+            SizedBox(width: 20), // <- space after the divider
             Text(
               "Stage 2",
               style: TextStyle(
-                fontSize: 24,
+                fontSize: responsiveFontSize,
                 fontWeight: FontWeight.w500,
                 color: Colors.white,
               ),
@@ -316,7 +337,12 @@ class ScheduleRow extends StatelessWidget {
     String timeText = timeParts.isNotEmpty ? timeParts[0] : scheduleItem.time;
     String ampm = timeParts.length > 1 ? timeParts[1] : "";
 
+    double screenWidth = MediaQuery.of(context).size.width;
+    double baseFontSize = 15;
+    double responsiveFontSize = baseFontSize * (screenWidth / 375);
+
     return Padding(
+      // Padding between events
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -328,8 +354,8 @@ class ScheduleRow extends StatelessWidget {
               children: [
                 Text(
                   timeText,
-                  style: const TextStyle(
-                    fontSize: 16,
+                  style: TextStyle(
+                    fontSize: responsiveFontSize,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -347,14 +373,14 @@ class ScheduleRow extends StatelessWidget {
                       eventItem: scheduleItem.stage1Event!,
                       onTap: onEventTap,
                     )
-                    : Container(width: 140, height: 60),
+                    : SizedBox(width: 140, height: 60),
                 const SizedBox(width: 10),
                 scheduleItem.stage2Event != null
                     ? PerformanceBox(
                       eventItem: scheduleItem.stage2Event!,
                       onTap: onEventTap,
                     )
-                    : Container(width: 140, height: 60),
+                    : SizedBox(width: 140, height: 60),
               ],
             ),
           ),
