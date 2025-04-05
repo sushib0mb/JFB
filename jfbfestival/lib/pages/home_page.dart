@@ -4,28 +4,15 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white.withOpacity(0.9),
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.grey,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.restaurant), label: 'Food'),
-          BottomNavigationBarItem(icon: Icon(Icons.schedule), label: 'Events'),
-          BottomNavigationBarItem(icon: Icon(Icons.location_on), label: 'Map'),
-        ],
-      ),
-      body: SafeArea(
+      backgroundColor: Color(0xFFFFF5F5), // Very light pink background
+      body: SingleChildScrollView(
         child: Column(
           children: [
-            // Top Section with Background Image and Overlays
             Stack(
               children: [
                 Container(
                   width: double.infinity,
-                  height: MediaQuery.of(context).size.height * 0.5,
+                  height: MediaQuery.of(context).size.height * 0.6,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage("assets/JFB-27.jpg"),
@@ -33,52 +20,51 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                 ),
-                Positioned(
-                  top: 20,
-                  left: 20,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 25,
-                    child: Icon(Icons.language, color: Colors.black),
-                  ),
-                ),
-                Positioned(
-                  top: 20,
-                  right: 20,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 25,
-                    child: Icon(Icons.translate, color: Colors.black),
-                  ),
-                ),
               ],
             ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      // Event Cards
-                      _buildEventCard("Kitano Gagaku E...", "Stage 1", "11:30-12:00", true),
-                      _buildEventCard("JAL Advertising", "Stage 2", "11:30-11:40", true),
-                      
-                      SizedBox(height: 20),
-
-                      // Sponsors Section
-                      _buildSponsorSection(),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            SizedBox(height: 20),
+            _buildSocialMediaIcons(),
+            _buildEventSection(),
+            _buildSponsorsSection(),
           ],
         ),
       ),
     );
   }
 
-  // Event Card Widget
+  Widget _buildSocialMediaIcons() {
+    return Container(
+      margin: EdgeInsets.all(16),
+      padding: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2)],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildIcon("assets/instagram.png"),
+          _buildIcon("assets/facebook.png"),
+          _buildIcon("assets/youtube.png"),
+          _buildIcon("assets/website.png"),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEventSection() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          _buildEventCard("Kitanodai Gagaku E...", "Stage 1", "11:30-12:00", true),
+          _buildEventCard("JAL Advertising", "Stage 2", "11:30-11:40", true),
+        ],
+      ),
+    );
+  }
+
   Widget _buildEventCard(String title, String stage, String time, bool ongoing) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -87,13 +73,7 @@ class HomePage extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 5,
-              spreadRadius: 2,
-            ),
-          ],
+          boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2)],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,41 +106,71 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  // Sponsor Section Widget
-  Widget _buildSponsorSection() {
-    List<String> sponsors = [
-      "Takeda", "Japan Airlines", "Meet Boston", "Sanipak",
-      "Chop Value", "Mitsubishi Corporation", "Senko", "Open Water"
+  Widget _buildSponsorsSection() {
+    return Container(
+      margin: EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2)],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          _buildSponsorCategory("Sustainability", "assets/Takeda.jpg"),
+          _buildSponsorCategory("Airline", "assets/jal.jpg"),
+          _buildCorporateSponsors(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSponsorCategory(String title, String imagePath) {
+    return Column(
+      children: [
+        Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        SizedBox(height: 5),
+        Image.asset(imagePath, height: 50),
+        SizedBox(height: 10),
+      ],
+    );
+  }
+
+  Widget _buildCorporateSponsors() {
+    List<String> corporateLogos = [
+      "assets/sanipak.png",
+      "assets/chopvalue.png",
+      "assets/openwater.png",
+      "assets/mitsubishi.jpg",
+      "assets/SDT.jpg",
+      "assets/senko.png",
+      "assets/yamamoto.jpg",
     ];
     
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Sponsors", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        Text("Corporate", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         SizedBox(height: 10),
-        GridView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 3.5,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-          ),
-          itemCount: sponsors.length,
-          itemBuilder: (context, index) {
-            return Container(
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 3)],
-              ),
-              child: Center(child: Text(sponsors[index], style: TextStyle(fontSize: 16))),
-            );
-          },
+        Wrap(
+          alignment: WrapAlignment.center,
+          spacing: 20,
+          runSpacing: 10,
+          children: corporateLogos.map((logo) => Image.asset(logo, height: 50)).toList(),
         ),
       ],
+    );
+  }
+
+  Widget _buildIcon(String imagePath) {
+    return Container(
+      padding: EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.circle,
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2)],
+      ),
+      child: Image.asset(imagePath, height: 30),
     );
   }
 }

@@ -40,6 +40,19 @@ flutter:
     - assets/payments/Venmo.png
     - assets/allergens/sesame.png
     - assets/allergens/shellfish.png
+    - assets/Takeda.jpg
+    - assets/sanipak.png
+    - assets/instagram.png
+    - assets/facebook.png
+    - assets/youtube.png
+    - assets/website.png
+    - assets/yamamoto.jpg
+    - assets/SDT.jpg
+    - assets/jal.jpg
+    - assets/mitsubishi.jpg
+    - assets/openwater.png
+    - assets/chopvalue.png
+    - assets/senko.png
     - assets/allergens/tree nut.png
     - assets/allergens/milk.png
     - assets/allergens/fish.png
