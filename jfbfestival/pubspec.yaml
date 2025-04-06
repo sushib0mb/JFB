@@ -29,17 +29,16 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/food/
+    - assets/filter(white).png
     - assets/miraku_boston.png
     - assets/JFBLogo.png
     - assets/JFB-27.jpg
     - assets/JFBHomeImage.png
     - assets/map.png
     - assets/Filter.png
-    - assets/payments/Cash.png
-    - assets/payments/Zelle.png
-    - assets/payments/Venmo.png
-    - assets/allergens/sesame.png
-    - assets/allergens/shellfish.png
+    - assets/payments/
+    - assets/allergens/
     - assets/Takeda.jpg
     - assets/sanipak.png
     - assets/instagram.png
@@ -59,13 +58,8 @@ flutter:
     - assets/langChange.png
     - assets/29. Singing performance (Frame).png
     - assets/35. Advertising (Frame).png
-    - assets/allergens/tree nut.png
-    - assets/allergens/milk.png
-    - assets/allergens/fish.png
-    - assets/allergens/soy.png
-    - assets/allergens/egg.png
     - assets/vegan.png
-    - assets/allergens/Egg(frame).png
+
 
 
 
