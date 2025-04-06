@@ -3,56 +3,68 @@ import 'package:flutter/material.dart';
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFFFFF5F5), // Very light pink background
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                Stack(
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isSmallScreen = constraints.maxWidth < 600;
+
+        return Scaffold(
+          backgroundColor: Color(0xFFFFF5F5),
+          body: Stack(
+            children: [
+              SingleChildScrollView(
+                child: Column(
                   children: [
-                    Container(
-                      width: double.infinity,
-                      height: MediaQuery.of(context).size.height * 0.6,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage("assets/JFB-27.jpg"),
-                          fit: BoxFit.cover,
+                    Stack(
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          height: screenHeight * 0.6,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage("assets/JFB-27.jpg"),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
-                      ),
+                        Positioned(
+                          top: screenHeight * 0.05,
+                          right: screenWidth * 0.05,
+                          child: GestureDetector(
+                            onTap: () {},
+                            child: Container(
+                              padding: EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2),
+                                ],
+                              ),
+                              child: Image.asset("assets/langChange.png", height: isSmallScreen ? 40 : 50),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    Positioned(
-                      top: 20,
-                      right: 16,
-                      child: Container(
-                        padding: EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: GestureDetector(
-                          onTap: () {}, // Placeholder for language change functionality
-                          child: Image.asset("assets/langChange.png", height: 60),
-                        ),
-                      ),
-                    ),
+                    SizedBox(height: screenHeight * 0.02),
+                    _buildEventSection(screenWidth, isSmallScreen),
+                    _buildSocialMediaIcons(screenWidth),
+                    _buildSponsorsSection(screenWidth),
+                    SizedBox(height: screenHeight * 0.3),
                   ],
                 ),
-                SizedBox(height: 20),
-                _buildEventSection(),
-                _buildSocialMediaIcons(),
-                _buildSponsorsSection(),
-                SizedBox(height: 200), // More extra space below the sponsors section
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
-  Widget _buildSocialMediaIcons() {
+  Widget _buildSocialMediaIcons(double screenWidth) {
     return Container(
       margin: EdgeInsets.all(16),
       padding: EdgeInsets.all(16),
@@ -73,19 +85,19 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildEventSection() {
+  Widget _buildEventSection(double screenWidth, bool isSmallScreen) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
-          _buildEventCard("Kitanodai Gagaku E...", "Stage 1", "11:30-12:00", true, true, false),
-          _buildEventCard("JAL Advertising", "Stage 2", "11:30-11:40", true, false, true),
+          _buildEventCard("Kitanodai Gagaku E...", "Stage 1", "11:30-12:00", true, true, false, screenWidth),
+          _buildEventCard("JAL Advertising", "Stage 2", "11:30-11:40", true, false, true, screenWidth),
         ],
       ),
     );
   }
 
-  Widget _buildEventCard(String title, String stage, String time, bool ongoing, bool isSinging, bool isAdvertising) {
+  Widget _buildEventCard(String title, String stage, String time, bool ongoing, bool isSinging, bool isAdvertising, double screenWidth) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Stack(
@@ -110,7 +122,7 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 5),
-                Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Text(title, style: TextStyle(fontSize: screenWidth * 0.045, fontWeight: FontWeight.bold)),
                 Text(time, style: TextStyle(color: Colors.grey)),
                 if (ongoing)
                   Padding(
@@ -132,8 +144,13 @@ class HomePage extends StatelessWidget {
               top: -35,
               left: 10,
               child: Container(
-                color: Colors.white,
-                child: Image.asset("assets/29. Singing performance (Frame).png", height: 65),
+                padding: EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2)],
+                ),
+                child: Image.asset("assets/29. Singing performance (Frame).png", height: screenWidth * 0.18),
               ),
             ),
           if (isAdvertising)
@@ -141,8 +158,13 @@ class HomePage extends StatelessWidget {
               top: -35,
               left: 10,
               child: Container(
-                color: Colors.white,
-                child: Image.asset("assets/35. Advertising (Frame).png", height: 65),
+                padding: EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2)],
+                ),
+                child: Image.asset("assets/35. Advertising (Frame).png", height: screenWidth * 0.18),
               ),
             ),
         ],
@@ -150,7 +172,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildSponsorsSection() {
+  Widget _buildSponsorsSection(double screenWidth) {
     return Container(
       margin: EdgeInsets.all(16),
       padding: EdgeInsets.all(16),
