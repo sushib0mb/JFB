@@ -1,39 +1,5 @@
 import 'package:flutter/material.dart';
-
-/// データモデル
-class Event {
-  final String name;
-  final String startTime;
-  final String endTime;
-  final int stage;
-  final String icon;
-  final String description;
-
-  Event({
-    required this.name,
-    required this.startTime,
-    required this.endTime,
-    required this.stage,
-    required this.icon,
-    required this.description,
-  });
-}
-
-class EventItem {
-  final String title;
-  final String time;
-  final String image; // Flutter ではアイコン名や画像パスに置き換え
-
-  EventItem({required this.title, required this.time, required this.image});
-}
-
-class ScheduleItem {
-  final String time;
-  final EventItem? stage1Event;
-  final EventItem? stage2Event;
-
-  ScheduleItem({required this.time, this.stage1Event, this.stage2Event});
-}
+import 'package:jfbfestival/data/timetableData.dart';
 
 /// メインビュー：タイムテーブル
 class TimetablePage extends StatefulWidget {
@@ -51,40 +17,6 @@ class _TimetablePageState extends State<TimetablePage> {
   double animationAmount = 1.0;
 
   // サンプルのスケジュールデータ（実際にはもっと項目が必要）
-  final List<ScheduleItem> scheduleData = [
-    ScheduleItem(
-      time: "11:00 am",
-      stage1Event: EventItem(
-        title: "Opening Ceremony",
-        time: "11:00-11:30",
-        image: "icon_socialdance", // ※実際のアイコンまたは画像パスに変更
-      ),
-      stage2Event: null,
-    ),
-    ScheduleItem(
-      time: "11:30 am",
-      stage1Event: null,
-      stage2Event: EventItem(
-        title: "Welcome Performance",
-        time: "11:30-11:45",
-        image: "icon_music_note",
-      ),
-    ),
-    ScheduleItem(
-      time: "12:00 pm",
-      stage1Event: EventItem(
-        title: "Showa Boston Dance Performance",
-        time: "12:00-12:15",
-        image: "icon_dance",
-      ),
-      stage2Event: EventItem(
-        title: "Live Music",
-        time: "12:00-12:30",
-        image: "icon_music_mic",
-      ),
-    ),
-    // 他のスケジュール項目...
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -92,176 +24,195 @@ class _TimetablePageState extends State<TimetablePage> {
         MediaQuery.of(context).size.height * 0.082 +
         MediaQuery.of(context).padding.top +
         MediaQuery.of(context).size.height * 0.02;
+    final currentSchedule =
+        selectedDay == 1 ? day1ScheduleData : day2ScheduleData;
+    final double dayButtonHeight = MediaQuery.of(context).size.height * 0.082;
+    final double dayButtonWidth = MediaQuery.of(context).size.width * 0.52;
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          Column(
-            children: [
-              SizedBox(height: topPadding),
-              // _buildDaySelectionView(),
-              Expanded(
+      body: Padding(
+        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+        child: Stack(
+          children: [
+            Positioned(
+              left: MediaQuery.of(context).size.width * 0.06, // Adjust position
+              top: MediaQuery.of(context).size.height * 0.002,
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    selectedDay = 1;
+                  });
+                },
                 child: Container(
-                  margin: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                    // Gradient of timetable background
+                  width: dayButtonWidth,
+                  height: dayButtonHeight,
+                  decoration: ShapeDecoration(
                     gradient: LinearGradient(
                       colors:
                           selectedDay == 1
                               ? [
-                                const Color.fromRGBO(191, 28, 36, 0.15),
-                                const Color.fromRGBO(10, 56, 117, 0.15),
+                                const Color.fromARGB(255, 255, 131, 135),
+                                // const Color.fromARGB(251, 234, 27, 27),
+                                const Color.fromARGB(128, 176, 113, 116),
+                                const Color.fromARGB(0, 96, 96, 96),
                               ]
                               : [
-                                const Color.fromRGBO(10, 56, 117, 0.15),
-                                const Color.fromRGBO(191, 28, 36, 0.15),
+                                const Color.fromARGB(128, 131, 131, 131),
+                                const Color.fromARGB(64, 114, 114, 114),
+                                const Color.fromARGB(0, 96, 96, 96),
                               ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                      // begin: Alignment(-0.50, 0.50),
+                      // end: Alignment(1.0, 0.50),
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(100),
                     ),
                   ),
-                  // Build contents of timetable
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: MediaQuery.of(context).size.height * 0.0725,
-                        ),
-                        child: _buildStageHeader(),
-                      ),
-                      Divider(color: Colors.grey.shade300, height: 1),
-                      Expanded(
-                        child: ListView.separated(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 10,
-                          ),
-                          itemCount: scheduleData.length,
-                          separatorBuilder:
-                              (context, index) => Divider(
-                                color: Colors.grey.shade300,
-                                height: 1,
-                              ),
-                          itemBuilder: (context, index) {
-                            return ScheduleRow(
-                              scheduleItem: scheduleData[index],
-                              onEventTap: (event) {
-                                setState(() {
-                                  selectedEvent = event;
-                                  isShowingDetail = true;
-                                });
-                              },
-                            );
-                          },
-                        ),
-                      ),
-                    ],
+                  alignment: Alignment(-0.3, 0),
+                  child: const Text(
+                    'Day 1',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 45,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ),
               ),
-            ],
-          ),
-          // イベント詳細ポップアップ
-          if (isShowingDetail && selectedEvent != null)
-            EventDetailView(
-              event: selectedEvent!,
-              onClose: () {
-                setState(() {
-                  isShowingDetail = false;
-                  selectedEvent = null;
-                });
-              },
             ),
-        ],
+
+            Positioned(
+              right:
+                  MediaQuery.of(context).size.width * 0.06, // Adjust position
+              top: MediaQuery.of(context).size.height * 0.002,
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    selectedDay = 2;
+                  });
+                },
+
+                child: Container(
+                  width: dayButtonWidth,
+                  height: dayButtonHeight,
+                  decoration: ShapeDecoration(
+                    gradient: LinearGradient(
+                      colors:
+                          selectedDay == 2
+                              ? [
+                                const Color.fromARGB(49, 96, 96, 96),
+                                const Color.fromARGB(128, 107, 136, 175),
+                                const Color.fromARGB(255, 118, 175, 255),
+                              ]
+                              : [
+                                const Color.fromARGB(0, 96, 96, 96),
+                                const Color.fromARGB(64, 114, 114, 114),
+                                const Color.fromARGB(128, 131, 131, 131),
+                              ],
+                      // begin: Alignment(-0.50, 0.50),
+                      // end: Alignment(1.0, 0.50),
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                  ),
+                  alignment: Alignment(0.35, 0),
+                  child: const Text(
+                    'Day 2',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 45,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Column(
+              children: [
+                SizedBox(height: topPadding),
+                Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      // Gradient of timetable background
+                      gradient: LinearGradient(
+                        colors:
+                            selectedDay == 1
+                                ? [
+                                  const Color.fromRGBO(191, 28, 36, 0.15),
+                                  const Color.fromRGBO(10, 56, 117, 0.15),
+                                ]
+                                : [
+                                  const Color.fromRGBO(10, 56, 117, 0.15),
+                                  const Color.fromRGBO(191, 28, 36, 0.15),
+                                ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                    // Build contents of timetable
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: MediaQuery.of(context).size.height * 0.0725,
+                          ),
+                          child: _buildStageHeader(),
+                        ),
+
+                        Expanded(
+                          child: ListView.separated(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 10,
+                            ),
+                            itemCount: currentSchedule.length,
+                            separatorBuilder:
+                                (context, index) => Divider(
+                                  color: Colors.grey.shade300,
+                                  height: 1,
+                                ),
+                            itemBuilder: (context, index) {
+                              return ScheduleRow(
+                                scheduleItem: currentSchedule[index],
+                                onEventTap: (event) {
+                                  setState(() {
+                                    selectedEvent = event;
+                                    isShowingDetail = true;
+                                  });
+                                },
+                                isFirst: index == 0,
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            // イベント詳細ポップアップ
+            if (isShowingDetail && selectedEvent != null)
+              EventDetailView(
+                event: selectedEvent!,
+                onClose: () {
+                  setState(() {
+                    isShowingDetail = false;
+                    selectedEvent = null;
+                  });
+                },
+              ),
+          ],
+        ),
       ),
     );
   }
-
-  /// 日付選択ビュー
-  // Widget _buildDaySelectionView() {
-  //   return Container(
-  //     height: 60,
-  //     margin: const EdgeInsets.symmetric(horizontal: 20),
-  //     decoration: BoxDecoration(
-  //       color: Colors.grey.withOpacity(0.1),
-  //       borderRadius: BorderRadius.circular(25),
-  //     ),
-  //     child: Row(
-  //       mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //       children: [
-  //         // Day 1 ボタン
-  //         ElevatedButton(
-  //           style: ElevatedButton.styleFrom(
-  //             backgroundColor: selectedDay == 1 ? Colors.red : Colors.white,
-  //             shape: const StadiumBorder(),
-  //             elevation: selectedDay == 1 ? 5 : 2,
-  //           ),
-  //           onPressed: () {
-  //             setState(() {
-  //               selectedDay = 1;
-  //             });
-  //           },
-  //           child: Text(
-  //             "Day 1",
-  //             style: TextStyle(
-  //               fontSize: 20,
-  //               fontWeight: FontWeight.bold,
-  //               color: selectedDay == 1 ? Colors.white : Colors.black,
-  //             ),
-  //           ),
-  //         ),
-  //         // 祭りロゴ
-  //         Container(
-  //           width: 50,
-  //           height: 50,
-  //           decoration: BoxDecoration(
-  //             shape: BoxShape.circle,
-  //             gradient: LinearGradient(
-  //               colors: [Colors.white, Colors.grey.withOpacity(0.2)],
-  //               begin: Alignment.topCenter,
-  //               end: Alignment.bottomCenter,
-  //             ),
-  //             boxShadow: [
-  //               BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 3),
-  //             ],
-  //           ),
-  //           alignment: Alignment.center,
-  //           child: const Text(
-  //             "祭",
-  //             style: TextStyle(
-  //               fontSize: 28,
-  //               fontWeight: FontWeight.bold,
-  //               color: Colors.red,
-  //             ),
-  //           ),
-  //         ),
-  //         // Day 2 ボタン
-  //         ElevatedButton(
-  //           style: ElevatedButton.styleFrom(
-  //             backgroundColor: selectedDay == 2 ? Colors.blue : Colors.white,
-  //             shape: const StadiumBorder(),
-  //             elevation: selectedDay == 2 ? 5 : 2,
-  //           ),
-  //           onPressed: () {
-  //             setState(() {
-  //               selectedDay = 2;
-  //             });
-  //           },
-  //           child: Text(
-  //             "Day 2",
-  //             style: TextStyle(
-  //               fontSize: 20,
-  //               fontWeight: FontWeight.bold,
-  //               color: selectedDay == 2 ? Colors.white : Colors.black,
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   /// ステージヘッダー
   Widget _buildStageHeader() {
@@ -292,7 +243,7 @@ class _TimetablePageState extends State<TimetablePage> {
                 color: Colors.white,
               ),
             ),
-            SizedBox(width: 20), // <- you can tweak this width as needed
+            SizedBox(width: 17.5), // <- you can tweak this width as needed
             SizedBox(
               width: 4,
               height: 30,
@@ -303,7 +254,7 @@ class _TimetablePageState extends State<TimetablePage> {
                 ),
               ),
             ),
-            SizedBox(width: 20), // <- space after the divider
+            SizedBox(width: 17.5), // <- space after the divider
             Text(
               "Stage 2",
               style: TextStyle(
@@ -322,13 +273,15 @@ class _TimetablePageState extends State<TimetablePage> {
 /// スケジュール行（1 行分のタイムテーブル）
 class ScheduleRow extends StatelessWidget {
   final ScheduleItem scheduleItem;
-  final Function(EventItem) onEventTap;
+  final void Function(EventItem) onEventTap;
+  final bool isFirst;
 
   const ScheduleRow({
-    Key? key,
     required this.scheduleItem,
     required this.onEventTap,
-  }) : super(key: key);
+    this.isFirst = false,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -338,54 +291,110 @@ class ScheduleRow extends StatelessWidget {
     String ampm = timeParts.length > 1 ? timeParts[1] : "";
 
     double screenWidth = MediaQuery.of(context).size.width;
-    double baseFontSize = 15;
+    double baseFontSize = 17;
     double responsiveFontSize = baseFontSize * (screenWidth / 375);
 
-    return Padding(
-      // Padding between events
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 時間列
-          SizedBox(
-            width: 60,
-            child: Column(
-              children: [
-                Text(
-                  timeText,
-                  style: TextStyle(
-                    fontSize: responsiveFontSize,
-                    fontWeight: FontWeight.w500,
+    return Column(
+      children: [
+        // Top rounded divider (if first row)
+        if (isFirst)
+          Padding(
+            padding: EdgeInsets.only(
+              left: 60 + screenWidth * 0.026,
+              right: 0, // adjust if you want spacing on the right
+            ),
+            child: Container(
+              height: 3,
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(8, 0, 0, 0),
+                borderRadius: BorderRadius.circular(4),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    offset: const Offset(0, 0),
+                    blurRadius: 1,
+                    spreadRadius: 0,
                   ),
+                ],
+              ),
+            ),
+          ),
+
+        // Main row content
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 60,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                // Displaying the time columns
+                children: [
+                  Text(
+                    timeText,
+                    style: TextStyle(
+                      fontSize: responsiveFontSize,
+                      fontWeight: FontWeight.w300,
+                      height: 1.0,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    ampm,
+                    style: TextStyle(
+                      fontSize: responsiveFontSize,
+                      height: 1.0,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(width: screenWidth * 0.026),
+            // Displaying the events on the row
+            Expanded(
+              child: Row(
+                children: [
+                  scheduleItem.stage1Event != null
+                      ? PerformanceBox(
+                        eventItem: scheduleItem.stage1Event!,
+                        onTap: onEventTap,
+                      )
+                      : const SizedBox(width: 140, height: 60),
+                  const SizedBox(width: 25),
+                  scheduleItem.stage2Event != null
+                      ? PerformanceBox(
+                        eventItem: scheduleItem.stage2Event!,
+                        onTap: onEventTap,
+                      )
+                      : const SizedBox(width: 140, height: 60),
+                ],
+              ),
+            ),
+          ],
+        ),
+
+        // Bottom rounded divider (always)
+        Padding(
+          padding: EdgeInsets.only(left: 60 + screenWidth * 0.026, right: 0),
+          child: Container(
+            height: 3,
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(8, 0, 0, 0),
+              borderRadius: BorderRadius.circular(4),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  offset: const Offset(0, 0),
+                  blurRadius: 1,
+                  spreadRadius: 0,
                 ),
-                Text(ampm, style: const TextStyle(fontSize: 14)),
               ],
             ),
           ),
-          const SizedBox(width: 10),
-          // イベント列（Stage1 と Stage2）
-          Expanded(
-            child: Row(
-              children: [
-                scheduleItem.stage1Event != null
-                    ? PerformanceBox(
-                      eventItem: scheduleItem.stage1Event!,
-                      onTap: onEventTap,
-                    )
-                    : SizedBox(width: 140, height: 60),
-                const SizedBox(width: 10),
-                scheduleItem.stage2Event != null
-                    ? PerformanceBox(
-                      eventItem: scheduleItem.stage2Event!,
-                      onTap: onEventTap,
-                    )
-                    : SizedBox(width: 140, height: 60),
-              ],
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -408,6 +417,10 @@ class _PerformanceBoxState extends State<PerformanceBox>
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+    double responsiveFontSize = (screenWidth / 375);
+
     return GestureDetector(
       onTap: () {
         // タップ時のアニメーション
@@ -421,15 +434,19 @@ class _PerformanceBoxState extends State<PerformanceBox>
           });
         });
       },
+
+      // TODO: Add picture between pictuire and text
       child: AnimatedScale(
         scale: isPressed ? 0.95 : 1.0,
         duration: const Duration(milliseconds: 150),
         child: Container(
           width: 140,
-          height: 60,
+          // TODO: Adjust height with length of event
+          height: screenHeight * 0.07,
+          // height: screenHeight * 0.07,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(40),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(isPressed ? 0.05 : 0.1),
@@ -440,7 +457,7 @@ class _PerformanceBoxState extends State<PerformanceBox>
           ),
           child: Row(
             children: [
-              const SizedBox(width: 8),
+              SizedBox(width: screenWidth * 0.01),
               // アイコン部分（Flutter では Image や Icon で実装）
               Container(
                 width: 30,
@@ -457,7 +474,7 @@ class _PerformanceBoxState extends State<PerformanceBox>
                 ),
                 child: const Icon(Icons.image),
               ),
-              const SizedBox(width: 5),
+              SizedBox(width: screenWidth * 0.03),
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -467,18 +484,20 @@ class _PerformanceBoxState extends State<PerformanceBox>
                       widget.eventItem.title.length > 20
                           ? widget.eventItem.title.substring(0, 17) + "..."
                           : widget.eventItem.title,
-                      style: const TextStyle(
-                        fontSize: 12,
+                      style: TextStyle(
+                        fontSize: responsiveFontSize * 10,
                         fontWeight: FontWeight.w500,
+                        height: screenHeight * 0.0010,
                       ),
                       maxLines: 2,
                     ),
                     Text(
                       widget.eventItem.time,
-                      style: const TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w300,
+                      style: TextStyle(
+                        fontSize: responsiveFontSize * 8,
+                        fontWeight: FontWeight.w500,
                         color: Colors.grey,
+                        height: 1.15,
                       ),
                     ),
                   ],
