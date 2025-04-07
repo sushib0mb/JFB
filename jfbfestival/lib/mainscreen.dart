@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:jfbfestival/pages/food_page.dart';
+import 'package:jfbfestival/pages/food/food_page.dart';
 import 'package:jfbfestival/pages/home_page.dart';
 // import 'package:jfbfestival/pages/timetable_page.dart';
 import 'package:jfbfestival/pages/map_page.dart';
@@ -49,7 +49,7 @@ class _MainScreenState extends State<MainScreen> {
         children: [
           IndexedStack(
             index: selectedIndex,
-            children: [HomePage(), FoodPage(), TimetablePage(), MapPage()],
+            children: [HomePage(), FoodPage(),  MapPage()], 
           ),
           SafeArea(child: TopBar(selectedIndex: selectedIndex)),
           Align(
@@ -71,7 +71,7 @@ class TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double logoSize = MediaQuery.of(context).size.height * 0.086;
+    final double logoSize = MediaQuery.of(context).size.height * 0.12;
     final double dayButtonHeight = MediaQuery.of(context).size.height * 0.082;
     final double dayButtonWidth = MediaQuery.of(context).size.width * 0.52;
 
