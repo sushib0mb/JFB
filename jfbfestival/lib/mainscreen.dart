@@ -71,97 +71,15 @@ class TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double logoSize = MediaQuery.of(context).size.height * 0.082;
+    final double logoSize = MediaQuery.of(context).size.height * 0.086;
     final double dayButtonHeight = MediaQuery.of(context).size.height * 0.082;
     final double dayButtonWidth = MediaQuery.of(context).size.width * 0.52;
 
     return Padding(
-      padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 10),
+      padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
       child: Stack(
         alignment: Alignment.topCenter,
         children: [
-          if (selectedIndex == 2) ...[
-            Positioned(
-              left: MediaQuery.of(context).size.width * 0.06, // Adjust position
-              top: MediaQuery.of(context).size.height * 0.002,
-              child: GestureDetector(
-                onTap: () {
-                  print("Right button pressed");
-                },
-                child: Container(
-                  width: dayButtonWidth,
-                  height: dayButtonHeight,
-                  decoration: ShapeDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment(-0.50, 0.50),
-                      end: Alignment(1.0, 0.50),
-                      colors: [
-                        const Color.fromARGB(255, 255, 131, 135),
-                        // const Color.fromARGB(251, 234, 27, 27),
-                        const Color.fromARGB(128, 176, 113, 116),
-                        const Color.fromARGB(0, 96, 96, 96),
-                      ],
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                  ),
-                  alignment: Alignment(-0.3, 0),
-                  child: const Text(
-                    'Day 1',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 45,
-                      fontFamily: 'Fredoka',
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-            Positioned(
-              right:
-                  MediaQuery.of(context).size.width * 0.06, // Adjust position
-              top: MediaQuery.of(context).size.height * 0.002,
-              child: GestureDetector(
-                onTap: () {
-                  print("Right button pressed");
-                },
-                child: Container(
-                  width: dayButtonWidth,
-                  height: dayButtonHeight,
-                  decoration: ShapeDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment(-0.50, 0.50),
-                      end: Alignment(1.0, 0.50),
-                      colors: [
-                        const Color.fromARGB(0, 96, 96, 96),
-                        // const Color.fromARGB(251, 234, 27, 27),
-                        const Color.fromARGB(64, 114, 114, 114),
-                        const Color.fromARGB(128, 131, 131, 131),
-                      ],
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                  ),
-                  alignment: Alignment(0.35, 0),
-                  child: const Text(
-                    'Day 2',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 45,
-                      fontFamily: 'Fredoka',
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
           Align(
             alignment: Alignment.topCenter,
             child: Container(

@@ -89,6 +89,7 @@ flutter:
     - family: Fredoka
       fonts:
         - asset: assets/fonts/Fredoka-Regular.ttf
+        - asset: assets/fonts/Fredoka-Light.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
