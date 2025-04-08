@@ -352,7 +352,7 @@ final List<ScheduleItem> day2ScheduleData = [
     ],
     stage2Events: [
       EventItem(
-        title: "DELEYE ME",
+        title: "DELETE ME",
         time: "15:40-16:10",
         duration: 30,
         image: "",
