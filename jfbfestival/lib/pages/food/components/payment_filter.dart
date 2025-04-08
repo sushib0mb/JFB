@@ -27,8 +27,7 @@ class PaymentFilterRow extends StatelessWidget {
     );
   }
 }
-
-class _PaymentFilterItem extends StatefulWidget {
+class _PaymentFilterItem extends StatelessWidget {
   final String method;
   final bool isSelected;
   final VoidCallback onTap;
@@ -40,68 +39,45 @@ class _PaymentFilterItem extends StatefulWidget {
   });
 
   @override
-  State<_PaymentFilterItem> createState() => _PaymentFilterItemState();
-}
-
-class _PaymentFilterItemState extends State<_PaymentFilterItem> {
-  bool _isHovered = false;
-
-  @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      child: GestureDetector(
-        onTap: widget.onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: widget.isSelected
-                ? Colors.blue.withOpacity(0.2)
-                : _isHovered
-                    ? Colors.grey.withOpacity(0.1)
-                    : Colors.transparent,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: widget.isSelected
-                  ? Colors.blue
-                  : _isHovered
-                      ? Colors.grey[400]!
-                      : Colors.grey[300]!,
-              width: widget.isSelected ? 2 : 1,
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.25),
+                  blurRadius: 10,
+                  spreadRadius: 0,
+                ),
+              ],
+            ),
+            child: Center(
+              child: Image.asset(
+                'assets/payments/${method.toLowerCase()}.png',
+                width: 44,
+                height: 44,
+                color: isSelected ? null : Colors.grey.withOpacity(0.5),
+                colorBlendMode: BlendMode.modulate,
+              ),
             ),
           ),
-          child: Column(
-            children: [
-              AnimatedOpacity(
-                duration: const Duration(milliseconds: 200),
-                opacity: _isHovered || widget.isSelected ? 1 : 0.7,
-                child: Image.asset(
-                  'assets/payments/${widget.method.toLowerCase()}.png',
-                  width: 40,
-                  color: widget.isSelected
-                      ? Colors.blue
-                      : _isHovered
-                          ? Colors.grey[800]
-                          : Colors.grey[600],
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                widget.method,
-                style: TextStyle(
-                  fontWeight: widget.isSelected ? FontWeight.bold : FontWeight.normal,
-                  color: widget.isSelected
-                      ? Colors.blue
-                      : _isHovered
-                          ? Colors.grey[800]
-                          : Colors.grey[600],
-                ),
-              ),
-            ],
+          const SizedBox(height: 8),
+          Text(
+            method,
+            style: TextStyle(
+              fontSize: 18,
+              color: isSelected ? Colors.black : Colors.grey[400],
+              fontWeight: FontWeight.normal,
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

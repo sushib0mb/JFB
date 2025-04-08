@@ -19,60 +19,54 @@ class _VeganFilterOptionState extends State<VeganFilterOption> {
 
   @override
   Widget build(BuildContext context) {
+    final isVegan = widget.isVegan;
+
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: GestureDetector(
-        onTap: () => widget.onChanged(!widget.isVegan),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            color: widget.isVegan
-                ? Colors.green.withOpacity(0.2)
-                : _isHovered
-                    ? Colors.grey.withOpacity(0.1)
-                    : Colors.transparent,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: widget.isVegan
-                  ? Colors.green
-                  : _isHovered
-                      ? Colors.grey[400]!
-                      : Colors.grey[300]!,
-              width: widget.isVegan ? 2 : 1,
-            ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              AnimatedOpacity(
-                duration: const Duration(milliseconds: 200),
-                opacity: _isHovered || widget.isVegan ? 1 : 0.7,
+        onTap: () => widget.onChanged(!isVegan),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.25),
+                    blurRadius: 10,
+                    spreadRadius: 0,
+                  ),
+                ],
+                border: Border.all(
+                  color: isVegan ? Colors.green : Colors.transparent,
+                  width: 2,
+                ),
+              ),
+              child: Center(
                 child: Image.asset(
                   'assets/vegan.png',
-                  width: 24,
-                  color: widget.isVegan
-                      ? Colors.green
-                      : _isHovered
-                          ? Colors.grey[800]
-                          : Colors.grey[600],
+                  width: 28,
+                  height: 28,
+                  color: isVegan ? null : Colors.grey.withOpacity(0.5),
+                  colorBlendMode: BlendMode.modulate,
                 ),
               ),
-              const SizedBox(width: 8),
-              Text(
-                'Vegan',
-                style: TextStyle(
-                  fontWeight: widget.isVegan ? FontWeight.bold : FontWeight.normal,
-                  color: widget.isVegan
-                      ? Colors.green
-                      : _isHovered
-                          ? Colors.grey[800]
-                          : Colors.grey[600],
-                ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              isVegan ? 'Vegan' : 'Not Vegan',
+              style: TextStyle(
+                fontSize: 14,
+                color: isVegan ? Colors.black : Colors.grey[400],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

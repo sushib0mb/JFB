@@ -258,8 +258,8 @@ class _FoodPageState extends State<FoodPage> {
       isScrollControlled: true,
       builder: (BuildContext context) {
         return DraggableScrollableSheet(
-          initialChildSize: 0.5,
-          maxChildSize: 0.75,
+          initialChildSize: 0.9,
+          maxChildSize: 1,
           minChildSize: 0.4,
           builder: (_, controller) {
             return StatefulBuilder(
@@ -303,7 +303,7 @@ class _FoodPageState extends State<FoodPage> {
                             ),
                           ),
                           const SizedBox(height: 15),
-                          Center(child: _buildSectionTitle("Exclude Allergens")),
+                          Center(child: _buildSectionTitle("Allergens")),
                           Center(
                             child: AllergyFilterGrid(
                               selectedAllergens: selectedAllergens,
@@ -334,13 +334,40 @@ class _FoodPageState extends State<FoodPage> {
   }
 
   Widget _buildSectionTitle(String title) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade200,
-        borderRadius: BorderRadius.circular(20),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Container(
+              width: 120,
+              height: 30,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(25),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.45),
+                    blurRadius: 5,
+                    spreadRadius: 0,
+                  ),
+                ],
+              ),
+              child: Center(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12)
+        ],
       ),
-      child: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
     );
   }
 Widget _buildApplyButton({required VoidCallback onApply}) {
