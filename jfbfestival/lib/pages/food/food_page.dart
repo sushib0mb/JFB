@@ -61,7 +61,9 @@ class _FoodPageState extends State<FoodPage> {
       left: 0,
       right: 0,
       child: Container(
-        height: MediaQuery.of(context).size.height * 0.25, // Adjust based on screen height
+        height:
+            MediaQuery.of(context).size.height *
+            0.25, // Adjust based on screen height
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -86,7 +88,9 @@ class _FoodPageState extends State<FoodPage> {
       child: Transform.rotate(
         angle: 3.14159,
         child: Container(
-          height: MediaQuery.of(context).size.height * 0.25, // Adjust based on screen height
+          height:
+              MediaQuery.of(context).size.height *
+              0.25, // Adjust based on screen height
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
@@ -106,8 +110,12 @@ class _FoodPageState extends State<FoodPage> {
 
   Widget _buildFilterButton() {
     return Positioned(
-      top: MediaQuery.of(context).size.height * 0.05, // Adjust position relative to screen height
-      right: MediaQuery.of(context).size.width * 0.05, // Adjust position relative to screen width
+      top:
+          MediaQuery.of(context).size.height *
+          0.05, // Adjust position relative to screen height
+      right:
+          MediaQuery.of(context).size.width *
+          0.05, // Adjust position relative to screen width
       child: GestureDetector(
         onTap: _showFilterPopup,
         child: Container(
@@ -126,10 +134,7 @@ class _FoodPageState extends State<FoodPage> {
           ),
           child: Padding(
             padding: const EdgeInsets.all(10.0),
-            child: Image.asset(
-              'assets/filter.png',
-              fit: BoxFit.contain,
-            ),
+            child: Image.asset('assets/filter.png', fit: BoxFit.contain),
           ),
         ),
       ),
@@ -138,11 +143,17 @@ class _FoodPageState extends State<FoodPage> {
 
   Widget _buildScrollIndicator() {
     return Positioned(
-      top: MediaQuery.of(context).size.height * 0.075, // Adjust position relative to screen height
-      right: MediaQuery.of(context).size.width * 0.03, // Adjust position relative to screen width
+      top:
+          MediaQuery.of(context).size.height *
+          0.075, // Adjust position relative to screen height
+      right:
+          MediaQuery.of(context).size.width *
+          0.03, // Adjust position relative to screen width
       child: Container(
         width: 7,
-        height: MediaQuery.of(context).size.height * 0.08, // Adjust height based on screen size
+        height:
+            MediaQuery.of(context).size.height *
+            0.08, // Adjust height based on screen size
         decoration: BoxDecoration(
           color: Colors.black.withOpacity(0.4),
           borderRadius: BorderRadius.circular(25),
@@ -157,9 +168,7 @@ class _FoodPageState extends State<FoodPage> {
 
     return Center(
       child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: maxWidth,
-        ),
+        constraints: BoxConstraints(maxWidth: maxWidth),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: padding),
           child: SingleChildScrollView(
@@ -167,7 +176,9 @@ class _FoodPageState extends State<FoodPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: screenHeight * 0.15), // Adjust height based on screen size
+                SizedBox(
+                  height: screenHeight * 0.15,
+                ), // Adjust height based on screen size
                 _buildFeaturedBoothsSection(),
                 _buildAllBoothsSection(screenWidth),
               ],
@@ -186,21 +197,28 @@ class _FoodPageState extends State<FoodPage> {
         Text(
           "Featured Booths",
           style: TextStyle(
-            fontSize: MediaQuery.of(context).size.width > 600 ? 20 : 16, // Adjust font size based on screen width
+            fontSize:
+                MediaQuery.of(context).size.width > 600
+                    ? 20
+                    : 16, // Adjust font size based on screen width
             fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 16),
         SizedBox(
-          height: MediaQuery.of(context).size.height * 0.3, // Adjust height based on screen height
+          height:
+              MediaQuery.of(context).size.height *
+              0.3, // Adjust height based on screen height
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
             itemCount: filteredBooths.length,
-            itemBuilder: (context, index) => BoothCard(
-              booth: filteredBooths[index],
-              onTap: () => _showBoothDetails(context, filteredBooths[index]),
-            ),
+            itemBuilder:
+                (context, index) => BoothCard(
+                  booth: filteredBooths[index],
+                  onTap:
+                      () => _showBoothDetails(context, filteredBooths[index]),
+                ),
           ),
         ),
       ],
@@ -216,7 +234,10 @@ class _FoodPageState extends State<FoodPage> {
         Text(
           "All Food Booths",
           style: TextStyle(
-            fontSize: screenWidth > 600 ? 20 : 16, // Adjust font size based on screen width
+            fontSize:
+                screenWidth > 600
+                    ? 20
+                    : 16, // Adjust font size based on screen width
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -225,16 +246,20 @@ class _FoodPageState extends State<FoodPage> {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: screenWidth > 600 ? 2 : 1, // Adjust number of columns based on screen width
+            crossAxisCount:
+                screenWidth > 600
+                    ? 2
+                    : 1, // Adjust number of columns based on screen width
             crossAxisSpacing: 16,
             mainAxisSpacing: 16,
             childAspectRatio: 1.2,
           ),
           itemCount: filteredBooths.length,
-          itemBuilder: (context, index) => BoothListItem(
-            booth: filteredBooths[index],
-            onTap: () => _showBoothDetails(context, filteredBooths[index]),
-          ),
+          itemBuilder:
+              (context, index) => BoothListItem(
+                booth: filteredBooths[index],
+                onTap: () => _showBoothDetails(context, filteredBooths[index]),
+              ),
         ),
       ],
     );
@@ -267,10 +292,17 @@ class _FoodPageState extends State<FoodPage> {
                 return Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-                    boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 10)],
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
+                    boxShadow: [
+                      BoxShadow(color: Colors.black26, blurRadius: 10),
+                    ],
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 10,
+                  ),
                   child: Center(
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 600),
@@ -303,7 +335,9 @@ class _FoodPageState extends State<FoodPage> {
                             ),
                           ),
                           const SizedBox(height: 15),
-                          Center(child: _buildSectionTitle("Exclude Allergens")),
+                          Center(
+                            child: _buildSectionTitle("Exclude Allergens"),
+                          ),
                           Center(
                             child: AllergyFilterGrid(
                               selectedAllergens: selectedAllergens,
@@ -319,7 +353,9 @@ class _FoodPageState extends State<FoodPage> {
                             ),
                           ),
                           const SizedBox(height: 20),
-                          Center(child: _buildApplyButton(onApply: _applyFilters)),
+                          Center(
+                            child: _buildApplyButton(onApply: _applyFilters),
+                          ),
                         ],
                       ),
                     ),
@@ -343,47 +379,52 @@ class _FoodPageState extends State<FoodPage> {
       child: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
     );
   }
-Widget _buildApplyButton({required VoidCallback onApply}) {
-  return ElevatedButton(
-    style: ElevatedButton.styleFrom(
-      backgroundColor: Colors.red, // background color
-      foregroundColor: Colors.white, // text color
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30), // more rounded corners
-      ),
-      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 40), // adjust padding for better proportions
-      elevation: 10, // add shadow for depth
-    ).copyWith(
-      shadowColor: MaterialStateProperty.all(Colors.redAccent.withOpacity(0.5)), // custom shadow color
-    ),
-    onPressed: onApply,
-    child: const Text(
-      "Apply Filters",
-      style: TextStyle(
-        fontSize: 18, // slightly larger font
-        fontWeight: FontWeight.bold,
-        letterSpacing: 1.2, // increased letter spacing for better readability
-      ),
-    ),
-  );
-}
 
-
+  Widget _buildApplyButton({required VoidCallback onApply}) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.red, // background color
+        foregroundColor: Colors.white, // text color
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30), // more rounded corners
+        ),
+        padding: const EdgeInsets.symmetric(
+          vertical: 18,
+          horizontal: 40,
+        ), // adjust padding for better proportions
+        elevation: 10, // add shadow for depth
+      ).copyWith(
+        shadowColor: MaterialStateProperty.all(
+          Colors.redAccent.withOpacity(0.5),
+        ), // custom shadow color
+      ),
+      onPressed: onApply,
+      child: const Text(
+        "Apply Filters",
+        style: TextStyle(
+          fontSize: 18, // slightly larger font
+          fontWeight: FontWeight.bold,
+          letterSpacing: 1.2, // increased letter spacing for better readability
+        ),
+      ),
+    );
+  }
 
   void _applyFilters() {
     setState(() {
-      filteredBooths = foodBooths.where((booth) {
-        if (selectedPayments.isNotEmpty && 
-            !booth.payments.any((p) => selectedPayments.contains(p))) {
-          return false;
-        }
-        if (veganOnly == true && !booth.isVegan) return false;
-        if (selectedAllergens.isNotEmpty && 
-            booth.allergens.any((a) => selectedAllergens.contains(a))) {
-          return false;
-        }
-        return true;
-      }).toList();
+      filteredBooths =
+          foodBooths.where((booth) {
+            if (selectedPayments.isNotEmpty &&
+                !booth.payments.any((p) => selectedPayments.contains(p))) {
+              return false;
+            }
+            if (veganOnly == true && !booth.isVegan) return false;
+            if (selectedAllergens.isNotEmpty &&
+                booth.allergens.any((a) => selectedAllergens.contains(a))) {
+              return false;
+            }
+            return true;
+          }).toList();
     });
   }
 }

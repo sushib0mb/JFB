@@ -1,13 +1,13 @@
-// import 'package:flutter/material.dart';
-// import 'package:jfbfestival/data/timetableData.dart';
+import 'package:flutter/material.dart';
+import 'package:jfbfestival/data/timetableData.dart';
 
-// /// メインビュー：タイムテーブル
-// class TimetablePage extends StatefulWidget {
-//   const TimetablePage({super.key});
+/// メインビュー：タイムテーブル
+class TimetablePage extends StatefulWidget {
+  const TimetablePage({super.key});
 
-//   @override
-//   _TimetablePageState createState() => _TimetablePageState();
-// }
+  @override
+  _TimetablePageState createState() => _TimetablePageState();
+}
 
 class _TimetablePageState extends State<TimetablePage> {
   int selectedDay = 1;
@@ -29,7 +29,7 @@ class _TimetablePageState extends State<TimetablePage> {
     super.dispose();
   }
 
-//   // サンプルのスケジュールデータ（実際にはもっと項目が必要）
+  //   // サンプルのスケジュールデータ（実際にはもっと項目が必要）
 
   @override
   Widget build(BuildContext context) {
@@ -93,16 +93,16 @@ class _TimetablePageState extends State<TimetablePage> {
               ),
             ),
 
-//             Positioned(
-//               right:
-//                   MediaQuery.of(context).size.width * 0.06, // Adjust position
-//               top: MediaQuery.of(context).size.height * 0.002,
-//               child: GestureDetector(
-//                 onTap: () {
-//                   setState(() {
-//                     selectedDay = 2;
-//                   });
-//                 },
+            Positioned(
+              right:
+                  MediaQuery.of(context).size.width * 0.06, // Adjust position
+              top: MediaQuery.of(context).size.height * 0.002,
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    selectedDay = 2;
+                  });
+                },
 
                 child: Container(
                   width: dayButtonWidth,
@@ -216,52 +216,52 @@ class _TimetablePageState extends State<TimetablePage> {
     double stageHeaderWidth = screenWidth * 0.67;
     double stageHeaderHeight = screenHeight * 0.053;
 
-//     return Padding(
-//       padding: const EdgeInsets.only(top: 25, bottom: 10),
-//       child: Container(
-//         width: stageHeaderWidth,
-//         height: stageHeaderHeight,
-//         decoration: BoxDecoration(
-//           color: Colors.grey.withOpacity(0.5),
-//           borderRadius: BorderRadius.circular(25),
-//         ),
-//         child: Row(
-//           mainAxisAlignment: MainAxisAlignment.center, // <- changed
-//           children: [
-//             Text(
-//               "Stage 1",
-//               style: TextStyle(
-//                 fontSize: responsiveFontSize,
-//                 fontWeight: FontWeight.w500,
-//                 color: Colors.white,
-//               ),
-//             ),
-//             SizedBox(width: 17.5), // <- you can tweak this width as needed
-//             SizedBox(
-//               width: 4,
-//               height: 30,
-//               child: DecoratedBox(
-//                 decoration: BoxDecoration(
-//                   borderRadius: BorderRadius.circular(20),
-//                   color: Colors.white,
-//                 ),
-//               ),
-//             ),
-//             SizedBox(width: 17.5), // <- space after the divider
-//             Text(
-//               "Stage 2",
-//               style: TextStyle(
-//                 fontSize: responsiveFontSize,
-//                 fontWeight: FontWeight.w500,
-//                 color: Colors.white,
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
+    return Padding(
+      padding: const EdgeInsets.only(top: 25, bottom: 10),
+      child: Container(
+        width: stageHeaderWidth,
+        height: stageHeaderHeight,
+        decoration: BoxDecoration(
+          color: Colors.grey.withOpacity(0.5),
+          borderRadius: BorderRadius.circular(25),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center, // <- changed
+          children: [
+            Text(
+              "Stage 1",
+              style: TextStyle(
+                fontSize: responsiveFontSize,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(width: 17.5), // <- you can tweak this width as needed
+            SizedBox(
+              width: 4,
+              height: 30,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            SizedBox(width: 17.5), // <- space after the divider
+            Text(
+              "Stage 2",
+              style: TextStyle(
+                fontSize: responsiveFontSize,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 /// スケジュール行（1 行分のタイムテーブル）
 class ScheduleList extends StatelessWidget {
@@ -443,21 +443,21 @@ class ScheduleList extends StatelessWidget {
   }
 }
 
-// /// パフォーマンスボックス：タップ時に詳細を表示（タップ時のアニメーション付き）
-// class PerformanceBox extends StatefulWidget {
-//   final EventItem eventItem;
-//   final Function(EventItem) onTap;
+// / パフォーマンスボックス：タップ時に詳細を表示（タップ時のアニメーション付き）
+class PerformanceBox extends StatefulWidget {
+  final EventItem eventItem;
+  final Function(EventItem) onTap;
 
-//   const PerformanceBox({Key? key, required this.eventItem, required this.onTap})
-//     : super(key: key);
+  const PerformanceBox({Key? key, required this.eventItem, required this.onTap})
+    : super(key: key);
 
-//   @override
-//   _PerformanceBoxState createState() => _PerformanceBoxState();
-// }
+  @override
+  _PerformanceBoxState createState() => _PerformanceBoxState();
+}
 
-// class _PerformanceBoxState extends State<PerformanceBox>
-//     with SingleTickerProviderStateMixin {
-//   bool isPressed = false;
+class _PerformanceBoxState extends State<PerformanceBox>
+    with SingleTickerProviderStateMixin {
+  bool isPressed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -625,196 +625,196 @@ class _ImageButtonState extends State<ImageButton> {
   }
 }
 
-// /// イベント詳細ポップアップ
-// class EventDetailView extends StatefulWidget {
-//   final EventItem event;
-//   final VoidCallback onClose;
+/// イベント詳細ポップアップ
+class EventDetailView extends StatefulWidget {
+  final EventItem event;
+  final VoidCallback onClose;
 
-//   const EventDetailView({Key? key, required this.event, required this.onClose})
-//     : super(key: key);
+  const EventDetailView({Key? key, required this.event, required this.onClose})
+    : super(key: key);
 
-//   @override
-//   _EventDetailViewState createState() => _EventDetailViewState();
-// }
+  @override
+  _EventDetailViewState createState() => _EventDetailViewState();
+}
 
-// class _EventDetailViewState extends State<EventDetailView>
-//     with TickerProviderStateMixin {
-//   late AnimationController _controller;
-//   late Animation<double> _cardOffsetAnimation;
-//   late Animation<double> _opacityAnimation;
-//   late Animation<double> _headerScaleAnimation;
+class _EventDetailViewState extends State<EventDetailView>
+    with TickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _cardOffsetAnimation;
+  late Animation<double> _opacityAnimation;
+  late Animation<double> _headerScaleAnimation;
 
-//   @override
-//   void initState() {
-//     super.initState();
-//     // アニメーションコントローラーの設定
-//     _controller = AnimationController(
-//       vsync: this,
-//       duration: const Duration(milliseconds: 500),
-//     );
-//     _cardOffsetAnimation = Tween<double>(
-//       begin: 1000,
-//       end: 0,
-//     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
-//     _opacityAnimation = Tween<double>(begin: 0, end: 1).animate(
-//       CurvedAnimation(
-//         parent: _controller,
-//         curve: const Interval(0.2, 0.5, curve: Curves.easeIn),
-//       ),
-//     );
-//     _headerScaleAnimation = Tween<double>(
-//       begin: 0.8,
-//       end: 1.0,
-//     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
-//     _controller.forward();
-//   }
+  @override
+  void initState() {
+    super.initState();
+    // アニメーションコントローラーの設定
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+    _cardOffsetAnimation = Tween<double>(
+      begin: 1000,
+      end: 0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+    _opacityAnimation = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.2, 0.5, curve: Curves.easeIn),
+      ),
+    );
+    _headerScaleAnimation = Tween<double>(
+      begin: 0.8,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+    _controller.forward();
+  }
 
-//   @override
-//   void dispose() {
-//     _controller.dispose();
-//     super.dispose();
-//   }
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
-//   void _close() {
-//     _controller.reverse().then((value) {
-//       widget.onClose();
-//     });
-//   }
+  void _close() {
+    _controller.reverse().then((value) {
+      widget.onClose();
+    });
+  }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return AnimatedBuilder(
-//       animation: _controller,
-//       builder: (context, child) {
-//         return Stack(
-//           children: [
-//             // 背景オーバーレイ
-//             Opacity(
-//               opacity: _opacityAnimation.value * 0.5,
-//               child: GestureDetector(
-//                 onTap: _close,
-//                 child: Container(color: Colors.black),
-//               ),
-//             ),
-//             // イベント詳細カード
-//             Transform.translate(
-//               offset: Offset(0, _cardOffsetAnimation.value),
-//               child: Center(
-//                 child: Container(
-//                   width: 300,
-//                   height: 500,
-//                   decoration: BoxDecoration(
-//                     color: Colors.white,
-//                     borderRadius: BorderRadius.circular(20),
-//                     boxShadow: [
-//                       BoxShadow(
-//                         color: Colors.black.withOpacity(0.3),
-//                         blurRadius: 10,
-//                       ),
-//                     ],
-//                   ),
-//                   child: Column(
-//                     children: [
-//                       // ヘッダー（背景とアイコン＋タイトル）
-//                       Container(
-//                         height: 200,
-//                         decoration: BoxDecoration(
-//                           color: Colors.grey.withOpacity(0.3),
-//                           borderRadius: const BorderRadius.only(
-//                             topLeft: Radius.circular(20),
-//                             topRight: Radius.circular(20),
-//                           ),
-//                         ),
-//                         child: Column(
-//                           mainAxisAlignment: MainAxisAlignment.center,
-//                           children: [
-//                             Transform.scale(
-//                               scale: _headerScaleAnimation.value,
-//                               child: CircleAvatar(
-//                                 radius: 30,
-//                                 backgroundColor: Colors.white,
-//                                 child: const Icon(Icons.image),
-//                               ),
-//                             ),
-//                             const SizedBox(height: 10),
-//                             Transform.scale(
-//                               scale: _headerScaleAnimation.value,
-//                               child: Text(
-//                                 widget.event.title,
-//                                 textAlign: TextAlign.center,
-//                                 style: const TextStyle(
-//                                   fontSize: 24,
-//                                   fontWeight: FontWeight.bold,
-//                                   color: Colors.white,
-//                                   shadows: [
-//                                     Shadow(
-//                                       color: Colors.black54,
-//                                       offset: Offset(0, 1),
-//                                       blurRadius: 2,
-//                                     ),
-//                                   ],
-//                                 ),
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-//                       ),
-//                       // ステージと時間情報
-//                       Padding(
-//                         padding: const EdgeInsets.symmetric(vertical: 15),
-//                         child: Row(
-//                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                           children: [
-//                             Chip(label: const Text("Stage 1")),
-//                             Chip(label: Text(widget.event.time)),
-//                           ],
-//                         ),
-//                       ),
-//                       // イベント説明
-//                       Padding(
-//                         padding: const EdgeInsets.all(16),
-//                         child: Column(
-//                           crossAxisAlignment: CrossAxisAlignment.start,
-//                           children: const [
-//                             Text(
-//                               "Event description",
-//                               style: TextStyle(
-//                                 fontSize: 18,
-//                                 fontWeight: FontWeight.w500,
-//                               ),
-//                             ),
-//                             SizedBox(height: 10),
-//                             Text(
-//                               "このイベントでは、伝統的な日本の音楽と現代的なパフォーマンスが融合した素晴らしいショーをお届けします。家族全員でお楽しみいただける内容となっています。",
-//                               style: TextStyle(
-//                                 fontSize: 16,
-//                                 color: Colors.black87,
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-//                       ),
-//                       const Spacer(),
-//                       // 閉じるボタン（右上）
-//                       Align(
-//                         alignment: Alignment.topRight,
-//                         child: IconButton(
-//                           icon: const Icon(
-//                             Icons.close,
-//                             size: 30,
-//                             color: Colors.white,
-//                           ),
-//                           onPressed: _close,
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//             ),
-//           ],
-//         );
-//       },
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return Stack(
+          children: [
+            // 背景オーバーレイ
+            Opacity(
+              opacity: _opacityAnimation.value * 0.5,
+              child: GestureDetector(
+                onTap: _close,
+                child: Container(color: Colors.black),
+              ),
+            ),
+            // イベント詳細カード
+            Transform.translate(
+              offset: Offset(0, _cardOffsetAnimation.value),
+              child: Center(
+                child: Container(
+                  width: 300,
+                  height: 500,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.3),
+                        blurRadius: 10,
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      // ヘッダー（背景とアイコン＋タイトル）
+                      Container(
+                        height: 200,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.withOpacity(0.3),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Transform.scale(
+                              scale: _headerScaleAnimation.value,
+                              child: CircleAvatar(
+                                radius: 30,
+                                backgroundColor: Colors.white,
+                                child: const Icon(Icons.image),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Transform.scale(
+                              scale: _headerScaleAnimation.value,
+                              child: Text(
+                                widget.event.title,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  shadows: [
+                                    Shadow(
+                                      color: Colors.black54,
+                                      offset: Offset(0, 1),
+                                      blurRadius: 2,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // ステージと時間情報
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Chip(label: const Text("Stage 1")),
+                            Chip(label: Text(widget.event.time)),
+                          ],
+                        ),
+                      ),
+                      // イベント説明
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [
+                            Text(
+                              "Event description",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              "このイベントでは、伝統的な日本の音楽と現代的なパフォーマンスが融合した素晴らしいショーをお届けします。家族全員でお楽しみいただける内容となっています。",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Spacer(),
+                      // 閉じるボタン（右上）
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.close,
+                            size: 30,
+                            color: Colors.white,
+                          ),
+                          onPressed: _close,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}

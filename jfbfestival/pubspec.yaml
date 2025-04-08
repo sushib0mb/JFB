@@ -56,13 +56,11 @@ flutter:
     - assets/bosJapan.png
     - assets/JAGB.jpg  
     - assets/langChange.png
-    - assets/allergens/tree nut.png
+    # - assets/allergens/tree nut.png
     - assets/allergens/milk.png
     - assets/allergens/fish.png
     - assets/allergens/soy.png
     - assets/allergens/egg.png
-    - assets/29. Singing performance (Frame).png
-    - assets/35. Advertising (Frame).png
     - assets/vegan.png
 
 
