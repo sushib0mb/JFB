@@ -63,7 +63,6 @@ class _TimetablePageState extends State<TimetablePage> {
                           selectedDay == 1
                               ? [
                                 const Color.fromARGB(255, 255, 131, 135),
-                                // const Color.fromARGB(251, 234, 27, 27),
                                 const Color.fromARGB(128, 176, 113, 116),
                                 const Color.fromARGB(0, 96, 96, 96),
                               ]

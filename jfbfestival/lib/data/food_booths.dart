@@ -70,7 +70,8 @@ final List<FoodBooth> foodBooths = [
   FoodBooth(
     name: "AKITA RICE SMOOTHIE",
     image: "assets/akita_smoothie.png",
-    description: "Salmon teriyaki onigiri, Kombu tsukudani onigiri, Matcha smoothie",
+    description:
+        "Salmon teriyaki onigiri, Kombu tsukudani onigiri, Matcha smoothie",
     allergy: "Contains fish, soy",
     boothLocation: "A2-1",
     genre: "Japanese",
@@ -136,14 +137,25 @@ final List<FoodBooth> foodBooths = [
     name: "Hokkaido Ramen Santouka",
     image: "assets/Santouka.png",
     description: "Ramen, Potato Stick",
-    allergy: "Contains soy, Egg, Wheat, Milk, Fish, Sesame, Peanut, Tree nut, Shellfish,",
+    allergy:
+        "Contains soy, Egg, Wheat, Milk, Fish, Sesame, Peanut, Tree nut, Shellfish,",
     boothLocation: "D9",
     genre: "Japanese",
     logoPath: "assets/Santouka.png",
     dishImagePath: "assets/9. Santouka Ramen.jpg",
     isVegan: false,
     payments: ["Credit"],
-    allergens: ["Soy","Egg","Wheat","Milk","Fish","Sesame","Peanut","Tree nut","Shellfish"],
+    allergens: [
+      "Soy",
+      "Egg",
+      "Wheat",
+      "Milk",
+      "Fish",
+      "Sesame",
+      "Peanut",
+      "Tree nut",
+      "Shellfish",
+    ],
   ),
   FoodBooth(
     name: "Kevin's Bread",
@@ -156,7 +168,7 @@ final List<FoodBooth> foodBooths = [
     dishImagePath: "assets/18. B)kevins Bread.png",
     isVegan: false,
     payments: ["Cash", "Venmo"],
-    allergens: ["Egg","Wheat", "Milk"],
+    allergens: ["Egg", "Wheat", "Milk"],
   ),
   FoodBooth(
     name: "IBARAKI's Yaki-Onigiri",
@@ -169,12 +181,13 @@ final List<FoodBooth> foodBooths = [
     dishImagePath: "assets/17. Yaki Onigiri.jpg",
     isVegan: true,
     payments: ["Cash", "Venmo"],
-    allergens: ["Soy","Wheat"],
+    allergens: ["Soy", "Wheat"],
   ),
   FoodBooth(
     name: "Lady M Cake Boutique",
     image: "assets/Lady M.png",
-    description: "Signature Mille Crepes, Green Tea Mille Crepes, Pistachio Mille Crepes",
+    description:
+        "Signature Mille Crepes, Green Tea Mille Crepes, Pistachio Mille Crepes",
     allergy: "Contains Egg, Wheat, Milk, Tree Nuts",
     boothLocation: "E-8",
     genre: "Bakery",
@@ -182,6 +195,6 @@ final List<FoodBooth> foodBooths = [
     dishImagePath: "assets/4. Lady M.png",
     isVegan: true,
     payments: ["Cash", "Credit"],
-    allergens: ["Egg","Wheat","Milk","Tree Nuts"],
+    allergens: ["Egg", "Wheat", "Milk", "Tree Nuts"],
   ),
 ];
