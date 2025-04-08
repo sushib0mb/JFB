@@ -57,8 +57,6 @@ flutter:
     - assets/bosJapan.png
     - assets/JAGB.jpg  
     - assets/langChange.png
-    - assets/29. Singing performance (Frame).png
-    - assets/35. Advertising (Frame).png
     - assets/allergens/tree nut.png
     - assets/allergens/milk.png
     - assets/allergens/fish.png
@@ -66,7 +64,6 @@ flutter:
     - assets/allergens/egg.png
     - assets/vegan.png
     - assets/allergens/Egg(frame).png
-
 
 
     - assets/bottomBar/Map.png
@@ -78,6 +75,17 @@ flutter:
     - assets/bottomBar/Home(Frame).png
     - assets/bottomBar/Food(Frame).png
     - assets/bottomBar/Home(Selected).png
+
+    - assets/timetableIcons/Advertising.png
+    - assets/timetableIcons/Advertising (Frame).png
+    - assets/timetableIcons/Anime stage (Frame).png
+    - assets/timetableIcons/Anime stage.png
+    - assets/timetableIcons/Dancing performance (Frame).png
+    - assets/timetableIcons/Dancing performance.png
+    - assets/timetableIcons/Opening ceremony (Frame).png
+    - assets/timetableIcons/Opening ceremony.png
+    - assets/timetableIcons/Singing performance (Frame).png
+    - assets/timetableIcons/Singing performance.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

@@ -15,19 +15,29 @@ class _TimetablePageState extends State<TimetablePage> {
   EventItem? selectedEvent;
   bool isShowingDetail = false;
   double animationAmount = 1.0;
+  late ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   // サンプルのスケジュールデータ（実際にはもっと項目が必要）
 
   @override
   Widget build(BuildContext context) {
-    final topPadding =
-        MediaQuery.of(context).size.height * 0.082 +
-        MediaQuery.of(context).padding.top +
-        MediaQuery.of(context).size.height * 0.02;
-    final currentSchedule =
-        selectedDay == 1 ? day1ScheduleData : day2ScheduleData;
     final double dayButtonHeight = MediaQuery.of(context).size.height * 0.082;
     final double dayButtonWidth = MediaQuery.of(context).size.width * 0.52;
+    final topPadding = dayButtonHeight;
+    final currentSchedule =
+        selectedDay == 1 ? day1ScheduleData : day2ScheduleData;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -69,7 +79,7 @@ class _TimetablePageState extends State<TimetablePage> {
                       borderRadius: BorderRadius.circular(100),
                     ),
                   ),
-                  alignment: Alignment(-0.3, 0),
+                  alignment: Alignment(-0.4, 0),
                   child: const Text(
                     'Day 1',
                     textAlign: TextAlign.center,
@@ -118,7 +128,7 @@ class _TimetablePageState extends State<TimetablePage> {
                       borderRadius: BorderRadius.circular(100),
                     ),
                   ),
-                  alignment: Alignment(0.35, 0),
+                  alignment: Alignment(0.55, 0),
                   child: const Text(
                     'Day 2',
                     textAlign: TextAlign.center,
@@ -133,29 +143,24 @@ class _TimetablePageState extends State<TimetablePage> {
             ),
             Column(
               children: [
-                SizedBox(height: topPadding),
+                SizedBox(
+                  height:
+                      topPadding + MediaQuery.of(context).size.height * 0.015,
+                ),
                 Expanded(
                   child: Container(
                     margin: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(25),
-                      // Gradient of timetable background
                       gradient: LinearGradient(
-                        colors:
-                            selectedDay == 1
-                                ? [
-                                  const Color.fromRGBO(191, 28, 36, 0.15),
-                                  const Color.fromRGBO(10, 56, 117, 0.15),
-                                ]
-                                : [
-                                  const Color.fromRGBO(10, 56, 117, 0.15),
-                                  const Color.fromRGBO(191, 28, 36, 0.15),
-                                ],
+                        colors: [
+                          const Color.fromRGBO(10, 56, 117, 0.15),
+                          const Color.fromRGBO(191, 28, 36, 0.15),
+                        ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                     ),
-                    // Build contents of timetable
                     child: Column(
                       children: [
                         Padding(
@@ -165,30 +170,18 @@ class _TimetablePageState extends State<TimetablePage> {
                           child: _buildStageHeader(),
                         ),
 
+                        // New ScheduleList Implementation
                         Expanded(
-                          child: ListView.separated(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 10,
+                          child: SingleChildScrollView(
+                            child: ScheduleList(
+                              scheduleItems: currentSchedule,
+                              onEventTap: (event) {
+                                setState(() {
+                                  selectedEvent = event;
+                                  isShowingDetail = true;
+                                });
+                              },
                             ),
-                            itemCount: currentSchedule.length,
-                            separatorBuilder:
-                                (context, index) => Divider(
-                                  color: Colors.grey.shade300,
-                                  height: 1,
-                                ),
-                            itemBuilder: (context, index) {
-                              return ScheduleRow(
-                                scheduleItem: currentSchedule[index],
-                                onEventTap: (event) {
-                                  setState(() {
-                                    selectedEvent = event;
-                                    isShowingDetail = true;
-                                  });
-                                },
-                                isFirst: index == 0,
-                              );
-                            },
                           ),
                         ),
                       ],
@@ -217,11 +210,11 @@ class _TimetablePageState extends State<TimetablePage> {
   /// ステージヘッダー
   Widget _buildStageHeader() {
     double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     double baseFontSize = 25;
     double responsiveFontSize = baseFontSize * (screenWidth / 375);
     double stageHeaderWidth = screenWidth * 0.67;
-    double stageHeaderHeight = screenHeight * 0.11;
+    double stageHeaderHeight = screenHeight * 0.053;
 
     return Padding(
       padding: const EdgeInsets.only(top: 25, bottom: 10),
@@ -271,127 +264,178 @@ class _TimetablePageState extends State<TimetablePage> {
 }
 
 /// スケジュール行（1 行分のタイムテーブル）
-class ScheduleRow extends StatelessWidget {
-  final ScheduleItem scheduleItem;
+class ScheduleList extends StatelessWidget {
+  final List<ScheduleItem> scheduleItems;
   final void Function(EventItem) onEventTap;
-  final bool isFirst;
 
-  const ScheduleRow({
-    required this.scheduleItem,
+  const ScheduleList({
+    required this.scheduleItems,
     required this.onEventTap,
-    this.isFirst = false,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    // 時間テキストを分割
-    List<String> timeParts = scheduleItem.time.split(" ");
-    String timeText = timeParts.isNotEmpty ? timeParts[0] : scheduleItem.time;
-    String ampm = timeParts.length > 1 ? timeParts[1] : "";
-
     double screenWidth = MediaQuery.of(context).size.width;
     double baseFontSize = 17;
     double responsiveFontSize = baseFontSize * (screenWidth / 375);
 
-    return Column(
+    // Group all events by start time to create a timeline
+    Set<String> allTimeslots = {};
+
+    // Collect all unique time slots
+    for (var item in scheduleItems) {
+      allTimeslots.add(item.time);
+    }
+
+    List<String> timelineSlots = allTimeslots.toList()..sort();
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Top rounded divider (if first row)
-        if (isFirst)
-          Padding(
-            padding: EdgeInsets.only(
-              left: 60 + screenWidth * 0.026,
-              right: 0, // adjust if you want spacing on the right
-            ),
-            child: Container(
-              height: 3,
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(8, 0, 0, 0),
-                borderRadius: BorderRadius.circular(4),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    offset: const Offset(0, 0),
-                    blurRadius: 1,
-                    spreadRadius: 0,
-                  ),
-                ],
-              ),
+        // Time column
+        Padding(
+          padding: const EdgeInsets.only(
+            top: 20,
+          ), // 20 padding before everything
+          child: SizedBox(
+            width: 60,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children:
+                  timelineSlots.map((timeString) {
+                    // Extract time text
+                    List<String> timeParts = timeString.split(" ");
+                    String timeText =
+                        timeParts.isNotEmpty ? timeParts[0] : timeString;
+                    String ampm = timeParts.length > 1 ? timeParts[1] : "";
+
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 60),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                timeText,
+                                style: TextStyle(
+                                  fontSize: responsiveFontSize,
+                                  fontWeight: FontWeight.w300,
+                                  height: 1.0,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                ampm,
+                                style: TextStyle(
+                                  fontSize: responsiveFontSize,
+                                  height: 1.0,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                      ],
+                    );
+                  }).toList(),
             ),
           ),
-
-        // Main row content
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 60,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                // Displaying the time columns
-                children: [
-                  Text(
-                    timeText,
-                    style: TextStyle(
-                      fontSize: responsiveFontSize,
-                      fontWeight: FontWeight.w300,
-                      height: 1.0,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    ampm,
-                    style: TextStyle(
-                      fontSize: responsiveFontSize,
-                      height: 1.0,
-                      fontWeight: FontWeight.w300,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(width: screenWidth * 0.026),
-            // Displaying the events on the row
-            Expanded(
-              child: Row(
-                children: [
-                  scheduleItem.stage1Event != null
-                      ? PerformanceBox(
-                        eventItem: scheduleItem.stage1Event!,
-                        onTap: onEventTap,
-                      )
-                      : const SizedBox(width: 140, height: 60),
-                  const SizedBox(width: 25),
-                  scheduleItem.stage2Event != null
-                      ? PerformanceBox(
-                        eventItem: scheduleItem.stage2Event!,
-                        onTap: onEventTap,
-                      )
-                      : const SizedBox(width: 140, height: 60),
-                ],
-              ),
-            ),
-          ],
         ),
 
-        // Bottom rounded divider (always)
-        Padding(
-          padding: EdgeInsets.only(left: 60 + screenWidth * 0.026, right: 0),
-          child: Container(
-            height: 3,
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(8, 0, 0, 0),
-              borderRadius: BorderRadius.circular(4),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  offset: const Offset(0, 0),
-                  blurRadius: 1,
-                  spreadRadius: 0,
-                ),
-              ],
-            ),
+        SizedBox(width: screenWidth * 0.026),
+
+        // Stage 1 column
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SizedBox(height: MediaQuery.of(context).size.width * 0.044),
+              ...timelineSlots.map((timeString) {
+                // Find the schedule item for this time slot
+                ScheduleItem? scheduleItem;
+                try {
+                  scheduleItem = scheduleItems.firstWhere(
+                    (item) => item.time == timeString,
+                  );
+                } catch (e) {
+                  scheduleItem = null;
+                }
+
+                // If there are stage1Events, render them
+                if (scheduleItem?.stage1Events?.isNotEmpty ?? false) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children:
+                        scheduleItem!.stage1Events!.map((eventItem) {
+                          return PerformanceBox(
+                            eventItem: eventItem,
+                            onTap: onEventTap,
+                          );
+                        }).toList(),
+                  );
+                } else {
+                  // Empty placeholder for this timeslot
+                  return const SizedBox(height: 0);
+                }
+              }),
+            ],
+          ),
+        ),
+
+        const SizedBox(width: 25),
+
+        // Stage 2 column
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SizedBox(height: MediaQuery.of(context).size.width * 0.06),
+              ...timelineSlots.map((timeString) {
+                // Find the schedule item for this time slot
+                ScheduleItem? scheduleItem;
+                try {
+                  scheduleItem = scheduleItems.firstWhere(
+                    (item) => item.time == timeString,
+                  );
+                } catch (e) {
+                  scheduleItem = null;
+                }
+
+                // If there are stage2Events, render them
+                if (scheduleItem?.stage2Events?.isNotEmpty ?? false) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children:
+                        scheduleItem!.stage2Events!.map((eventItem) {
+                          if (eventItem.title.trim().isEmpty) {
+                            // Calculate height based on duration (example: 1 minute = 10 logical pixels)
+                            double height =
+                                eventItem.duration /
+                                60 *
+                                MediaQuery.of(context).size.height *
+                                0.252;
+
+                            return SizedBox(
+                              height: height,
+                              child: ColoredBox(color: Colors.transparent),
+                            );
+                          } else {
+                            return PerformanceBox(
+                              eventItem: eventItem,
+                              onTap: onEventTap,
+                            );
+                          }
+                        }).toList(),
+                  );
+                } else {
+                  return const SizedBox(height: 0);
+                }
+              }),
+            ],
           ),
         ),
       ],
@@ -421,6 +465,9 @@ class _PerformanceBoxState extends State<PerformanceBox>
     double screenHeight = MediaQuery.of(context).size.height;
     double responsiveFontSize = (screenWidth / 375);
 
+    double timeSectionHeight = screenHeight * 0.253;
+    double eventHeight = widget.eventItem.duration / 60 * timeSectionHeight;
+
     return GestureDetector(
       onTap: () {
         // タップ時のアニメーション
@@ -434,19 +481,15 @@ class _PerformanceBoxState extends State<PerformanceBox>
           });
         });
       },
-
-      // TODO: Add picture between pictuire and text
       child: AnimatedScale(
         scale: isPressed ? 0.95 : 1.0,
         duration: const Duration(milliseconds: 150),
         child: Container(
           width: 140,
-          // TODO: Adjust height with length of event
-          height: screenHeight * 0.07,
-          // height: screenHeight * 0.07,
+          height: eventHeight,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(40),
+            borderRadius: BorderRadius.circular(45),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(isPressed ? 0.05 : 0.1),
@@ -472,7 +515,18 @@ class _PerformanceBoxState extends State<PerformanceBox>
                     ),
                   ],
                 ),
-                child: const Icon(Icons.image),
+                child:
+                    // ImageButton(
+                    //   defaultImage: "widget.eventItem.image",
+                    //   pressedImage: "widget.eventItem.image",
+                    // ),
+                    // ),
+                    widget.eventItem.image.isNotEmpty
+                        ? Image.asset(widget.eventItem.image, fit: BoxFit.cover)
+                        : Icon(
+                          Icons.event,
+                          size: 20,
+                        ), // Fallback icon if no image is provided
               ),
               SizedBox(width: screenWidth * 0.03),
               Expanded(
@@ -505,6 +559,65 @@ class _PerformanceBoxState extends State<PerformanceBox>
               ),
               const SizedBox(width: 8),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ImageButton extends StatefulWidget {
+  final String defaultImage;
+  final String pressedImage;
+
+  const ImageButton({
+    required this.defaultImage,
+    required this.pressedImage,
+    super.key,
+  });
+
+  @override
+  _ImageButtonState createState() => _ImageButtonState();
+}
+
+class _ImageButtonState extends State<ImageButton> {
+  bool isPressed = false;
+
+  // Handle tap events
+  void _onTapDown(TapDownDetails details) {
+    setState(() {
+      isPressed = true;
+    });
+  }
+
+  void _onTapUp(TapUpDetails details) {
+    setState(() {
+      isPressed = false;
+    });
+  }
+
+  void _onTapCancel() {
+    setState(() {
+      isPressed = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final imageToShow = isPressed ? widget.pressedImage : widget.defaultImage;
+    final iconSize = 30.0;
+
+    return GestureDetector(
+      onTapDown: _onTapDown,
+      onTapUp: _onTapUp,
+      onTapCancel: _onTapCancel,
+      child: Container(
+        width: 74,
+        height: 74,
+        decoration: BoxDecoration(shape: BoxShape.circle),
+        child: Center(
+          child: ClipOval(
+            child: Image.asset(imageToShow, width: iconSize, height: iconSize),
           ),
         ),
       ),

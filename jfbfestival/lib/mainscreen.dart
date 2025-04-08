@@ -72,8 +72,6 @@ class TopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double logoSize = MediaQuery.of(context).size.height * 0.086;
-    final double dayButtonHeight = MediaQuery.of(context).size.height * 0.082;
-    final double dayButtonWidth = MediaQuery.of(context).size.width * 0.52;
 
     return Padding(
       padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
