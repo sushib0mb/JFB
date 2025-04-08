@@ -50,10 +50,6 @@ class MapPageState extends State<MapPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        title: Image.asset(
-          'assets/JFBLogo.png',
-          height: 80,
-        ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 30.0),
@@ -92,13 +88,13 @@ class MapPageState extends State<MapPage> {
       ),
       body: Stack(
         children: [
-          // Background Gradient
+          // Background Gradient with lighter colors
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Colors.lightBlue.shade100,
-                  Colors.red.shade100,
+                  Colors.lightBlue.shade200,  // Lighter blue
+                  Colors.red.shade200,        // Lighter red
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
