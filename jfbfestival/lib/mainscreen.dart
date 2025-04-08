@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:jfbfestival/pages/food_page.dart';
+import 'package:jfbfestival/pages/food/food_page.dart';
 import 'package:jfbfestival/pages/home_page.dart';
 // import 'package:jfbfestival/pages/timetable_page.dart';
 import 'package:jfbfestival/pages/map_page.dart';
