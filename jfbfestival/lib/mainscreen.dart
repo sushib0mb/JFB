@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-// import 'package:jfbfestival/pages/food/food_page.dart';
+import 'package:jfbfestival/pages/food/food_page.dart';
 import 'package:jfbfestival/pages/home_page.dart';
 import 'package:jfbfestival/pages/map_page.dart';
 
@@ -48,7 +48,7 @@ class _MainScreenState extends State<MainScreen> {
         children: [
           IndexedStack(
             index: selectedIndex,
-            children: [HomePage(), TimetablePage(), MapPage()],
+            children: [HomePage(), FoodPage(), TimetablePage(), MapPage()],
           ),
           SafeArea(child: TopBar(selectedIndex: selectedIndex)),
           Align(
