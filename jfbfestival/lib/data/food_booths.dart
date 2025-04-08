@@ -1,5 +1,6 @@
 // lib/data/food_booths.dart
 import '../models/food_booth.dart';
+
 final List<FoodBooth> foodBooths = [
   FoodBooth(
     name: "Miraku Boston",

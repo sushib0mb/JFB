@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:jfbfestival/pages/food/food_page.dart';
 import 'package:jfbfestival/pages/home_page.dart';
-// import 'package:jfbfestival/pages/timetable_page.dart';
 import 'package:jfbfestival/pages/map_page.dart';
 
 import 'package:jfbfestival/pages/timetableNew.dart';
@@ -33,7 +32,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int selectedIndex = 2;
+  int selectedIndex = 0;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -49,7 +48,7 @@ class _MainScreenState extends State<MainScreen> {
         children: [
           IndexedStack(
             index: selectedIndex,
-            children: [HomePage(), FoodPage(),  MapPage()], 
+            children: [HomePage(), FoodPage(), TimetablePage(), MapPage()],
           ),
           SafeArea(child: TopBar(selectedIndex: selectedIndex)),
           Align(
@@ -71,9 +70,7 @@ class TopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double logoSize = MediaQuery.of(context).size.height * 0.12;
-    final double dayButtonHeight = MediaQuery.of(context).size.height * 0.082;
-    final double dayButtonWidth = MediaQuery.of(context).size.width * 0.52;
+    final double logoSize = MediaQuery.of(context).size.height * 0.086;
 
     return Padding(
       padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
