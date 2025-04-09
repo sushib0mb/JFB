@@ -134,7 +134,7 @@ class _FoodPageState extends State<FoodPage> {
           ),
           child: Padding(
             padding: const EdgeInsets.all(10.0),
-            child: Image.asset('assets/filter.png', fit: BoxFit.contain),
+            child: Image.asset('assets/Filter.png', fit: BoxFit.contain),
           ),
         ),
       ),
@@ -399,7 +399,7 @@ class _FoodPageState extends State<FoodPage> {
               ),
             ),
           ),
-          const SizedBox(height: 12)
+          const SizedBox(height: 12),
         ],
       ),
     );

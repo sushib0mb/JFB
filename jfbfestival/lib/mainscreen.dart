@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:jfbfestival/pages/food/food_page.dart';
 import 'package:jfbfestival/pages/home_page.dart';
 import 'package:jfbfestival/pages/map_page.dart';
-
-import 'package:jfbfestival/pages/timetableNew.dart';
+import 'package:jfbfestival/pages/timetable_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,7 +31,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int selectedIndex = 0;
+  int selectedIndex = 2;
 
   void _onItemTapped(int index) {
     setState(() {

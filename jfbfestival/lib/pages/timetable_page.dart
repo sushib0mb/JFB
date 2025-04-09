@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jfbfestival/data/timetableData.dart';
+import 'package:collection/collection.dart';
 
 /// メインビュー：タイムテーブル
 class TimetablePage extends StatefulWidget {
@@ -71,8 +72,6 @@ class _TimetablePageState extends State<TimetablePage> {
                                 const Color.fromARGB(64, 114, 114, 114),
                                 const Color.fromARGB(0, 96, 96, 96),
                               ],
-                      // begin: Alignment(-0.50, 0.50),
-                      // end: Alignment(1.0, 0.50),
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(100),
@@ -120,8 +119,6 @@ class _TimetablePageState extends State<TimetablePage> {
                                 const Color.fromARGB(64, 114, 114, 114),
                                 const Color.fromARGB(128, 131, 131, 131),
                               ],
-                      // begin: Alignment(-0.50, 0.50),
-                      // end: Alignment(1.0, 0.50),
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(100),
@@ -169,7 +166,6 @@ class _TimetablePageState extends State<TimetablePage> {
                           child: _buildStageHeader(),
                         ),
 
-                        // New ScheduleList Implementation
                         Expanded(
                           child: SingleChildScrollView(
                             child: ScheduleList(
@@ -208,18 +204,13 @@ class _TimetablePageState extends State<TimetablePage> {
 
   /// ステージヘッダー
   Widget _buildStageHeader() {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-    double baseFontSize = 25;
-    double responsiveFontSize = baseFontSize * (screenWidth / 375);
-    double stageHeaderWidth = screenWidth * 0.67;
-    double stageHeaderHeight = screenHeight * 0.053;
+    double fontSize = 30;
 
     return Padding(
       padding: const EdgeInsets.only(top: 25, bottom: 10),
       child: Container(
-        width: stageHeaderWidth,
-        height: stageHeaderHeight,
+        width: 290,
+        height: 50,
         decoration: BoxDecoration(
           color: Colors.grey.withOpacity(0.5),
           borderRadius: BorderRadius.circular(25),
@@ -230,7 +221,7 @@ class _TimetablePageState extends State<TimetablePage> {
             Text(
               "Stage 1",
               style: TextStyle(
-                fontSize: responsiveFontSize,
+                fontSize: fontSize,
                 fontWeight: FontWeight.w500,
                 color: Colors.white,
               ),
@@ -250,7 +241,7 @@ class _TimetablePageState extends State<TimetablePage> {
             Text(
               "Stage 2",
               style: TextStyle(
-                fontSize: responsiveFontSize,
+                fontSize: fontSize,
                 fontWeight: FontWeight.w500,
                 color: Colors.white,
               ),
@@ -262,7 +253,6 @@ class _TimetablePageState extends State<TimetablePage> {
   }
 }
 
-/// スケジュール行（1 行分のタイムテーブル）
 class ScheduleList extends StatelessWidget {
   final List<ScheduleItem> scheduleItems;
   final void Function(EventItem) onEventTap;
@@ -275,70 +265,54 @@ class ScheduleList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double baseFontSize = 17;
-    double responsiveFontSize = baseFontSize * (screenWidth / 375);
+    final screenWidth = MediaQuery.of(context).size.width;
+    final baseFontSize = 17.0;
+    final responsiveFontSize = baseFontSize * (screenWidth / 375);
+    final pixelsPerMinute = 7.4; // Adjust this for density
 
-    // Group all events by start time to create a timeline
-    Set<String> allTimeslots = {};
-
-    // Collect all unique time slots
-    for (var item in scheduleItems) {
-      allTimeslots.add(item.time);
-    }
-
-    List<String> timelineSlots = allTimeslots.toList()..sort();
+    // Get all unique times and sort them
+    final timelineSlots =
+        scheduleItems.map((item) => item.time).toSet().toList()..sort();
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Time column
+        // Time Column
         Padding(
-          padding: const EdgeInsets.only(
-            top: 20,
-          ), // 20 padding before everything
+          padding: const EdgeInsets.only(top: 12, left: 13),
           child: SizedBox(
             width: 60,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children:
                   timelineSlots.map((timeString) {
-                    // Extract time text
-                    List<String> timeParts = timeString.split(" ");
-                    String timeText =
+                    final timeParts = timeString.split(" ");
+                    final timeText =
                         timeParts.isNotEmpty ? timeParts[0] : timeString;
-                    String ampm = timeParts.length > 1 ? timeParts[1] : "";
+                    final ampm = timeParts.length > 1 ? timeParts[1] : "";
 
-                    return Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 60),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                timeText,
-                                style: TextStyle(
-                                  fontSize: responsiveFontSize,
-                                  fontWeight: FontWeight.w300,
-                                  height: 1.0,
-                                ),
-                              ),
-                              const SizedBox(height: 2),
-                              Text(
-                                ampm,
-                                style: TextStyle(
-                                  fontSize: responsiveFontSize,
-                                  height: 1.0,
-                                  fontWeight: FontWeight.w300,
-                                ),
-                              ),
-                            ],
+                    return SizedBox(
+                      height: 30 * pixelsPerMinute, // Height for 30-minute slot
+                      child: Column(
+                        mainAxisAlignment:
+                            MainAxisAlignment.start, // Align items at the top
+                        children: [
+                          Text(
+                            timeText,
+                            style: TextStyle(
+                              fontSize: responsiveFontSize,
+                              fontWeight: FontWeight.w300,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 20),
-                      ],
+                          Text(
+                            ampm,
+                            style: TextStyle(
+                              fontSize: responsiveFontSize,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                        ],
+                      ),
                     );
                   }).toList(),
             ),
@@ -347,98 +321,46 @@ class ScheduleList extends StatelessWidget {
 
         SizedBox(width: screenWidth * 0.026),
 
-        // Stage 1 column
+        // Stage 1 Column
         Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(height: MediaQuery.of(context).size.width * 0.044),
-              ...timelineSlots.map((timeString) {
-                // Find the schedule item for this time slot
-                ScheduleItem? scheduleItem;
-                try {
-                  scheduleItem = scheduleItems.firstWhere(
-                    (item) => item.time == timeString,
-                  );
-                } catch (e) {
-                  scheduleItem = null;
-                }
-
-                // If there are stage1Events, render them
-                if (scheduleItem?.stage1Events?.isNotEmpty ?? false) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children:
-                        scheduleItem!.stage1Events!.map((eventItem) {
-                          return PerformanceBox(
-                            eventItem: eventItem,
-                            onTap: onEventTap,
-                          );
-                        }).toList(),
-                  );
-                } else {
-                  // Empty placeholder for this timeslot
-                  return const SizedBox(height: 0);
-                }
-              }),
-            ],
-          ),
+          child: Column(children: _buildEventColumn(1, pixelsPerMinute)),
         ),
 
-        const SizedBox(width: 25),
-
-        // Stage 2 column
+        // Stage 2 Column
         Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(height: MediaQuery.of(context).size.width * 0.06),
-              ...timelineSlots.map((timeString) {
-                // Find the schedule item for this time slot
-                ScheduleItem? scheduleItem;
-                try {
-                  scheduleItem = scheduleItems.firstWhere(
-                    (item) => item.time == timeString,
-                  );
-                } catch (e) {
-                  scheduleItem = null;
-                }
-
-                // If there are stage2Events, render them
-                if (scheduleItem?.stage2Events?.isNotEmpty ?? false) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children:
-                        scheduleItem!.stage2Events!.map((eventItem) {
-                          if (eventItem.title.trim().isEmpty) {
-                            // Calculate height based on duration (example: 1 minute = 10 logical pixels)
-                            double height =
-                                eventItem.duration /
-                                60 *
-                                MediaQuery.of(context).size.height *
-                                0.252;
-
-                            return SizedBox(
-                              height: height,
-                              child: ColoredBox(color: Colors.transparent),
-                            );
-                          } else {
-                            return PerformanceBox(
-                              eventItem: eventItem,
-                              onTap: onEventTap,
-                            );
-                          }
-                        }).toList(),
-                  );
-                } else {
-                  return const SizedBox(height: 0);
-                }
-              }),
-            ],
-          ),
+          child: Column(children: _buildEventColumn(2, pixelsPerMinute)),
         ),
       ],
     );
+  }
+
+  List<Widget> _buildEventColumn(int stage, double pixelsPerMinute) {
+    final events =
+        scheduleItems
+            .expand(
+              (item) =>
+                  stage == 1
+                      ? item.stage1Events ?? []
+                      : item.stage2Events ?? [],
+            )
+            .where((e) => e.title.isNotEmpty)
+            .toList();
+
+    // Sort events by time if needed
+    events.sort((a, b) => a.time.compareTo(b.time));
+
+    return [
+      const SizedBox(height: 12),
+      for (var i = 0; i < events.length; i++)
+        Column(
+          children: [
+            SizedBox(
+              height: events[i].duration * pixelsPerMinute,
+              child: PerformanceBox(eventItem: events[i], onTap: onEventTap),
+            ),
+          ],
+        ),
+    ];
   }
 }
 
@@ -515,13 +437,11 @@ class _PerformanceBoxState extends State<PerformanceBox>
                   ],
                 ),
                 child:
-                    // ImageButton(
-                    //   defaultImage: "widget.eventItem.image",
-                    //   pressedImage: "widget.eventItem.image",
-                    // ),
-                    // ),
-                    widget.eventItem.image.isNotEmpty
-                        ? Image.asset(widget.eventItem.image, fit: BoxFit.cover)
+                    widget.eventItem.iconImage.isNotEmpty
+                        ? Image.asset(
+                          widget.eventItem.iconImage,
+                          fit: BoxFit.cover,
+                        )
                         : Icon(
                           Icons.event,
                           size: 20,
@@ -565,65 +485,6 @@ class _PerformanceBoxState extends State<PerformanceBox>
   }
 }
 
-class ImageButton extends StatefulWidget {
-  final String defaultImage;
-  final String pressedImage;
-
-  const ImageButton({
-    required this.defaultImage,
-    required this.pressedImage,
-    super.key,
-  });
-
-  @override
-  _ImageButtonState createState() => _ImageButtonState();
-}
-
-class _ImageButtonState extends State<ImageButton> {
-  bool isPressed = false;
-
-  // Handle tap events
-  void _onTapDown(TapDownDetails details) {
-    setState(() {
-      isPressed = true;
-    });
-  }
-
-  void _onTapUp(TapUpDetails details) {
-    setState(() {
-      isPressed = false;
-    });
-  }
-
-  void _onTapCancel() {
-    setState(() {
-      isPressed = false;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final imageToShow = isPressed ? widget.pressedImage : widget.defaultImage;
-    final iconSize = 30.0;
-
-    return GestureDetector(
-      onTapDown: _onTapDown,
-      onTapUp: _onTapUp,
-      onTapCancel: _onTapCancel,
-      child: Container(
-        width: 74,
-        height: 74,
-        decoration: BoxDecoration(shape: BoxShape.circle),
-        child: Center(
-          child: ClipOval(
-            child: Image.asset(imageToShow, width: iconSize, height: iconSize),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 /// イベント詳細ポップアップ
 class EventDetailView extends StatefulWidget {
   final EventItem event;
@@ -646,7 +507,7 @@ class _EventDetailViewState extends State<EventDetailView>
   @override
   void initState() {
     super.initState();
-    // アニメーションコントローラーの設定
+    // Animation controller setup
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
@@ -686,16 +547,20 @@ class _EventDetailViewState extends State<EventDetailView>
       animation: _controller,
       builder: (context, child) {
         return Stack(
+          // Ensure stack fills the screen
+          fit: StackFit.expand,
           children: [
-            // 背景オーバーレイ
-            Opacity(
-              opacity: _opacityAnimation.value * 0.5,
-              child: GestureDetector(
-                onTap: _close,
-                child: Container(color: Colors.black),
+            // Background overlay - using Positioned.fill to ensure complete coverage
+            Positioned.fill(
+              child: Opacity(
+                opacity: _opacityAnimation.value * 0.5,
+                child: GestureDetector(
+                  onTap: _close,
+                  child: Container(color: Colors.black),
+                ),
               ),
             ),
-            // イベント詳細カード
+            // Event detail card
             Transform.translate(
               offset: Offset(0, _cardOffsetAnimation.value),
               child: Center(
@@ -712,98 +577,113 @@ class _EventDetailViewState extends State<EventDetailView>
                       ),
                     ],
                   ),
-                  child: Column(
+                  child: Stack(
                     children: [
-                      // ヘッダー（背景とアイコン＋タイトル）
-                      Container(
-                        height: 200,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(0.3),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20),
-                          ),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Transform.scale(
-                              scale: _headerScaleAnimation.value,
-                              child: CircleAvatar(
-                                radius: 30,
-                                backgroundColor: Colors.white,
-                                child: const Icon(Icons.image),
+                      // Content
+                      Column(
+                        children: [
+                          // Header (background, icon, title)
+                          Container(
+                            height: 200,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(
+                                255,
+                                208,
+                                85,
+                                85,
+                              ).withOpacity(0.3),
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                topRight: Radius.circular(20),
                               ),
                             ),
-                            const SizedBox(height: 10),
-                            Transform.scale(
-                              scale: _headerScaleAnimation.value,
-                              child: Text(
-                                widget.event.title,
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  shadows: [
-                                    Shadow(
-                                      color: Colors.black54,
-                                      offset: Offset(0, 1),
-                                      blurRadius: 2,
-                                    ),
-                                  ],
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Transform.scale(
+                                  scale: _headerScaleAnimation.value,
+                                  child: CircleAvatar(
+                                    radius: 30,
+                                    backgroundColor: Colors.white,
+                                    child: const Icon(Icons.image),
+                                  ),
                                 ),
-                              ),
+                                const SizedBox(height: 10),
+                                Transform.scale(
+                                  scale: _headerScaleAnimation.value,
+                                  child: Text(
+                                    widget.event.title,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      shadows: [
+                                        Shadow(
+                                          color: Colors.black54,
+                                          offset: Offset(0, 1),
+                                          blurRadius: 2,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
-                      // ステージと時間情報
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Chip(label: const Text("Stage 1")),
-                            Chip(label: Text(widget.event.time)),
-                          ],
-                        ),
-                      ),
-                      // イベント説明
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
-                              "Event description",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            Text(
-                              "このイベントでは、伝統的な日本の音楽と現代的なパフォーマンスが融合した素晴らしいショーをお届けします。家族全員でお楽しみいただける内容となっています。",
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black87,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Spacer(),
-                      // 閉じるボタン（右上）
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.close,
-                            size: 30,
-                            color: Colors.white,
                           ),
-                          onPressed: _close,
+                          // Stage and time information
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 15),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Chip(label: Text(widget.event.stage)),
+                                Chip(label: Text(widget.event.time)),
+                              ],
+                            ),
+                          ),
+                          // Expanded content area with scrolling
+                          Expanded(
+                            child: SingleChildScrollView(
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    width: 242,
+                                    height: 255,
+                                    decoration: ShapeDecoration(
+                                      color: const Color.fromARGB(13, 0, 0, 0),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(25),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      // Close button - positioned properly at the top right
+                      Positioned(
+                        top: 10,
+                        right: 10,
+                        child: GestureDetector(
+                          onTap: _close,
+                          child: Container(
+                            padding: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.3),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.close,
+                              size: 20,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
                       ),
                     ],

@@ -40,10 +40,17 @@ class HomePage extends StatelessWidget {
                                 color: Colors.white,
                                 shape: BoxShape.circle,
                                 boxShadow: [
-                                  BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2),
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    blurRadius: 5,
+                                    spreadRadius: 2,
+                                  ),
                                 ],
                               ),
-                              child: Image.asset("assets/langChange.png", height: isSmallScreen ? 40 : 50),
+                              child: Image.asset(
+                                "assets/langChange.png",
+                                height: isSmallScreen ? 40 : 50,
+                              ),
                             ),
                           ),
                         ),
@@ -71,7 +78,9 @@ class HomePage extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2)],
+        boxShadow: [
+          BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2),
+        ],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -90,14 +99,38 @@ class HomePage extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
-          _buildEventCard("Kitanodai Gagaku E...", "Stage 1", "11:30-12:00", true, true, false, screenWidth),
-          _buildEventCard("JAL Advertising", "Stage 2", "11:30-11:40", true, false, true, screenWidth),
+          _buildEventCard(
+            "Kitanodai Gagaku E...",
+            "Stage 1",
+            "11:30-12:00",
+            true,
+            true,
+            false,
+            screenWidth,
+          ),
+          _buildEventCard(
+            "JAL Advertising",
+            "Stage 2",
+            "11:30-11:40",
+            true,
+            false,
+            true,
+            screenWidth,
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildEventCard(String title, String stage, String time, bool ongoing, bool isSinging, bool isAdvertising, double screenWidth) {
+  Widget _buildEventCard(
+    String title,
+    String stage,
+    String time,
+    bool ongoing,
+    bool isSinging,
+    bool isAdvertising,
+    double screenWidth,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Stack(
@@ -108,7 +141,13 @@ class HomePage extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(10),
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2)],
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 5,
+                  spreadRadius: 2,
+                ),
+              ],
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,11 +157,23 @@ class HomePage extends StatelessWidget {
                   children: [
                     Icon(Icons.mic, color: Colors.black),
                     SizedBox(width: 10),
-                    Text(stage, style: TextStyle(color: Colors.pinkAccent, fontWeight: FontWeight.bold)),
+                    Text(
+                      stage,
+                      style: TextStyle(
+                        color: Colors.pinkAccent,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ],
                 ),
                 SizedBox(height: 5),
-                Text(title, style: TextStyle(fontSize: screenWidth * 0.045, fontWeight: FontWeight.bold)),
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.045,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 Text(time, style: TextStyle(color: Colors.grey)),
                 if (ongoing)
                   Padding(
@@ -133,7 +184,10 @@ class HomePage extends StatelessWidget {
                         color: Colors.orange,
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      child: Text("Going on now!", style: TextStyle(color: Colors.white)),
+                      child: Text(
+                        "Going on now!",
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
               ],
@@ -148,9 +202,18 @@ class HomePage extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,
-                  boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2)],
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 5,
+                      spreadRadius: 2,
+                    ),
+                  ],
                 ),
-                child: Image.asset("assets/29. Singing performance (Frame).png", height: screenWidth * 0.18),
+                child: Image.asset(
+                  "assets/timetableIcons/Singing performance (Frame).png",
+                  height: screenWidth * 0.18,
+                ),
               ),
             ),
           if (isAdvertising)
@@ -162,9 +225,18 @@ class HomePage extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,
-                  boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2)],
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 5,
+                      spreadRadius: 2,
+                    ),
+                  ],
                 ),
-                child: Image.asset("assets/35. Advertising (Frame).png", height: screenWidth * 0.18),
+                child: Image.asset(
+                  "assets/timetableIcons/Advertising (Frame).png",
+                  height: screenWidth * 0.18,
+                ),
               ),
             ),
         ],
@@ -179,7 +251,9 @@ class HomePage extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2)],
+        boxShadow: [
+          BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -203,7 +277,10 @@ class HomePage extends StatelessWidget {
             color: Colors.grey[200],
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Text(title, style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold)),
+          child: Text(
+            title,
+            style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
+          ),
         ),
         Image.asset(imagePath, height: 50),
         SizedBox(height: 10),
@@ -231,13 +308,19 @@ class HomePage extends StatelessWidget {
             color: Colors.grey[200],
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Text("Corporate", style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold)),
+          child: Text(
+            "Corporate",
+            style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
+          ),
         ),
         Wrap(
           alignment: WrapAlignment.center,
           spacing: 20,
           runSpacing: 10,
-          children: corporateLogos.map((logo) => Image.asset(logo, height: 50)).toList(),
+          children:
+              corporateLogos
+                  .map((logo) => Image.asset(logo, height: 50))
+                  .toList(),
         ),
       ],
     );
@@ -253,7 +336,10 @@ class HomePage extends StatelessWidget {
             color: Colors.grey[200],
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Text("JFB Organizers", style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold)),
+          child: Text(
+            "JFB Organizers",
+            style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
+          ),
         ),
         Wrap(
           alignment: WrapAlignment.center,
@@ -282,7 +368,9 @@ class HomePage extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         shape: BoxShape.circle,
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2)],
+        boxShadow: [
+          BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2),
+        ],
       ),
       child: Image.asset(imagePath, height: 30),
     );
