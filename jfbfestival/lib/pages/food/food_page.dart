@@ -264,15 +264,18 @@ class _FoodPageState extends State<FoodPage> {
       ],
     );
   }
+void _showBoothDetails(BuildContext context, FoodBooth booth) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    builder: (context) => BoothDetails(
+      booth: booth,
+      onClose: () => Navigator.of(context).pop(),
+    ),
+  );
+}
 
-  void _showBoothDetails(BuildContext context, FoodBooth booth) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => BoothDetails(booth: booth),
-    );
-  }
 
   Set<String> selectedAllergens = {};
 

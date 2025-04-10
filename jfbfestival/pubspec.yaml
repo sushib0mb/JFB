@@ -31,6 +31,7 @@ flutter:
 
   assets:
     - assets/food/
+    - assets/foodLogo/
     - assets/filter(white).png
     - assets/miraku_boston.png
     - assets/JFBLogo.png

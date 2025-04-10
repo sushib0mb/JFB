@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
 import '/models/food_booth.dart';
+import '/models/dish.dart';
 import 'dart:ui'; 
 
 class BoothDetails extends StatelessWidget {
   final FoodBooth booth;
+  final VoidCallback onClose;
 
-  const BoothDetails({required this.booth, super.key});
+  const BoothDetails({required this.booth, required this.onClose, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // Blurred Background
+        // Blurred Background with clickable area to close
         Positioned.fill(
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-            child: Container(color: Colors.white.withOpacity(0.02)),
+          child: GestureDetector(
+            onTap: onClose,
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+              child: Container(color: Colors.white.withOpacity(0.02)),
+            ),
           ),
         ),
         // Main Content with Logo Overlay
@@ -43,6 +48,15 @@ class BoothDetails extends StatelessWidget {
                   ),
                   child: Stack(
                     children: [
+                      // Close button
+                      Positioned(
+                        top: 10,
+                        right: 10,
+                        child: IconButton(
+                          icon: const Icon(Icons.close, size: 30),
+                          onPressed: onClose,
+                        ),
+                      ),
                       // Food stall image container
                       Container(
                         height: 186,
@@ -107,24 +121,29 @@ class BoothDetails extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 250),
                         child: SingleChildScrollView(
                           controller: controller,
-                          child: Column(
-                            children: [
-                              _buildSection(
-                                "Payment",
-                                _buildPaymentOptions(booth.payments),
-                              ),
-                              const SizedBox(height: 20),
-                              _buildSection(
-                                "Veganism",
-                                _buildVeganism(booth.isVegan),
-                              ),
-                              const SizedBox(height: 20),
-                              _buildSection(
-                                "Allergens",
-                                _buildAllergens(booth.allergens),
-                              ),
-                              const SizedBox(height: 40),
-                            ],
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minHeight: MediaQuery.of(context).size.height - 250,
+                            ),
+                            child: Column(
+                              children: [
+                                _buildSection(
+                                  "Payment",
+                                  _buildPaymentOptions(booth.payments),
+                                ),
+                                const SizedBox(height: 20),
+                                _buildSection(
+                                  "Veganism",
+                                  _buildVeganism(booth.isVegan),
+                                ),
+                                const SizedBox(height: 40),
+                                _buildSection(
+                                  "Dishes",
+                                  _buildDishesSection(booth.dishes),
+                                ),
+                                const SizedBox(height: 20),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -134,7 +153,7 @@ class BoothDetails extends StatelessWidget {
               },
             ),
             Positioned(
-              top:  MediaQuery.of(context).size.height / 20,
+              top: MediaQuery.of(context).size.height / 20,
               left: MediaQuery.of(context).size.width / 2.8,
               child: Container(
                 width: 150,
@@ -205,6 +224,12 @@ class BoothDetails extends StatelessWidget {
     );
   }
 
+  Widget _buildDishesSection(List<Dish> dishes) {
+    return Column(
+      children: dishes.map((dish) => DishCard(dish: dish)).toList(),
+    );
+  }
+
   Widget _buildPaymentOptions(List<String> payments) {
     return Column(
       children: [
@@ -220,11 +245,6 @@ class BoothDetails extends StatelessWidget {
               "Zelle",
               "assets/payments/zelle.png",
               payments.contains("Zelle"),
-            ),
-            _buildPaymentItem(
-              "PayPal",
-              "assets/payments/paypal.png",
-              payments.contains("PayPal"),
             ),
           ],
         ),
@@ -298,8 +318,8 @@ class BoothDetails extends StatelessWidget {
           child: Center(
             child: Image.asset(
               "assets/vegan.png",
-              width: 44,
-              height: 44,
+              width: 30,  // Adjusted size for better centering
+              height: 30,  // Adjusted size for better centering
               color: isVegan ? null : Colors.grey.withOpacity(0.5),
               colorBlendMode: BlendMode.modulate,
             ),
@@ -317,65 +337,242 @@ class BoothDetails extends StatelessWidget {
       ],
     );
   }
+}
 
-  Widget _buildAllergens(List<String> allergens) {
-    const allAllergens = [
-      {"name": "Egg", "icon": "assets/allergens/egg.png"},
-      {"name": "Wheat", "icon": "assets/allergens/wheat.png"},
-      {"name": "Peanut", "icon": "assets/allergens/peanut.png"},
-      {"name": "Milk", "icon": "assets/allergens/milk.png"},
-      {"name": "Soy", "icon": "assets/allergens/soy.png"},
-      {"name": "Tree Nut", "icon": "assets/allergens/tree_nut.png"},
-      {"name": "Fish", "icon": "assets/allergens/fish.png"},
-      {"name": "Shellfish", "icon": "assets/allergens/shellfish.png"},
-      {"name": "Sesame", "icon": "assets/allergens/sesame.png"},
-    ];
+class DishCard extends StatefulWidget {
+  final Dish dish;
+  
+  const DishCard({required this.dish, super.key});
+  
+  @override
+  State<DishCard> createState() => _DishCardState();
+}
 
-    return GridView.count(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisCount: 3,
-      childAspectRatio: 1.5,
-      children: allAllergens.map((allergen) {
-        final hasAllergen = allergens.contains(allergen["name"]);
-        return Column(
+class _DishCardState extends State<DishCard> {
+  bool _showAllergenDetails = false;
+  
+  // Map allergen names to their corresponding icon paths
+  final Map<String, String> _allergenIcons = {
+    "Egg": "assets/allergens/egg.png",
+    "Wheat": "assets/allergens/wheat.png",
+    "Peanut": "assets/allergens/peanut.png",
+    "Milk": "assets/allergens/milk.png",
+    "Soy": "assets/allergens/soy.png",
+    "Tree Nut": "assets/allergens/tree_nut.png",
+    "Fish": "assets/allergens/fish.png",
+    "Shellfish": "assets/allergens/shellfish.png",
+    "Sesame": "assets/allergens/sesame.png",
+  };
+  
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          minWidth: double.infinity,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.25),
-                    blurRadius: 10,
-                    spreadRadius: 0,
+            // Dish image and basic info
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                  child: Image.asset(
+                    widget.dish.imagePath,
+                    height: 120,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
                   ),
-                ],
-              ),
-              child: Center(
-                child: Image.asset(
-                  allergen["icon"]!,
-                  width: 42,
-                  height: 42,
-                  color: hasAllergen ? null : Colors.grey.withOpacity(0.5),
-                  colorBlendMode: BlendMode.modulate,
                 ),
-              ),
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  left: 0,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          Colors.black.withOpacity(0.7),
+                        ],
+                      ),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            widget.dish.name,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        Text(
+                          "\$${widget.dish.price.toStringAsFixed(2)}",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                if (widget.dish.isVegan)
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.green.withOpacity(0.8),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.eco,
+                            color: Colors.white,
+                            size: 14,
+                          ),
+                          SizedBox(width: 4),
+                          Text(
+                            "Vegan",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
             ),
-            const SizedBox(height: 4),
-            Text(
-              allergen["name"]!,
-              style: TextStyle(
-                fontSize: 14,
-                color: hasAllergen ? Colors.black : Colors.grey[400],
-                fontWeight: hasAllergen ? FontWeight.normal : FontWeight.normal,
+            // Dish description
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.dish.description,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  // Allergen information
+                  if (widget.dish.allergens.isNotEmpty)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              _showAllergenDetails = !_showAllergenDetails;
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              const Text(
+                                "Contains allergens",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.orange,
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              Icon(
+                                _showAllergenDetails
+                                    ? Icons.keyboard_arrow_up
+                                    : Icons.keyboard_arrow_down,
+                                size: 18,
+                                color: Colors.orange,
+                              ),
+                            ],
+                          ),
+                        ),
+                        if (_showAllergenDetails) ...[
+                          const SizedBox(height: 8),
+                          // Allergen icons
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: widget.dish.allergens.map((allergen) {
+                              final iconPath = _allergenIcons[allergen] ?? "assets/allergens/default.png";
+                              return SizedBox(
+                                width: 70, // Fixed width for consistent spacing
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      width: 40,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(20),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(0.25),
+                                            blurRadius: 10,
+                                            spreadRadius: 0,
+                                          ),
+                                        ],
+                                      ),
+                                      child: Center(
+                                        child: Image.asset(
+                                          iconPath,
+                                          width: 30,
+                                          height: 30,
+                                          color: Colors.orange.withOpacity(0.8),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      allergen,
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.orange,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ],
+                      ],
+                    ),
+                ],
               ),
             ),
           ],
-        );
-      }).toList(),
+        ),
+      ),
     );
   }
 }

@@ -1,4 +1,6 @@
 // lib/models/food_booth.dart
+import 'dish.dart'; 
+
 class FoodBooth {
   final String name;
   final String image;
@@ -11,6 +13,7 @@ class FoodBooth {
   final bool isVegan;
   final List<String> payments;
   final List<String> allergens;
+  final List<Dish> dishes;
 
   const FoodBooth({
     required this.name,
@@ -24,5 +27,6 @@ class FoodBooth {
     required this.isVegan,
     required this.payments,
     required this.allergens,
+     this.dishes = const [],
   });
 }
