@@ -157,10 +157,10 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ],
                               ),
-                              child: Image.asset(
-                                "assets/langChange.png",
-                                height: isSmallScreen ? 40 : 50,
-                              ),
+                              // child: Image.asset(
+                              //   "assets/langChange.png",
+                              //   height: isSmallScreen ? 40 : 50,
+                              // ), #COMMENT OUT FOR NOW!!
                             ),
                           ),
                         ),
