@@ -166,7 +166,7 @@ final List<ScheduleItem> day1ScheduleData = [
       EventItem(
         title: "Anime Band",
         time: "13:05-13:45",
-        duration: 20,
+        duration: 45,
         stage: "Stage 2",
         iconImage: "assets/timetableIcons/Anime stage.png",
         description: "",
@@ -207,7 +207,7 @@ final List<ScheduleItem> day1ScheduleData = [
         time: "14:00-14:30",
         duration: 30,
         stage: "Stage 1",
-        iconImage: "assets/timetableIcons/Instrument performance.png",
+        iconImage: "assets/timetableIcons/Dancing performance.png",
         description: "",
         backgroundImage: "",
       ),
@@ -308,12 +308,6 @@ final List<ScheduleItem> day1ScheduleData = [
         description: "",
         backgroundImage: "",
       ),
-    ],
-    stage2Events: [],
-  ),
-  ScheduleItem(
-    time: "4:30 pm",
-    stage1Events: [
       EventItem(
         title: "Bon Dance Event",
         time: "16:25-16:55",
@@ -349,6 +343,7 @@ final List<ScheduleItem> day2ScheduleData = [
         duration: 5,
         iconImage: "",
         description: "",
+        stage: "1",
         backgroundImage: "assets/timetableIcons/Opening ceremony.png",
       ),
       EventItem(

@@ -145,7 +145,7 @@ class _TimetablePageState extends State<TimetablePage> {
                 ),
                 Expanded(
                   child: Container(
-                    margin: const EdgeInsets.all(16),
+                    margin: const EdgeInsets.all(25),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(25),
                       gradient: LinearGradient(
@@ -201,70 +201,71 @@ class _TimetablePageState extends State<TimetablePage> {
       ),
     );
   }
-Widget _buildStageHeader() {
-  const double fontSize = 20;
 
-  return Padding(
-    padding: const EdgeInsets.only(top: 25, bottom: 10),
-    child: Container(
-      width: 290,
-      height: 50,
-      decoration: BoxDecoration(
-        color: Colors.grey.withOpacity(0.5),
-        borderRadius: BorderRadius.circular(25),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 12, right: 8),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  "Boston Common",
-                  style: TextStyle(
-                    fontSize: fontSize,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
+  Widget _buildStageHeader() {
+    const double fontSize = 17;
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 25, bottom: 10),
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.67,
+        height: 50,
+        decoration: BoxDecoration(
+          color: Colors.grey.withOpacity(0.5),
+          borderRadius: BorderRadius.circular(25),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 12, right: 8),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Boston Common",
+                    style: TextStyle(
+                      fontSize: fontSize - 1.5,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                   ),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
                 ),
               ),
             ),
-          ),
-          Container(
-            width: 4,
-            height: 30,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: Colors.white,
+            Container(
+              width: 4,
+              height: 30,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.white,
+              ),
             ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8, right: 12),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Downtown",
-                  style: TextStyle(
-                    fontSize: fontSize,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8, right: 12),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Downtown",
+                    style: TextStyle(
+                      fontSize: fontSize,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                   ),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 }
 
 class ScheduleList extends StatelessWidget {
@@ -286,7 +287,7 @@ class ScheduleList extends StatelessWidget {
 
     // Get all unique times and sort them
     final timelineSlots =
-        scheduleItems.map((item) => item.time).toSet().toList()..sort();
+        scheduleItems.map((item) => item.time).toSet().toList();
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -333,16 +334,24 @@ class ScheduleList extends StatelessWidget {
           ),
         ),
 
-        SizedBox(width: screenWidth * 0.026),
-
         // Stage 1 Column
         Expanded(
-          child: Column(children: _buildEventColumn(1, pixelsPerMinute)),
+          child: Column(
+            children: [
+              ..._buildEventColumn(1, pixelsPerMinute),
+              SizedBox(height: 100),
+            ],
+          ),
         ),
 
         // Stage 2 Column
         Expanded(
-          child: Column(children: _buildEventColumn(2, pixelsPerMinute)),
+          child: Column(
+            children: [
+              ..._buildEventColumn(2, pixelsPerMinute),
+              SizedBox(height: 100),
+            ],
+          ),
         ),
       ],
     );
@@ -357,23 +366,19 @@ class ScheduleList extends StatelessWidget {
                       ? item.stage1Events ?? []
                       : item.stage2Events ?? [],
             )
-            .where((e) => e.title.isNotEmpty)
             .toList();
-
-    // Sort events by time if needed
-    events.sort((a, b) => a.time.compareTo(b.time));
 
     return [
       const SizedBox(height: 12),
       for (var i = 0; i < events.length; i++)
-        Column(
-          children: [
-            SizedBox(
-              height: events[i].duration * pixelsPerMinute,
-              child: PerformanceBox(eventItem: events[i], onTap: onEventTap),
-            ),
-          ],
-        ),
+        ...(events[i].title != ""
+            ? [
+              SizedBox(
+                height: events[i].duration * pixelsPerMinute,
+                child: PerformanceBox(eventItem: events[i], onTap: onEventTap),
+              ),
+            ]
+            : [SizedBox(height: events[i].duration * pixelsPerMinute)]),
     ];
   }
 }
