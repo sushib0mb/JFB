@@ -229,7 +229,7 @@ final List<ScheduleItem> day1ScheduleData = [
     time: "3:00 pm",
     stage1Events: [
       EventItem(
-        title: "YAMAZAKI VS SUGIMONO",
+        title: "Yamazaki VS Sugimono",
         time: "15:20-15:30",
         duration: 10,
         stage: "Stage 1",
@@ -385,7 +385,7 @@ final List<ScheduleItem> day2ScheduleData = [
         iconImage: "assets/timetableIcons/Anime stage.png",
         stage: "1",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
       EventItem(
         title: "Showa Boston Dance Performance",
@@ -451,16 +451,7 @@ final List<ScheduleItem> day2ScheduleData = [
         stage: "Stage 1", // Changed to string
         iconImage: "assets/timetableIcons/Band performance.png",
         description: "",
-        backgroundImage: "",
-      ),
-      EventItem(
-        title: "Cosplay Death Match",
-        time: "13:55-14:25",
-        duration: 30,
-        stage: "Stage 1", // Changed to string
-        iconImage: "assets/timetableIcons/Anime stage.png",
-        description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
     ],
     stage2Events: [],

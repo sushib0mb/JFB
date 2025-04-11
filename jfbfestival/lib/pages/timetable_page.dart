@@ -295,14 +295,18 @@ class ScheduleList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final baseFontSize = 17.0;
+    final baseFontSize = 16.0;
     final responsiveFontSize = baseFontSize * (screenWidth / 375);
     final pixelsPerMinute = 10.0;
 
     final timelineSlots =
         scheduleItems.map((item) => item.time).toSet().toList();
     final baseTime = _parseTimeToMinutes(timelineSlots.first);
-    final latestTime = _parseTimeToMinutes(timelineSlots.last) + 120;
+
+    // TODO: Change latest time to be the finish time of the last event
+    final latestTime =
+        _parseTimeToMinutes(timelineSlots.last) +
+        _parseTimeToMinutes(timelineSlots.last);
     final timelineHeight = (latestTime - baseTime) * pixelsPerMinute;
 
     return Row(
@@ -313,38 +317,33 @@ class ScheduleList extends StatelessWidget {
           padding: const EdgeInsets.only(top: 12, left: 13),
           child: SizedBox(
             width: 60,
-            height: timelineHeight,
-            child: Stack(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children:
                   timelineSlots.map((timeString) {
                     final timeParts = timeString.split(" ");
                     final timeText =
                         timeParts.isNotEmpty ? timeParts[0] : timeString;
                     final ampm = timeParts.length > 1 ? timeParts[1] : "";
-                    final timeInMinutes = _parseTimeToMinutes(timeString);
-                    final topPosition =
-                        (timeInMinutes - baseTime) * pixelsPerMinute;
 
-                    return Positioned(
-                      top: topPosition,
-                      left: 0,
+                    return SizedBox(
+                      height: 30 * pixelsPerMinute, // Height for 30-minute slot
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment:
+                            MainAxisAlignment.start, // Align items at the top
                         children: [
                           Text(
                             timeText,
                             style: TextStyle(
-                              fontSize: responsiveFontSize * 1.1,
-                              fontWeight: FontWeight.w400,
-                              color: Color(0xFF303030),
+                              fontSize: responsiveFontSize,
+                              fontWeight: FontWeight.w300,
                             ),
                           ),
                           Text(
                             ampm,
                             style: TextStyle(
-                              fontSize: responsiveFontSize * 0.9,
+                              fontSize: responsiveFontSize,
                               fontWeight: FontWeight.w300,
-                              color: Color(0xFF505050),
                             ),
                           ),
                         ],
@@ -388,10 +387,11 @@ class ScheduleList extends StatelessWidget {
                   pixelsPerMinute: pixelsPerMinute,
                   width: screenWidth / 2,
                 ),
+
                 Column(
                   children: [
                     ..._buildEventColumn(2, pixelsPerMinute),
-                    SizedBox(height: 100),
+                    SizedBox(height: 200),
                   ],
                 ),
               ],
@@ -419,9 +419,19 @@ class ScheduleList extends StatelessWidget {
           left: 0,
           right: 0,
           child: Container(
-            width: width,
-            height: 1,
-            color: Colors.grey.withOpacity(1),
+            height: 3,
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(8, 0, 0, 0),
+              borderRadius: BorderRadius.circular(4),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  offset: const Offset(0, 0),
+                  blurRadius: 1,
+                  spreadRadius: 0,
+                ),
+              ],
+            ),
           ),
         ),
       );
@@ -442,7 +452,6 @@ class ScheduleList extends StatelessWidget {
             .toList();
 
     return [
-      const SizedBox(height: 12),
       for (var i = 0; i < events.length; i++)
         ...(events[i].title != ""
             ? [
@@ -509,7 +518,7 @@ class _PerformanceBoxState extends State<PerformanceBox>
     double timeSectionHeight = screenHeight * 0.253;
     double eventHeight =
         widget.eventItem.duration / 60 * timeSectionHeight + 6.7;
-    double responsiveFontSize = screenWidth / 375;
+    double responsiveFontSize = screenWidth / 380;
 
     return GestureDetector(
       onTap: () {
@@ -543,7 +552,7 @@ class _PerformanceBoxState extends State<PerformanceBox>
           child: Padding(
             padding: const EdgeInsets.symmetric(
               vertical: 12.0,
-              horizontal: 8.0,
+              horizontal: 3.0,
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -572,18 +581,18 @@ class _PerformanceBoxState extends State<PerformanceBox>
                 ),
                 SizedBox(height: eventHeight * 0.05),
                 Text(
-                  widget.eventItem.title.length > 20
-                      ? widget.eventItem.title.substring(0, 17) + "..."
+                  widget.eventItem.title.length > 17
+                      ? "${widget.eventItem.title.substring(0, 17)}..."
                       : widget.eventItem.title,
                   style: TextStyle(
                     fontSize: responsiveFontSize * 10,
                     fontWeight: FontWeight.w500,
-                    height: 1.2,
+                    height: 0.8,
                   ),
                   maxLines: 2,
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: screenHeight * 0.003),
                 Text(
                   widget.eventItem.time,
                   style: TextStyle(
