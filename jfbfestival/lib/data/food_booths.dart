@@ -80,7 +80,7 @@ final List<FoodBooth> foodBooths = [
     allergy: "Contains soy",
     boothLocation: "D8",
     genre: "Japanese",
-    logoPath: "assets/tori_jiro_logo.jpg",
+    logoPath: "assets/foodLogo/tori_jiro_logo.jpg",
     dishImagePath: "assets/food/tori_jori.jpg",
     isVegan: false,
     payments: ["Cash"],
@@ -550,13 +550,13 @@ final List<FoodBooth> foodBooths = [
 
   // Umai Beef Bowl
   FoodBooth(
-    name: "Umai Beef Bowl",
-    image: "assets/food/beef_bowl.jpg",
+    name: "Umai",
+    image: "assets/foodLogo/umai.png",
     description: "Japanese beef rice bowls",
     allergy: "Contains soy",
     boothLocation: "TBD",
     genre: "Japanese",
-    logoPath: "assets/umai_beef_bowl.png",
+    logoPath: "assets/foodLogo/umai.png",
     dishImagePath: "assets/food/beef_bowl.jpg",
     isVegan: false,
     payments: ["Cash", "Zelle", "Venmo"],
@@ -576,12 +576,12 @@ final List<FoodBooth> foodBooths = [
   // Nagomi Bento (なごみ弁当)
   FoodBooth(
     name: "Nagomi Bento",
-    image: "assets/food/bento.jpg",
+    image: "assets/foodLogo/nagomi_bento.jpg",
     description: "Japanese bento boxes and drinks",
     allergy: "Contains egg, soy",
     boothLocation: "TBD",
     genre: "Japanese",
-    logoPath: "assets/nagomi_bento.png",
+    logoPath: "assets/foodLogo/nagomi_bento.jpg",
     dishImagePath: "assets/food/bento.jpg",
     isVegan: false, // Mixed vegan options
     payments: ["Cash", "Credit Card"],
@@ -617,13 +617,13 @@ final List<FoodBooth> foodBooths = [
   // Hokkaido Ramen Santouka (北海道らーめん山頭火)
   FoodBooth(
     name: "Hokkaido Ramen Santouka",
-    image: "assets/food/ramen.jpg",
+    image: "assets/foodLogo/hokkaido_santouka.jpg",
     description: "Hokkaido style ramen and snacks",
     allergy:
         "Contains egg, wheat, milk, soy, fish, sesame, peanut, tree nuts, shellfish",
     boothLocation: "TBD",
     genre: "Ramen",
-    logoPath: "assets/santouka.png",
+    logoPath: "assets/foodLogo/hokkaido_santouka.png",
     dishImagePath: "assets/food/ramen.jpg",
     isVegan: false,
     payments: ["Credit Card"],
@@ -635,7 +635,7 @@ final List<FoodBooth> foodBooths = [
       "Fish",
       "Sesame",
       "Peanut",
-      "Tree Nuts",
+      "Tree Nut",
       "Shellfish",
     ],
     dishes: [

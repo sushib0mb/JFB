@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';  // For launching URLs
 import 'timetable_page.dart';
 import 'package:jfbfestival/mainscreen.dart';
 
@@ -10,7 +11,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final List<String> backgroundImages = [
-    "assets/JFB-27.jpg", 
+    "assets/JFB-27.jpg",
     "assets/JFB-4.jpg",
     "assets/JFB-3.jpg",
     "assets/JFB-8.jpg",
@@ -49,7 +50,6 @@ class _HomePageState extends State<HomePage> {
     _pageController.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +99,7 @@ class _HomePageState extends State<HomePage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: List.generate(
                                     backgroundImages.length,
-                                    (index) => AnimatedContainer(
+                                        (index) => AnimatedContainer(
                                       duration: Duration(milliseconds: 300),
                                       margin: EdgeInsets.symmetric(horizontal: 4),
                                       width: _currentPage == index ? 10 : 6,
@@ -188,134 +188,134 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildEventCard(
-  String title,
-  String stage,
-  String time,
-  bool ongoing,
-  bool isSinging,
-  bool isAdvertising,
-  double screenWidth,
-) {
-  return GestureDetector(
-    onTap: () {
-    Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (context) => MainScreen(initialIndex: 2),
-  ),
-);
-    },
-    child: Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Container(
-            padding: EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 5,
-                  spreadRadius: 2,
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Icon(Icons.mic, color: Colors.black),
-                    SizedBox(width: 10),
-                    Text(
-                      stage,
-                      style: TextStyle(
-                        color: Colors.pinkAccent,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 5),
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: screenWidth * 0.045,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(time, style: TextStyle(color: Colors.grey)),
-                if (ongoing)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5.0),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                      decoration: BoxDecoration(
-                        color: Colors.orange,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: Text(
-                        "Going on now!",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-              ],
-            ),
+    String title,
+    String stage,
+    String time,
+    bool ongoing,
+    bool isSinging,
+    bool isAdvertising,
+    double screenWidth,
+  ) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MainScreen(initialIndex: 2),
           ),
-          if (isSinging)
-            Positioned(
-              top: -35,
-              left: 10,
-              child: Container(
-                padding: EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 5,
-                      spreadRadius: 2,
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 5,
+                    spreadRadius: 2,
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Icon(Icons.mic, color: Colors.black),
+                      SizedBox(width: 10),
+                      Text(
+                        stage,
+                        style: TextStyle(
+                          color: Colors.pinkAccent,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: screenWidth * 0.045,
+                      fontWeight: FontWeight.bold,
                     ),
-                  ],
-                ),
-                child: Image.asset(
-                  "assets/timetableIcons/Singing performance (Frame).png",
-                  height: screenWidth * 0.18,
-                ),
+                  ),
+                  Text(time, style: TextStyle(color: Colors.grey)),
+                  if (ongoing)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.orange,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Text(
+                          "Going on now!",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ),
-          if (isAdvertising)
-            Positioned(
-              top: -35,
-              left: 10,
-              child: Container(
-                padding: EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 5,
-                      spreadRadius: 2,
-                    ),
-                  ],
-                ),
-                child: Image.asset(
-                  "assets/timetableIcons/Advertising (Frame).png",
-                  height: screenWidth * 0.18,
+            if (isSinging)
+              Positioned(
+                top: -35,
+                left: 10,
+                child: Container(
+                  padding: EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 5,
+                        spreadRadius: 2,
+                      ),
+                    ],
+                  ),
+                  child: Image.asset(
+                    "assets/timetableIcons/Singing performance (Frame).png",
+                    height: screenWidth * 0.18,
+                  ),
                 ),
               ),
-            ),
-        ],
+            if (isAdvertising)
+              Positioned(
+                top: -35,
+                left: 10,
+                child: Container(
+                  padding: EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 5,
+                        spreadRadius: 2,
+                      ),
+                    ],
+                  ),
+                  child: Image.asset(
+                    "assets/timetableIcons/Advertising (Frame).png",
+                    height: screenWidth * 0.18,
+                  ),
+                ),
+              ),
+          ],
         ),
-      )
+      ),
     );
   }
 
@@ -333,11 +333,35 @@ class _HomePageState extends State<HomePage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _buildIcon("assets/instagram.png"),
-          _buildIcon("assets/facebook.png"),
-          _buildIcon("assets/youtube.png"),
-          _buildIcon("assets/website.png"),
+          _buildIcon("assets/instagram.png", "https://www.instagram.com/japanfestivalboston?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="),
+          _buildIcon("assets/facebook.png", "https://www.facebook.com/JapanFestivalBoston"),
+          _buildIcon("assets/youtube.png", "https://www.youtube.com/@japanfestivalboston"),
+          _buildIcon("assets/website.png", "https://www.japanfestivalboston.org"),
         ],
+      ),
+    );
+  }
+
+  Widget _buildIcon(String imagePath, String url) {
+    return GestureDetector(
+      onTap: () async {
+        final Uri uri = Uri.parse(url); // Ensure the URL is correctly parsed
+        if (await canLaunch(uri.toString())) { // Check if the URL can be launched
+          await launch(uri.toString()); // Launch the URL
+        } else {
+          throw 'Could not launch $url'; // Show an error if the URL cannot be launched
+        }
+      },
+      child: Container(
+        padding: EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2),
+          ],
+        ),
+        child: Image.asset(imagePath, height: 30),
       ),
     );
   }
@@ -364,7 +388,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
   Widget _buildSponsorCategory(String title, String imagePath) {
     return Column(
       children: [
@@ -456,20 +479,6 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ],
-    );
-  }
-
-  Widget _buildIcon(String imagePath) {
-    return Container(
-      padding: EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2),
-        ],
-      ),
-      child: Image.asset(imagePath, height: 30),
     );
   }
 }

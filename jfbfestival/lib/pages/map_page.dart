@@ -93,8 +93,8 @@ class MapPageState extends State<MapPage> {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Colors.lightBlue.shade200,  // Lighter blue
-                  Colors.red.shade200,        // Lighter red
+                  const Color.fromARGB(255, 204, 233, 245),  // Lighter blue
+                  const Color.fromARGB(255, 246, 221, 221),        // Lighter red
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
