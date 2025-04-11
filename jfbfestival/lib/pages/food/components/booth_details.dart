@@ -152,33 +152,33 @@ class BoothDetails extends StatelessWidget {
                 );
               },
             ),
-            Positioned(
-              top: MediaQuery.of(context).size.height / 20,
-              left: MediaQuery.of(context).size.width / 2.8,
-              child: Container(
-                width: 150,
-                height: 100,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(25),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.5),
-                      blurRadius: 10,
-                      spreadRadius: 0,
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: Image.asset(
-                    booth.logoPath,
-                    width: 80,
-                    height: 60,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-            ),
+            // Positioned(
+            //   top: MediaQuery.of(context).size.height / 20,
+            //   left: MediaQuery.of(context).size.width / 2.8,
+            //   child: Container(
+            //     width: 150,
+            //     height: 100,
+            //     decoration: BoxDecoration(
+            //       color: Colors.white,
+            //       borderRadius: BorderRadius.circular(25),
+            //       boxShadow: [
+            //         BoxShadow(
+            //           color: Colors.black.withOpacity(0.5),
+            //           blurRadius: 10,
+            //           spreadRadius: 0,
+            //         ),
+            //       ],
+            //     ),
+            //     child: Center(
+            //       child: Image.asset(
+            //         booth.logoPath,
+            //         width: 80,
+            //         height: 60,
+            //         fit: BoxFit.contain,
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ],
@@ -500,7 +500,7 @@ class _DishCardState extends State<DishCard> {
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.orange,
+                                  color: Color(0xFF7A4E2C),
                                 ),
                               ),
                               const SizedBox(width: 4),
@@ -508,8 +508,8 @@ class _DishCardState extends State<DishCard> {
                                 _showAllergenDetails
                                     ? Icons.keyboard_arrow_up
                                     : Icons.keyboard_arrow_down,
-                                size: 18,
-                                color: Colors.orange,
+                                size: 18, 
+                                color: Color.fromARGB(255, 151, 73, 0),
                               ),
                             ],
                           ),
@@ -545,7 +545,7 @@ class _DishCardState extends State<DishCard> {
                                           iconPath,
                                           width: 30,
                                           height: 30,
-                                          color: Colors.orange.withOpacity(0.8),
+                                          color: Color.fromARGB(255, 107, 53, 1),
                                         ),
                                       ),
                                     ),
@@ -554,7 +554,7 @@ class _DishCardState extends State<DishCard> {
                                       allergen,
                                       style: const TextStyle(
                                         fontSize: 12,
-                                        color: Colors.orange,
+                                        color: Color.fromARGB(255, 107, 53, 1),
                                       ),
                                       textAlign: TextAlign.center,
                                       maxLines: 2,

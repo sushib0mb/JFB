@@ -6,6 +6,63 @@ import 'package:jfbfestival/pages/food/components/allergy_filter.dart';
 import 'package:jfbfestival/pages/food/components/booth_details.dart';
 import 'package:jfbfestival/data/food_booths.dart';
 import 'package:jfbfestival/models/food_booth.dart';
+class AnimatedBoothDetailWrapper extends StatefulWidget {
+  final FoodBooth booth;
+  final VoidCallback onClose;
+
+  const AnimatedBoothDetailWrapper({
+    Key? key,
+    required this.booth,
+    required this.onClose,
+  }) : super(key: key);
+
+  @override
+  State<AnimatedBoothDetailWrapper> createState() => _AnimatedBoothDetailWrapperState();
+}
+
+class _AnimatedBoothDetailWrapperState extends State<AnimatedBoothDetailWrapper>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 400),
+      vsync: this,
+    );
+
+    _fadeAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.05),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: SlideTransition(
+        position: _slideAnimation,
+        child: BoothDetails(
+          booth: widget.booth,
+          onClose: widget.onClose,
+        ),
+      ),
+    );
+  }
+}
 
 class FoodPage extends StatefulWidget {
   const FoodPage({super.key});
@@ -170,13 +227,12 @@ Widget _buildMainContent(double screenWidth, double screenHeight) {
   );
 }
 
-
-  Widget _buildAllBoothsSection(double screenWidth) {
+Widget _buildAllBoothsSection(double screenWidth) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     crossAxisAlignment: CrossAxisAlignment.center,
     children: [
-      const SizedBox(height: 20),
+      const SizedBox(height: 60), 
       Text(
         "All Food Booths",
         style: TextStyle(
@@ -184,15 +240,15 @@ Widget _buildMainContent(double screenWidth, double screenHeight) {
           fontWeight: FontWeight.bold,
         ),
       ),
-      const SizedBox(height: 16),
+      const SizedBox(height: 5), //
       GridView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: screenWidth > 600 ? 2 : 1,
-          crossAxisSpacing: 30,
-          mainAxisSpacing: 30,
-          childAspectRatio: 1.2,
+          crossAxisSpacing: 20, // 👈 reduced from 30
+          mainAxisSpacing: 20,  // 👈 reduced from 30
+          childAspectRatio: 1.25, // slight tweak for balance
         ),
         itemCount: filteredBooths.length,
         itemBuilder: (context, index) {
@@ -202,7 +258,7 @@ Widget _buildMainContent(double screenWidth, double screenHeight) {
             child: Center(
               child: Container(
                 width: 320,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16), // 👈 tighter padding
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(30),
@@ -226,7 +282,7 @@ Widget _buildMainContent(double screenWidth, double screenHeight) {
                         fit: BoxFit.contain,
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 12), // 👈 reduced
                     Text(
                       booth.name,
                       style: const TextStyle(
@@ -235,7 +291,7 @@ Widget _buildMainContent(double screenWidth, double screenHeight) {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 6), // 👈 reduced
                     Text(
                       'Food Booth: ${booth.boothLocation}',
                       style: const TextStyle(
@@ -244,7 +300,7 @@ Widget _buildMainContent(double screenWidth, double screenHeight) {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 10), // 👈 reduced
                     Container(
                       padding: const EdgeInsets.symmetric(
                           vertical: 6, horizontal: 20),
@@ -268,17 +324,25 @@ Widget _buildMainContent(double screenWidth, double screenHeight) {
   );
 }
 
+
 void _showBoothDetails(BuildContext context, FoodBooth booth) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
-    builder: (context) => BoothDetails(
-      booth: booth,
-      onClose: () => Navigator.of(context).pop(),
+    transitionAnimationController: AnimationController(
+      duration: const Duration(milliseconds: 350),
+      vsync: Navigator.of(context),
     ),
+    builder: (context) {
+      return AnimatedBoothDetailWrapper(
+        booth: booth,
+        onClose: () => Navigator.of(context).pop(),
+      );
+    },
   );
 }
+
 
 
   Set<String> selectedAllergens = {};
