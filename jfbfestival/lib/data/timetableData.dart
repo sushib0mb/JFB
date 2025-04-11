@@ -29,6 +29,7 @@ class ScheduleItem {
     required this.stage2Events,
   });
 }
+
 final List<ScheduleItem> day1ScheduleData = [
   ScheduleItem(
     time: "11:00 am",
@@ -58,7 +59,7 @@ final List<ScheduleItem> day1ScheduleData = [
     time: "11:30 am",
     stage1Events: [
       EventItem(
-        title: "NODO JIMAN",
+        title: "Nodo Jiman",
         time: "11:30-12:00",
         duration: 30,
         stage: "Stage 1",
@@ -98,7 +99,7 @@ final List<ScheduleItem> day1ScheduleData = [
     time: "12:30 pm",
     stage1Events: [
       EventItem(
-        title: "opening ceremony",
+        title: "Opening Ceremony",
         time: "12:40-13:00",
         duration: 20,
         stage: "Stage 1",
@@ -275,12 +276,6 @@ final List<ScheduleItem> day1ScheduleData = [
         description: "",
         backgroundImage: "",
       ),
-    ],
-    stage2Events: [],
-  ),
-  ScheduleItem(
-    time: "4:30 pm",
-    stage1Events: [
       EventItem(
         title: "Bon Dance Event",
         time: "16:25-16:55",
@@ -295,17 +290,100 @@ final List<ScheduleItem> day1ScheduleData = [
   ),
 ];
 
-
 final List<ScheduleItem> day2ScheduleData = [
   ScheduleItem(
-    time: "11:00 am",
+    time: "1:00 pm",
     stage1Events: [
       EventItem(
-        title: "Opening Ceremony",
-        time: "11:00-11:05",
+        title: "Kitanodai Gagaku Ensemble",
+        time: "13:00-13:30",
+        duration: 30,
+        iconImage: "assets/timetableIcons/Dancing performance.png",
+        stage: "1",
+        description: "",
+        backgroundImage: "",
+      ),
+    ],
+    stage2Events: [
+      EventItem(
+        title: "",
+        time: "",
         duration: 5,
-        stage: "Stage 1", // Changed to string
         iconImage: "",
+        description: "",
+        stage: "1",
+        backgroundImage: "assets/timetableIcons/Opening ceremony.png",
+      ),
+      EventItem(
+        title: "Anime Band",
+        time: "13:05-13:45",
+        duration: 40,
+        iconImage: "assets/timetableIcons/Singing performance.png",
+        stage: "2",
+        description: "",
+        backgroundImage: "",
+      ),
+    ],
+  ),
+  ScheduleItem(
+    time: "1:30 pm",
+    stage1Events: [
+      EventItem(
+        title: "Okinawa Ryukyu Kokusai Taiko",
+        time: "13:30-14:00",
+        duration: 30,
+        iconImage: "assets/timetableIcons/Dancing performance.png",
+        stage: "1",
+        description: "",
+        backgroundImage: "",
+      ),
+    ],
+    stage2Events: [
+      EventItem(
+        title: "Cosplay Fashion Show",
+        time: "13:45-14:05",
+        duration: 20,
+        iconImage: "assets/timetableIcons/Dancing performance.png",
+        stage: "2",
+        description: "",
+        backgroundImage: "",
+      ),
+    ],
+  ),
+  ScheduleItem(
+    time: "2:00 pm",
+    stage1Events: [
+      EventItem(
+        title: "Jeiko Taiko Ensemble",
+        time: "14:00-14:30",
+        duration: 30,
+        iconImage: "assets/timetableIcons/Dancing performance.png",
+        stage: "1",
+        description: "",
+        backgroundImage: "",
+      ),
+    ],
+    stage2Events: [
+      EventItem(
+        title: "Parade to Boston Common",
+        time: "14:05-14:25",
+        duration: 20,
+        iconImage: "assets/timetableIcons/Singing performance.png",
+        stage: "2",
+        description: "",
+        backgroundImage: "",
+      ),
+    ],
+  ),
+  ScheduleItem(
+    time: "2:30 pm",
+    stage1Events: [
+      EventItem(
+        title: "Cosplay Fashion Show",
+        time: "14:30-14:50",
+        duration: 20,
+        iconImage: "assets/timetableIcons/Dancing performance.png",
+        stage: "1",
         description: "",
         backgroundImage: "assets/timetableIcons/Opening ceremony.png",
       ),
@@ -331,7 +409,7 @@ final List<ScheduleItem> day2ScheduleData = [
     stage2Events: [],
   ),
   ScheduleItem(
-    time: "12:00 pm",
+    time: "3:30 pm",
     stage1Events: [
       EventItem(
         title: "KENDO",
@@ -470,6 +548,3 @@ final List<ScheduleItem> day2ScheduleData = [
     stage2Events: [],
   ),
 ];
-
-
-
