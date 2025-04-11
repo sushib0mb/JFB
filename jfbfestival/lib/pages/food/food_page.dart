@@ -146,73 +146,128 @@ Widget _buildFilterButton() {
 }
 
  
+Widget _buildMainContent(double screenWidth, double screenHeight) {
+  double maxWidth = screenWidth > 1200 ? 1300 : screenWidth * 0.95;
+  double padding = screenWidth < 600 ? 16 : 24;
 
-  Widget _buildMainContent(double screenWidth, double screenHeight) {
-    double maxWidth = screenWidth > 1200 ? 1300 : screenWidth;
-    double padding = screenWidth < 600 ? 40 : 30;
-
-    return Center(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: maxWidth),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: padding),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: screenHeight * 0.15,
-                ), // Adjust height based on screen size
-                _buildAllBoothsSection(screenWidth),
-              ],
-            ),
+  return Center(
+    child: ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: maxWidth),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: padding),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: screenHeight * 0.1),
+              _buildAllBoothsSection(screenWidth),
+              SizedBox(height: screenHeight * 0.05),
+            ],
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
 
   Widget _buildAllBoothsSection(double screenWidth) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const SizedBox(height: 20),
-        Text(
-          "All Food Booths",
-          style: TextStyle(
-            fontSize:
-                screenWidth > 600
-                    ? 20
-                    : 16, // Adjust font size based on screen width
-            fontWeight: FontWeight.bold,
-          ),
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      const SizedBox(height: 20),
+      Text(
+        "All Food Booths",
+        style: TextStyle(
+          fontSize: screenWidth > 600 ? 20 : 16,
+          fontWeight: FontWeight.bold,
         ),
-        const SizedBox(height: 16),
-        GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount:
-                screenWidth > 600
-                    ? 2
-                    : 1, // Adjust number of columns based on screen width
-            crossAxisSpacing: 30,
-            mainAxisSpacing: 1,
-            childAspectRatio: 1.4,
-          ),
-          itemCount: filteredBooths.length,
-          itemBuilder:
-              (context, index) => BoothListItem(
-                booth: filteredBooths[index],
-                onTap: () => _showBoothDetails(context, filteredBooths[index]),
+      ),
+      const SizedBox(height: 16),
+      GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: screenWidth > 600 ? 2 : 1,
+          crossAxisSpacing: 30,
+          mainAxisSpacing: 30,
+          childAspectRatio: 1.2,
+        ),
+        itemCount: filteredBooths.length,
+        itemBuilder: (context, index) {
+          final booth = filteredBooths[index];
+          return GestureDetector(
+            onTap: () => _showBoothDetails(context, booth),
+            child: Center(
+              child: Container(
+                width: 320,
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(30),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 10,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.asset(
+                        booth.logoPath,
+                        width: 80,
+                        height: 80,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      booth.name,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      'Food Booth: ${booth.boothLocation}',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 12),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 6, horizontal: 20),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        booth.genre,
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-        ),
-      ],
-    );
-  }
+            ),
+          );
+        },
+      ),
+    ],
+  );
+}
+
 void _showBoothDetails(BuildContext context, FoodBooth booth) {
   showModalBottomSheet(
     context: context,
