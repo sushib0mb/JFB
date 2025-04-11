@@ -404,7 +404,7 @@ final List<ScheduleItem> day2ScheduleData = [
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description: "",
         backgroundImage: "",
-      ),
+       ),
     ],
     stage2Events: [],
   ),
