@@ -256,52 +256,39 @@ class BoothDetails extends StatelessWidget {
         ),
          _buildPaymentItem(
           "Credit",
-          "assets/payments/credit_card.jpg",
+          "assets/payments/credit_card_3.jpg",
           payments.contains("Credit Card"),
         ),
       ],
     );
   }
+Widget _buildPaymentItem(String name, String assetPath, bool enabled) {
+  return Column(
+    children: [
+      Container(
+        width: 90,
+        height: 90,
+        decoration: BoxDecoration(
+          color: enabled ? Colors.greenAccent : Colors.grey[300],
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Image.asset(
+            assetPath,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return const Icon(Icons.error);
+            },
+          ),
+        ),
+      ),
+      const SizedBox(height: 8),
+      Text(name),
+    ],
+  );
+}
 
-  Widget _buildPaymentItem(String method, String iconPath, bool isActive) {
-    return Column(
-      children: [
-        Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.25),
-                blurRadius: 10,
-                spreadRadius: 0,
-              ),
-            ],
-          ),
-          child: Center(
-            child: Image.asset(
-              iconPath,
-              width: 44,
-              height: 44,
-              color: isActive ? null : Colors.grey.withOpacity(0.5),
-              colorBlendMode: BlendMode.modulate,
-            ),
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          method,
-          style: TextStyle(
-            fontSize: 18,
-            color: isActive ? Colors.black : Colors.grey[400],
-            fontWeight: isActive ? FontWeight.normal : FontWeight.normal,
-          ),
-        ),
-      ],
-    );
-  }
 Widget _buildVeganism(bool isVegan) {
   return Center(
     child: Column(

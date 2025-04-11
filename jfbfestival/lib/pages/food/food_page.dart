@@ -149,7 +149,7 @@ Widget _buildFilterButton() {
 
   Widget _buildMainContent(double screenWidth, double screenHeight) {
     double maxWidth = screenWidth > 1200 ? 1300 : screenWidth;
-    double padding = screenWidth < 600 ? 20 : 30;
+    double padding = screenWidth < 600 ? 40 : 30;
 
     return Center(
       child: ConstrainedBox(
