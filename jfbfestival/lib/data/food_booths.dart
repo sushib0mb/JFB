@@ -668,7 +668,7 @@ final List<FoodBooth> foodBooths = [
     ],
   ),
 
-<<<<<<< HEAD
+
 // Kevin's Bread (けびんのパン)
 FoodBooth(
   name: "Kevin's Bread",
@@ -701,7 +701,7 @@ FoodBooth(
     ),
   ],
 ),
-=======
+
   // Kevin's Bread (けびんのパン)
   FoodBooth(
     name: "Kevin's Bread",
@@ -734,7 +734,7 @@ FoodBooth(
       ),
     ],
   ),
->>>>>>> e1d76dedb3983350f67973c7ce748490dbf1d407
+
 
   // IBARAKI's Yaki-Onigiri (茨城の焼きおにぎり)
   FoodBooth(
