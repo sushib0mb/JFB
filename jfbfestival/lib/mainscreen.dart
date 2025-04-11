@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
 
 class MainScreen extends StatefulWidget {
   final int initialIndex;
-  const MainScreen({Key? key, this.initialIndex = 2}) : super(key: key);
+  const MainScreen({Key? key, this.initialIndex = 0}) : super(key: key);
 
   @override
   _MainScreenState createState() => _MainScreenState();

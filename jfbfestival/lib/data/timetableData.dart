@@ -453,10 +453,18 @@ final List<ScheduleItem> day2ScheduleData = [
         description: "",
         eventDetailImage: "",
       ),
+      EventItem(
+        title: "Cosplay Death Match",
+        time: "13:55-14:25",
+        duration: 30,
+        stage: "Stage 1", // Changed to string
+        iconImage: "assets/timetableIcons/Anime stage.png",
+        description: "",
+        eventDetailImage: "",
+      ),
     ],
     stage2Events: [],
   ),
-  // Continue similarly for other entries...
   ScheduleItem(
     time: "2:00 pm",
     stage1Events: [
