@@ -47,7 +47,7 @@ final List<ScheduleItem> day1ScheduleData = [
         title: "Showa Boston Dance Performance",
         time: "11:15-11:30",
         duration: 15,
-        stage: "Stage 1", // Changed to string
+        stage: "Stage 1",
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description: "",
         backgroundImage: "",
@@ -58,7 +58,7 @@ final List<ScheduleItem> day1ScheduleData = [
         title: "",
         time: "",
         duration: 35,
-        stage: "Stage 2", // Changed to string
+        stage: "Stage 2",
         iconImage: "",
         description: "",
         backgroundImage: "",
@@ -69,10 +69,10 @@ final List<ScheduleItem> day1ScheduleData = [
     time: "11:30 am",
     stage1Events: [
       EventItem(
-        title: "NODO JIMAN",
+        title: "Nodo Jiman",
         time: "11:30-12:00",
         duration: 30,
-        stage: "Stage 1", // Changed to string
+        stage: "Stage 1",
         iconImage: "assets/timetableIcons/Singing performance.png",
         description: "",
         backgroundImage: "",
@@ -82,7 +82,7 @@ final List<ScheduleItem> day1ScheduleData = [
       EventItem(
         title: "Ukulele",
         time: "11:35-12:05",
-        stage: "Stage 2", // Changed to string
+        stage: "Stage 2",
         duration: 30,
         iconImage: "assets/timetableIcons/Singing performance.png",
         description: "",
@@ -97,8 +97,8 @@ final List<ScheduleItem> day1ScheduleData = [
         title: "Hiroko Watanabe Calligraphy",
         time: "12:00-12:40",
         duration: 40,
-        stage: "Stage 1", // Changed to string
-        iconImage: "",
+        stage: "Stage 1",
+        iconImage: "assets/timetableIcons/Singing performance.png",
         description: "",
         backgroundImage: "",
       ),
@@ -107,7 +107,7 @@ final List<ScheduleItem> day1ScheduleData = [
       EventItem(
         title: "",
         time: "",
-        stage: "Stage 2", // Changed to string
+        stage: "Stage 2",
         duration: 25,
         iconImage: "",
         description: "",
@@ -119,11 +119,11 @@ final List<ScheduleItem> day1ScheduleData = [
     time: "12:30 pm",
     stage1Events: [
       EventItem(
-        title: "opening ceremony",
+        title: "Opening Ceremony",
         time: "12:40-13:00",
         duration: 20,
-        stage: "Stage 1", // Changed to string
-        iconImage: "",
+        stage: "Stage 1",
+        iconImage: "assets/timetableIcons/Opening ceremony.png",
         description: "",
         backgroundImage: "",
       ),
@@ -133,7 +133,7 @@ final List<ScheduleItem> day1ScheduleData = [
         title: "",
         time: "",
         duration: 25,
-        stage: "Stage 2", // Changed to string
+        stage: "Stage 2",
         iconImage: "",
         description: "",
         backgroundImage: "",
@@ -141,15 +141,15 @@ final List<ScheduleItem> day1ScheduleData = [
       EventItem(
         title: "Berklee Band",
         time: "12:55-13:05",
-        stage: "Stage 2", // Changed to string
+        stage: "Stage 2",
         duration: 10,
-        iconImage: "",
+        iconImage: "assets/timetableIcons/Singing performance.png",
         description: "",
         backgroundImage: "",
       ),
     ],
   ),
-    ScheduleItem(
+  ScheduleItem(
     time: "1:00 pm",
     stage1Events: [
       EventItem(
@@ -224,7 +224,7 @@ final List<ScheduleItem> day1ScheduleData = [
       ),
     ],
   ),
-  
+
   ScheduleItem(
     time: "2:30 pm",
     stage1Events: [
@@ -292,7 +292,7 @@ final List<ScheduleItem> day1ScheduleData = [
         backgroundImage: "",
       ),
     ],
-    
+
     stage2Events: [],
   ),
 
@@ -326,21 +326,101 @@ final List<ScheduleItem> day1ScheduleData = [
     ],
     stage2Events: [],
   ),
-
 ];
-
-
 
 final List<ScheduleItem> day2ScheduleData = [
   ScheduleItem(
-    time: "11:00 am",
+    time: "1:00 pm",
     stage1Events: [
       EventItem(
-        title: "Opening Ceremony",
-        time: "11:00-11:05",
+        title: "Kitanodai Gagaku Ensemble",
+        time: "13:00-13:30",
+        duration: 30,
+        iconImage: "assets/timetableIcons/Dancing performance.png",
+        stage: "1",
+        description: "",
+        backgroundImage: "",
+      ),
+    ],
+    stage2Events: [
+      EventItem(
+        title: "",
+        time: "",
         duration: 5,
-        stage: "Stage 1", // Changed to string
         iconImage: "",
+        description: "",
+        backgroundImage: "assets/timetableIcons/Opening ceremony.png",
+      ),
+      EventItem(
+        title: "Anime Band",
+        time: "13:05-13:45",
+        duration: 40,
+        iconImage: "assets/timetableIcons/Singing performance.png",
+        stage: "2",
+        description: "",
+        backgroundImage: "",
+      ),
+    ],
+  ),
+  ScheduleItem(
+    time: "1:30 pm",
+    stage1Events: [
+      EventItem(
+        title: "Okinawa Ryukyu Kokusai Taiko",
+        time: "13:30-14:00",
+        duration: 30,
+        iconImage: "assets/timetableIcons/Dancing performance.png",
+        stage: "1",
+        description: "",
+        backgroundImage: "",
+      ),
+    ],
+    stage2Events: [
+      EventItem(
+        title: "Cosplay Fashion Show",
+        time: "13:45-14:05",
+        duration: 20,
+        iconImage: "assets/timetableIcons/Dancing performance.png",
+        stage: "2",
+        description: "",
+        backgroundImage: "",
+      ),
+    ],
+  ),
+  ScheduleItem(
+    time: "2:00 pm",
+    stage1Events: [
+      EventItem(
+        title: "Jeiko Taiko Ensemble",
+        time: "14:00-14:30",
+        duration: 30,
+        iconImage: "assets/timetableIcons/Dancing performance.png",
+        stage: "1",
+        description: "",
+        backgroundImage: "",
+      ),
+    ],
+    stage2Events: [
+      EventItem(
+        title: "Parade to Boston Common",
+        time: "14:05-14:25",
+        duration: 20,
+        iconImage: "assets/timetableIcons/Singing performance.png",
+        stage: "2",
+        description: "",
+        backgroundImage: "",
+      ),
+    ],
+  ),
+  ScheduleItem(
+    time: "2:30 pm",
+    stage1Events: [
+      EventItem(
+        title: "Cosplay Fashion Show",
+        time: "14:30-14:50",
+        duration: 20,
+        iconImage: "assets/timetableIcons/Dancing performance.png",
+        stage: "1",
         description: "",
         backgroundImage: "assets/timetableIcons/Opening ceremony.png",
       ),
@@ -366,7 +446,7 @@ final List<ScheduleItem> day2ScheduleData = [
     stage2Events: [],
   ),
   ScheduleItem(
-    time: "12:00 pm",
+    time: "3:30 pm",
     stage1Events: [
       EventItem(
         title: "KENDO",
@@ -505,5 +585,3 @@ final List<ScheduleItem> day2ScheduleData = [
     stage2Events: [],
   ),
 ];
-
-
