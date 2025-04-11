@@ -202,8 +202,6 @@ class _TimetablePageState extends State<TimetablePage> {
     );
   }
 Widget _buildStageHeader() {
-  const double fontSize = 20;
-
   return Padding(
     padding: const EdgeInsets.only(top: 25, bottom: 10),
     child: Container(
@@ -214,22 +212,21 @@ Widget _buildStageHeader() {
         borderRadius: BorderRadius.circular(25),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Expanded(
+            flex: 5,
             child: Padding(
-              padding: const EdgeInsets.only(left: 12, right: 8),
+              padding: const EdgeInsets.only(left: 10, right: 6),
               child: Align(
                 alignment: Alignment.centerRight,
                 child: Text(
                   "Boston Common",
                   style: TextStyle(
-                    fontSize: fontSize,
+                    fontSize: 17.5, // Reduced for better fit
                     fontWeight: FontWeight.w500,
                     color: Colors.white,
                   ),
                   overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
                 ),
               ),
             ),
@@ -243,19 +240,19 @@ Widget _buildStageHeader() {
             ),
           ),
           Expanded(
+            flex: 5,
             child: Padding(
-              padding: const EdgeInsets.only(left: 8, right: 12),
+              padding: const EdgeInsets.only(left: 20, right: 13),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   "Downtown",
                   style: TextStyle(
-                    fontSize: fontSize,
+                    fontSize: 20, // Slightly larger for optical balance
                     fontWeight: FontWeight.w500,
                     color: Colors.white,
                   ),
                   overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
                 ),
               ),
             ),
@@ -265,6 +262,7 @@ Widget _buildStageHeader() {
     ),
   );
 }
+
 }
 
 class ScheduleList extends StatelessWidget {
