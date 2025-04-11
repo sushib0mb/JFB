@@ -12,7 +12,7 @@ class PaymentFilterRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final payments = ["Cash", "Venmo", "Zelle", "Credit"];
+    final payments = ["Cash", "Venmo", "Zelle", "Credit Card"];
     
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -60,7 +60,7 @@ class _PaymentFilterItem extends StatelessWidget {
             ),
             child: Center(
               child: Image.asset(
-                'assets/payments/${method.toLowerCase()}.png',
+                  'assets/payments/${method.toLowerCase().replaceAll(' ', '_')}.png',
                 width: 44,
                 height: 44,
                 color: isSelected ? null : Colors.grey.withOpacity(0.5),
