@@ -22,16 +22,22 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  final int initialIndex;
+  const MainScreen({Key? key, this.initialIndex = 0}) : super(key: key);
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
+  _MainScreenState createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int selectedIndex = 0;
+  late int selectedIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedIndex = widget.initialIndex;
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -62,6 +68,7 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 }
+
 
 class TopBar extends StatelessWidget {
   final int selectedIndex;

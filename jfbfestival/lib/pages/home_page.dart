@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'timetable_page.dart';
+import 'package:jfbfestival/mainscreen.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -197,10 +198,12 @@ class _HomePageState extends State<HomePage> {
 ) {
   return GestureDetector(
     onTap: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => TimetablePage()),
-      );
+    Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => MainScreen(initialIndex: 2),
+  ),
+);
     },
     child: Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
