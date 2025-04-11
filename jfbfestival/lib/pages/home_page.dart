@@ -512,11 +512,23 @@ DateTime _parseTimeString(String timeStr, int day) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MainScreen(initialIndex: 2),
-          ),
-        );
+  context,
+  PageRouteBuilder(
+    transitionDuration: const Duration(milliseconds: 400),
+    pageBuilder: (_, __, ___) => MainScreen(initialIndex: 2),
+    transitionsBuilder: (_, animation, __, child) {
+      const begin = Offset(1.0, 0.0); // slide from right
+      const end = Offset.zero;
+      final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: Curves.easeInOut));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  ),
+);
+
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
