@@ -288,7 +288,7 @@ final List<FoodBooth> foodBooths = [
         description: "Traditional fermented napa cabbage with Korean spices",
         price: 8.99,
         allergens: ["Soy"],
-        imagePath: "assets/kimchi_dish.png",
+        imagePath: "assets/food/napaCab.png",
         isVegan: true,
       ),
       Dish(
@@ -296,7 +296,7 @@ final List<FoodBooth> foodBooths = [
         description: "Fresh cucumber kimchi with garlic and chili",
         price: 7.99,
         allergens: ["Soy"],
-        imagePath: "assets/cucumber_kimchi.png",
+        imagePath: "assets/food/cucumber_kimchi.png",
         isVegan: true,
       ),
     ],
@@ -668,40 +668,6 @@ final List<FoodBooth> foodBooths = [
     ],
   ),
 
-
-// Kevin's Bread (けびんのパン)
-FoodBooth(
-  name: "Kevin's Bread",
-  image: "assets/food/Kevins Bread.jpg",
-  description: "Japanese style breads",
-  allergy: "Contains egg, wheat, milk",
-  boothLocation: "TBD",
-  genre: "Bakery",
-  logoPath: "assets/kevin_bread.jpg",
-  dishImagePath: "assets/food/Kevins Bread.jpg",
-  isVegan: false,
-  payments: ["Cash", "Venmo"],
-  allergens: ["Egg", "Wheat", "Milk"],
-  dishes: [
-    Dish(
-      name: "Curry Pan",
-      description: "Japanese curry bread",
-      price: 5.50,
-      allergens: ["Egg", "Wheat", "Milk"],
-      imagePath: "assets/food/curry_bread.jpg",
-      isVegan: false,
-    ),
-    Dish(
-      name: "Sakura An Pan",
-      description: "Sweet bread with cherry blossom filling",
-      price: 5.00,
-      allergens: ["Egg", "Wheat", "Milk"],
-      imagePath: "assets/food/sakura_pan.jpg",
-      isVegan: false,
-    ),
-  ],
-),
-
   // Kevin's Bread (けびんのパン)
   FoodBooth(
     name: "Kevin's Bread",
@@ -870,7 +836,7 @@ FoodBooth(
         description: "Rice ball with tuna",
         price: 5.00,
         allergens: ["Egg", "Soy", "Fish"],
-        imagePath: "assets/food/tuna_onigiri.jpg",
+        imagePath: "assets/food/tuna_onigiriiiii.jpg",
         isVegan: false,
       ),
       Dish(
