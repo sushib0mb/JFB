@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'timetable_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -186,15 +187,22 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildEventCard(
-    String title,
-    String stage,
-    String time,
-    bool ongoing,
-    bool isSinging,
-    bool isAdvertising,
-    double screenWidth,
-  ) {
-    return Padding(
+  String title,
+  String stage,
+  String time,
+  bool ongoing,
+  bool isSinging,
+  bool isAdvertising,
+  double screenWidth,
+) {
+  return GestureDetector(
+    onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => TimetablePage()),
+      );
+    },
+    child: Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Stack(
         clipBehavior: Clip.none,
@@ -303,7 +311,8 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
         ],
-      ),
+        ),
+      )
     );
   }
 
