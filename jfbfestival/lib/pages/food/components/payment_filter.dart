@@ -12,7 +12,7 @@ class PaymentFilterRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final payments = ['Cash', 'Venmo', 'Zelle', 'PayPal'];
+    final payments = ['Cash', 'Venmo', 'Zelle'];
     
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

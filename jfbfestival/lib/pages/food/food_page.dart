@@ -21,24 +21,30 @@ class _FoodPageState extends State<FoodPage> {
   Set<String> excludedAllergens = {};
 
   @override
-  Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size; // Get screen size
-    final screenWidth = screenSize.width;
-    final screenHeight = screenSize.height;
+Widget build(BuildContext context) {
+  final screenSize = MediaQuery.of(context).size;
+  final screenWidth = screenSize.width;
+  final screenHeight = screenSize.height;
 
-    return Scaffold(
-      body: Stack(
-        children: [
-          _buildBackgroundGradient(),
-          _buildTopGradient(),
-          _buildBottomGradient(),
-          _buildFilterButton(),
-          _buildScrollIndicator(),
-          _buildMainContent(screenWidth, screenHeight),
-        ],
-      ),
-    );
-  }
+  return Scaffold(
+    body: Stack(
+      children: [
+        _buildBackgroundGradient(),
+        _buildTopGradient(),
+        _buildBottomGradient(),
+        
+        // Ensure this is behind the filter button
+        Positioned.fill(
+          child: _buildMainContent(screenWidth, screenHeight),
+        ),
+
+        // This stays on top
+        _buildFilterButton(),
+      ],
+    ),
+  );
+}
+
 
   Widget _buildBackgroundGradient() {
     return Container(
@@ -107,20 +113,17 @@ class _FoodPageState extends State<FoodPage> {
       ),
     );
   }
-
-  Widget _buildFilterButton() {
-    return Positioned(
-      top:
-          MediaQuery.of(context).size.height *
-          0.05, // Adjust position relative to screen height
-      right:
-          MediaQuery.of(context).size.width *
-          0.05, // Adjust position relative to screen width
-      child: GestureDetector(
-        onTap: _showFilterPopup,
+Widget _buildFilterButton() {
+  return Positioned(
+    top: MediaQuery.of(context).size.height * 0.05,
+    right: MediaQuery.of(context).size.width * 0.05,
+    child: GestureDetector(
+      onTap: _showFilterPopup,
+      child: Material( // Wrap with Material for better tap detection
+        color: Colors.transparent,
         child: Container(
-          width: 70, // Adjust size relative to screen width
-          height: 70, // Adjust size relative to screen width
+          width: 50,
+          height: 50,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(25),
@@ -138,29 +141,11 @@ class _FoodPageState extends State<FoodPage> {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
-  Widget _buildScrollIndicator() {
-    return Positioned(
-      top:
-          MediaQuery.of(context).size.height *
-          0.075, // Adjust position relative to screen height
-      right:
-          MediaQuery.of(context).size.width *
-          0.03, // Adjust position relative to screen width
-      child: Container(
-        width: 7,
-        height:
-            MediaQuery.of(context).size.height *
-            0.08, // Adjust height based on screen size
-        decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.4),
-          borderRadius: BorderRadius.circular(25),
-        ),
-      ),
-    );
-  }
+ 
 
   Widget _buildMainContent(double screenWidth, double screenHeight) {
     double maxWidth = screenWidth > 1200 ? 1200 : screenWidth;
@@ -179,7 +164,6 @@ class _FoodPageState extends State<FoodPage> {
                 SizedBox(
                   height: screenHeight * 0.15,
                 ), // Adjust height based on screen size
-                _buildFeaturedBoothsSection(),
                 _buildAllBoothsSection(screenWidth),
               ],
             ),
@@ -189,48 +173,13 @@ class _FoodPageState extends State<FoodPage> {
     );
   }
 
-  Widget _buildFeaturedBoothsSection() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          "Featured Booths",
-          style: TextStyle(
-            fontSize:
-                MediaQuery.of(context).size.width > 600
-                    ? 20
-                    : 16, // Adjust font size based on screen width
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 16),
-        SizedBox(
-          height:
-              MediaQuery.of(context).size.height *
-              0.3, // Adjust height based on screen height
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            shrinkWrap: true,
-            itemCount: filteredBooths.length,
-            itemBuilder:
-                (context, index) => BoothCard(
-                  booth: filteredBooths[index],
-                  onTap:
-                      () => _showBoothDetails(context, filteredBooths[index]),
-                ),
-          ),
-        ),
-      ],
-    );
-  }
 
   Widget _buildAllBoothsSection(double screenWidth) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const SizedBox(height: 24),
+        const SizedBox(height: 40),
         Text(
           "All Food Booths",
           style: TextStyle(
@@ -309,56 +258,73 @@ void _showBoothDetails(BuildContext context, FoodBooth booth) {
                   child: Center(
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 600),
-                      child: ListView(
-                        controller: controller,
-                        children: [
-                          Center(child: _buildSectionTitle("Payment")),
-                          Center(
-                            child: PaymentFilterRow(
-                              selectedPayments: selectedPayments,
-                              onPaymentSelected: (method, isSelected) {
-                                setModalState(() {
-                                  if (isSelected) {
-                                    selectedPayments.add(method);
-                                  } else {
-                                    selectedPayments.remove(method);
-                                  }
-                                });
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 15),
-                          Center(child: _buildSectionTitle("Veganism")),
-                          Center(
-                            child: VeganFilterOption(
-                              isVegan: veganOnly ?? false,
-                              onChanged: (value) {
-                                setModalState(() => veganOnly = value);
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 15),
-                          Center(child: _buildSectionTitle("Allergens")),
-                          Center(
-                            child: AllergyFilterGrid(
-                              selectedAllergens: selectedAllergens,
-                              onAllergenSelected: (allergen, isSelected) {
-                                setModalState(() {
-                                  if (isSelected) {
-                                    selectedAllergens.add(allergen);
-                                  } else {
-                                    selectedAllergens.remove(allergen);
-                                  }
-                                });
-                              },
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          Center(
-                            child: _buildApplyButton(onApply: _applyFilters),
-                          ),
-                        ],
-                      ),
+                      child: Column(
+  children: [
+    Align(
+      alignment: Alignment.topRight,
+      child: IconButton(
+        icon: const Icon(Icons.close),
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+    ),
+    Expanded(
+      child: ListView(
+        controller: controller,
+        children: [
+          Center(child: _buildSectionTitle("Payment")),
+          Center(
+            child: PaymentFilterRow(
+              selectedPayments: selectedPayments,
+              onPaymentSelected: (method, isSelected) {
+                setModalState(() {
+                  if (isSelected) {
+                    selectedPayments.add(method);
+                  } else {
+                    selectedPayments.remove(method);
+                  }
+                });
+              },
+            ),
+          ),
+          const SizedBox(height: 15),
+          Center(child: _buildSectionTitle("Veganism")),
+          Center(
+            child: VeganFilterOption(
+              isVegan: veganOnly ?? false,
+              onChanged: (value) {
+                setModalState(() => veganOnly = value);
+              },
+            ),
+          ),
+          const SizedBox(height: 15),
+          Center(child: _buildSectionTitle("Allergens")),
+          Center(
+            child: AllergyFilterGrid(
+              selectedAllergens: selectedAllergens,
+              onAllergenSelected: (allergen, isSelected) {
+                setModalState(() {
+                  if (isSelected) {
+                    selectedAllergens.add(allergen);
+                  } else {
+                    selectedAllergens.remove(allergen);
+                  }
+                });
+              },
+            ),
+          ),
+          const SizedBox(height: 20),
+          Center(
+            child: _buildApplyButton(
+              onApply: _applyFilters,
+              closeModal: () => Navigator.of(context).pop(),
+            ),
+          ),
+        ],
+      ),
+    ),
+  ],
+)
+
                     ),
                   ),
                 );
@@ -407,36 +373,39 @@ void _showBoothDetails(BuildContext context, FoodBooth booth) {
       ),
     );
   }
+Widget _buildApplyButton({required VoidCallback onApply, required VoidCallback closeModal}) {
+  return ElevatedButton(
+    style: ElevatedButton.styleFrom(
+      backgroundColor: Colors.red, // background color
+      foregroundColor: Colors.white, // text color
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(30), // more rounded corners
+      ),
+      padding: const EdgeInsets.symmetric(
+        vertical: 18,
+        horizontal: 40,
+      ), // adjust padding for better proportions
+      elevation: 10, // add shadow for depth
+    ).copyWith(
+      shadowColor: MaterialStateProperty.all(
+        Colors.redAccent.withOpacity(0.5),
+      ), // custom shadow color
+    ),
+    onPressed: () {
+      onApply();      // Apply filters
+      closeModal();   // Close modal
+    },
+    child: const Text(
+      "Apply Filters",
+      style: TextStyle(
+        fontSize: 18, // slightly larger font
+        fontWeight: FontWeight.bold,
+        letterSpacing: 1.2, // increased letter spacing for better readability
+      ),
+    ),
+  );
+}
 
-  Widget _buildApplyButton({required VoidCallback onApply}) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.red, // background color
-        foregroundColor: Colors.white, // text color
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30), // more rounded corners
-        ),
-        padding: const EdgeInsets.symmetric(
-          vertical: 18,
-          horizontal: 40,
-        ), // adjust padding for better proportions
-        elevation: 10, // add shadow for depth
-      ).copyWith(
-        shadowColor: MaterialStateProperty.all(
-          Colors.redAccent.withOpacity(0.5),
-        ), // custom shadow color
-      ),
-      onPressed: onApply,
-      child: const Text(
-        "Apply Filters",
-        style: TextStyle(
-          fontSize: 18, // slightly larger font
-          fontWeight: FontWeight.bold,
-          letterSpacing: 1.2, // increased letter spacing for better readability
-        ),
-      ),
-    );
-  }
 
   void _applyFilters() {
     setState(() {

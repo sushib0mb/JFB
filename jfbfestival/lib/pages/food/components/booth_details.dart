@@ -133,7 +133,7 @@ class BoothDetails extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 20),
                                 _buildSection(
-                                  "Veganism",
+                                  "Vegan Options",
                                   _buildVeganism(booth.isVegan),
                                 ),
                                 const SizedBox(height: 40),
@@ -193,7 +193,7 @@ class BoothDetails extends StatelessWidget {
         children: [
           Center(
             child: Container(
-              width: 120,
+              width: 140,
               height: 30,
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -297,9 +297,10 @@ class BoothDetails extends StatelessWidget {
       ],
     );
   }
-
-  Widget _buildVeganism(bool isVegan) {
-    return Column(
+Widget _buildVeganism(bool isVegan) {
+  return Center(
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Container(
           width: 40,
@@ -318,8 +319,8 @@ class BoothDetails extends StatelessWidget {
           child: Center(
             child: Image.asset(
               "assets/vegan.png",
-              width: 30,  // Adjusted size for better centering
-              height: 30,  // Adjusted size for better centering
+              width: 30,
+              height: 30,
               color: isVegan ? null : Colors.grey.withOpacity(0.5),
               colorBlendMode: BlendMode.modulate,
             ),
@@ -327,7 +328,7 @@ class BoothDetails extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          isVegan ? "Vegan" : "Not Vegan",
+          isVegan ? "Yes" : "None",
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.normal,
@@ -335,8 +336,9 @@ class BoothDetails extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
+    ),
+  );
+}
 }
 
 class DishCard extends StatefulWidget {
