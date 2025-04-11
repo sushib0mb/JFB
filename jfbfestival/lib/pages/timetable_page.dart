@@ -201,56 +201,70 @@ class _TimetablePageState extends State<TimetablePage> {
       ),
     );
   }
+Widget _buildStageHeader() {
+  const double fontSize = 20;
 
-  /// ステージヘッダー
-  Widget _buildStageHeader() {
-    double fontSize = 30;
-
-    return Padding(
-      padding: const EdgeInsets.only(top: 25, bottom: 10),
-      child: Container(
-        width: 290,
-        height: 50,
-        decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(0.5),
-          borderRadius: BorderRadius.circular(25),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center, // <- changed
-          children: [
-            Text(
-              "Stage 1",
-              style: TextStyle(
-                fontSize: fontSize,
-                fontWeight: FontWeight.w500,
-                color: Colors.white,
-              ),
-            ),
-            SizedBox(width: 17.5), // <- you can tweak this width as needed
-            SizedBox(
-              width: 4,
-              height: 30,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.white,
+  return Padding(
+    padding: const EdgeInsets.only(top: 25, bottom: 10),
+    child: Container(
+      width: 290,
+      height: 50,
+      decoration: BoxDecoration(
+        color: Colors.grey.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(25),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 12, right: 8),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  "Boston Common",
+                  style: TextStyle(
+                    fontSize: fontSize,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
               ),
             ),
-            SizedBox(width: 17.5), // <- space after the divider
-            Text(
-              "Stage 2",
-              style: TextStyle(
-                fontSize: fontSize,
-                fontWeight: FontWeight.w500,
-                color: Colors.white,
+          ),
+          Container(
+            width: 4,
+            height: 30,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Colors.white,
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8, right: 12),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Downtown",
+                  style: TextStyle(
+                    fontSize: fontSize,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 }
 
 class ScheduleList extends StatelessWidget {
