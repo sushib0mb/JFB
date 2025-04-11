@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';  // For launching URLs
 import 'timetable_page.dart';
 import 'package:jfbfestival/mainscreen.dart';
-import 'package:url_launcher/url_launcher.dart';  
 
 class HomePage extends StatefulWidget {
   @override
@@ -342,12 +342,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
- Widget _buildIcon(String imagePath, String url) {
+  Widget _buildIcon(String imagePath, String url) {
     return GestureDetector(
       onTap: () async {
         final Uri uri = Uri.parse(url); // Ensure the URL is correctly parsed
-        if (await canLaunchUrl(uri)) { // Check if the URL can be launched
-          await launchUrl(uri); // Launch the URL
+        if (await canLaunch(uri.toString())) { // Check if the URL can be launched
+          await launch(uri.toString()); // Launch the URL
         } else {
           throw 'Could not launch $url'; // Show an error if the URL cannot be launched
         }
@@ -365,6 +365,7 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
   Widget _buildSponsorsSection(double screenWidth) {
     return Container(
       margin: EdgeInsets.all(16),
@@ -387,7 +388,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
   Widget _buildSponsorCategory(String title, String imagePath) {
     return Column(
       children: [
