@@ -148,8 +148,8 @@ Widget _buildFilterButton() {
  
 
   Widget _buildMainContent(double screenWidth, double screenHeight) {
-    double maxWidth = screenWidth > 1200 ? 1200 : screenWidth;
-    double padding = screenWidth < 600 ? 16 : 24;
+    double maxWidth = screenWidth > 1200 ? 1300 : screenWidth;
+    double padding = screenWidth < 600 ? 20 : 30;
 
     return Center(
       child: ConstrainedBox(
@@ -179,7 +179,7 @@ Widget _buildFilterButton() {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const SizedBox(height: 40),
+        const SizedBox(height: 20),
         Text(
           "All Food Booths",
           style: TextStyle(
@@ -199,9 +199,9 @@ Widget _buildFilterButton() {
                 screenWidth > 600
                     ? 2
                     : 1, // Adjust number of columns based on screen width
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-            childAspectRatio: 1.2,
+            crossAxisSpacing: 30,
+            mainAxisSpacing: 1,
+            childAspectRatio: 1.4,
           ),
           itemCount: filteredBooths.length,
           itemBuilder:
