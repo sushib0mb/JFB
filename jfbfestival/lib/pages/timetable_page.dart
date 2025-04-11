@@ -224,9 +224,9 @@ class _TimetablePageState extends State<TimetablePage> {
         width: MediaQuery.of(context).size.width * 0.67,
         height: 50,
         decoration: BoxDecoration(
-  color: Color(0xFF8D8D97),
-  borderRadius: BorderRadius.circular(36),
-),
+          color: Color(0xFF8D8D97),
+          borderRadius: BorderRadius.circular(36),
+        ),
 
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -249,14 +249,14 @@ class _TimetablePageState extends State<TimetablePage> {
                 ),
               ),
             ),
-           Container(
-  width: 3,
-  height: 30,
-  decoration: BoxDecoration(
-    color: Colors.white,
-    borderRadius: BorderRadius.circular(20),
-  ),
-),
+            Container(
+              width: 3,
+              height: 30,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
 
             Expanded(
               child: Padding(
@@ -292,15 +292,15 @@ class ScheduleList extends StatelessWidget {
     required this.onEventTap,
     super.key,
   });
- @override
+  @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final baseFontSize = 17.0;
     final responsiveFontSize = baseFontSize * (screenWidth / 375);
     final pixelsPerMinute = 10.0;
 
-    final timelineSlots = scheduleItems.map((item) => item.time).toSet().toList();
-    timelineSlots.sort();
+    final timelineSlots =
+        scheduleItems.map((item) => item.time).toSet().toList();
     final baseTime = _parseTimeToMinutes(timelineSlots.first);
     final latestTime = _parseTimeToMinutes(timelineSlots.last) + 120;
     final timelineHeight = (latestTime - baseTime) * pixelsPerMinute;
@@ -308,233 +308,152 @@ class ScheduleList extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Time Column (unchanged)
+        // Time Column
         Padding(
           padding: const EdgeInsets.only(top: 12, left: 13),
           child: SizedBox(
             width: 60,
             height: timelineHeight,
             child: Stack(
-              children: timelineSlots.map((timeString) {
-                final timeParts = timeString.split(" ");
-                final timeText = timeParts.isNotEmpty ? timeParts[0] : timeString;
-                final ampm = timeParts.length > 1 ? timeParts[1] : "";
-                final timeInMinutes = _parseTimeToMinutes(timeString);
-                final topPosition = (timeInMinutes - baseTime) * pixelsPerMinute;
+              children:
+                  timelineSlots.map((timeString) {
+                    final timeParts = timeString.split(" ");
+                    final timeText =
+                        timeParts.isNotEmpty ? timeParts[0] : timeString;
+                    final ampm = timeParts.length > 1 ? timeParts[1] : "";
+                    final timeInMinutes = _parseTimeToMinutes(timeString);
+                    final topPosition =
+                        (timeInMinutes - baseTime) * pixelsPerMinute;
 
-                return Positioned(
-                  top: topPosition,
-                  left: 0,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-  timeText,
-  style: TextStyle(
-    fontSize: responsiveFontSize * 1.1,
-    fontWeight: FontWeight.w400,
-    color: Color(0xFF303030),
-  ),
-),
-Text(
-  ampm,
-  style: TextStyle(
-    fontSize: responsiveFontSize * 0.9,
-    fontWeight: FontWeight.w300,
-    color: Color(0xFF505050),
-  ),
-),
-
-                    ],
-                  ),
-                );
-              }).toList(),
+                    return Positioned(
+                      top: topPosition,
+                      left: 0,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            timeText,
+                            style: TextStyle(
+                              fontSize: responsiveFontSize * 1.1,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xFF303030),
+                            ),
+                          ),
+                          Text(
+                            ampm,
+                            style: TextStyle(
+                              fontSize: responsiveFontSize * 0.9,
+                              fontWeight: FontWeight.w300,
+                              color: Color(0xFF505050),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
             ),
           ),
         ),
 
-        // Stage 1 Column with smart positioning
-       Expanded(
-  child: SizedBox(
-    height: timelineHeight,
-    child: Stack(
-      children: [
-        _buildTimelineLines(
-          baseTime: baseTime,
-          latestTime: latestTime,
-          pixelsPerMinute: pixelsPerMinute,
-          width: screenWidth / 2,
+        Expanded(
+          child: SizedBox(
+            height: timelineHeight,
+            child: Stack(
+              children: [
+                _buildTimelineLines(
+                  baseTime: baseTime,
+                  latestTime: latestTime,
+                  pixelsPerMinute: pixelsPerMinute,
+                  width: screenWidth / 2,
+                ),
+                Column(
+                  children: [
+                    ..._buildEventColumn(1, pixelsPerMinute),
+                    SizedBox(height: 100),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ),
-        ..._buildSmartEventPositioning(
-          stage: 1,
-          baseTime: baseTime,
-          pixelsPerMinute: pixelsPerMinute,
-          screenWidth: screenWidth,
-        ),
-      ],
-    ),
-  ),
-),
 
-
-        // Stage 2 Column with smart positioning
-              Expanded(
-  child: SizedBox(
-    height: timelineHeight,
-    child: Stack(
-      children: [
-        _buildTimelineLines(
-          baseTime: baseTime,
-          latestTime: latestTime,
-          pixelsPerMinute: pixelsPerMinute,
-          width: screenWidth / 2,
+        Expanded(
+          child: SizedBox(
+            height: timelineHeight,
+            child: Stack(
+              children: [
+                _buildTimelineLines(
+                  baseTime: baseTime,
+                  latestTime: latestTime,
+                  pixelsPerMinute: pixelsPerMinute,
+                  width: screenWidth / 2,
+                ),
+                Column(
+                  children: [
+                    ..._buildEventColumn(2, pixelsPerMinute),
+                    SizedBox(height: 100),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ),
-        ..._buildSmartEventPositioning(
-          stage: 2,
-          baseTime: baseTime,
-          pixelsPerMinute: pixelsPerMinute,
-          screenWidth: screenWidth,
-        ),
-      ],
-    ),
-  ),
-),
       ],
     );
   }
+
   Widget _buildTimelineLines({
-  required int baseTime,
-  required int latestTime,
-  required double pixelsPerMinute,
-  required double width,
-}) {
-  final List<Widget> lines = [];
+    required int baseTime,
+    required int latestTime,
+    required double pixelsPerMinute,
+    required double width,
+  }) {
+    final List<Widget> lines = [];
 
-  for (int t = baseTime; t <= latestTime; t += 30) { // <-- now every 15 minutes
-    final top = (t - baseTime) * pixelsPerMinute;
-    lines.add(Positioned(
-      top: top,
-      left: 0,
-      right: 0,
-      child: Container(
-        width: width,
-        height: 1,
-        color: Colors.grey.withOpacity(1),
-      ),
-    ));
-  }
-
-  return Stack(children: lines);
-}
-List<Widget> _buildSmartEventPositioning({
-  required int stage,
-  required int baseTime,
-  required double pixelsPerMinute,
-  required double screenWidth,
-}) {
-  // Get all events for this stage
-  final events = scheduleItems
-      .expand((item) => stage == 1 ? (item.stage1Events ?? []) : (item.stage2Events ?? []))
-      .where((e) => e.title.isNotEmpty)
-      .map((e) {
-        final start = _parseEventStartTime(e.time).toInt();
-        final duration = e.duration;
-        return _EventData(
-          event: e,
-          startMinutes: start,
-          endMinutes: (start + duration).toInt(),
-        );
-      }).toList();
-
-  // Sort events by start time
-  events.sort((a, b) => a.startMinutes.compareTo(b.startMinutes));
-  
-  final List<Widget> widgets = [];
-  
-  // Approach: Process the events and place them in non-overlapping columns
-  if (events.isEmpty) return widgets;
-  
-  // Track which columns have events at what times
-  final List<List<_EventData>> columns = [];
-  
-  for (var event in events) {
-    // Find a column where this event doesn't overlap with existing events
-    bool placed = false;
-    
-    for (int i = 0; i < columns.length; i++) {
-      // Check if this event overlaps with any event in this column
-      bool hasOverlap = columns[i].any((existingEvent) => 
-        (event.startMinutes < existingEvent.endMinutes && 
-         event.endMinutes > existingEvent.startMinutes));
-      
-      if (!hasOverlap) {
-        // No overlap in this column, add the event here
-        columns[i].add(event);
-        placed = true;
-        break;
-      }
-    }
-    
-    // If we couldn't place in existing columns, create a new column
-    if (!placed) {
-      columns.add([event]);
-    }
-  }
-  
-  // Calculate layout parameters
-  final double totalAvailableWidth = (screenWidth - 100) / 2;
-  final double columnCount = columns.length.toDouble();
-  final double cardWidth = max(totalAvailableWidth / columnCount, 80.0); // Minimum width of 80
-  
-  // Render each event in its assigned column
-  for (int columnIndex = 0; columnIndex < columns.length; columnIndex++) {
-    for (var event in columns[columnIndex]) {
-      final double leftOffset = 5 + columnIndex * (totalAvailableWidth / columnCount);
-      final double topPosition = (event.startMinutes - baseTime) * pixelsPerMinute;
-      final double height = (event.endMinutes - event.startMinutes) * pixelsPerMinute;
-      
-      widgets.add(Positioned(
-        top: topPosition + 12, // Add padding at top
-        left: leftOffset,
-        width: cardWidth - 10,
-        height: height,
-        child: PerformanceBox(
-          eventItem: event.event,
-          onTap: onEventTap,
+    for (int t = baseTime; t <= latestTime; t += 30) {
+      // <-- now every 15 minutes
+      final top = (t - baseTime) * pixelsPerMinute;
+      lines.add(
+        Positioned(
+          top: top,
+          left: 0,
+          right: 0,
+          child: Container(
+            width: width,
+            height: 1,
+            color: Colors.grey.withOpacity(1),
+          ),
         ),
-      ));
-    }
-  }
-  
-  return widgets;
-}
-
-  List<List<_EventData>> _groupOverlappingEvents(List<_EventData> events) {
-  if (events.isEmpty) return [];
-
-  final List<List<_EventData>> lanes = [];
-
-  for (final event in events) {
-    bool placed = false;
-
-    for (final lane in lanes) {
-      final lastEventInLane = lane.last;
-
-      // Only add if it starts after or exactly when the last ends
-      if (event.startMinutes >= lastEventInLane.endMinutes) {
-        lane.add(event);
-        placed = true;
-        break;
-      }
+      );
     }
 
-    if (!placed) {
-      lanes.add([event]);
-    }
+    return Stack(children: lines);
   }
 
-  return lanes;
-}
+  List<Widget> _buildEventColumn(int stage, double pixelsPerMinute) {
+    final events =
+        scheduleItems
+            .expand(
+              (item) =>
+                  stage == 1
+                      ? item.stage1Events ?? []
+                      : item.stage2Events ?? [],
+            )
+            .toList();
+
+    return [
+      const SizedBox(height: 12),
+      for (var i = 0; i < events.length; i++)
+        ...(events[i].title != ""
+            ? [
+              SizedBox(
+                height: events[i].duration * pixelsPerMinute,
+                child: PerformanceBox(eventItem: events[i], onTap: onEventTap),
+              ),
+            ]
+            : [SizedBox(height: events[i].duration * pixelsPerMinute)]),
+    ];
+  }
 
   // Parse time string (like "11:00 am") to minutes since midnight
   int _parseTimeToMinutes(String timeString) {
@@ -543,11 +462,12 @@ List<Widget> _buildSmartEventPositioning({
       final parts = timeString.split(' ');
       final timePart = parts[0];
       final isPM = parts.length > 1 && parts[1].toLowerCase() == 'pm';
-      
+
       final hourAndMinute = timePart.split(':');
       int hour = int.parse(hourAndMinute[0]);
-      final int minute = hourAndMinute.length > 1 ? int.parse(hourAndMinute[1]) : 0;
-      
+      final int minute =
+          hourAndMinute.length > 1 ? int.parse(hourAndMinute[1]) : 0;
+
       // Convert to 24-hour format if PM
       if (isPM && hour < 12) {
         hour += 12;
@@ -556,64 +476,12 @@ List<Widget> _buildSmartEventPositioning({
       if (!isPM && hour == 12) {
         hour = 0;
       }
-      
+
       return hour * 60 + minute;
     } catch (e) {
       print('Error parsing time: $timeString - $e');
       return 0; // Default fallback
     }
-  }
-
-  // Parse event time from the format used in your app
-  int _parseEventStartTime(String eventTime) {
-    try {
-      // Handle formats like "11:00-11:30" or "11:00 am - 11:30 am"
-      final parts = eventTime.split('-');
-      if (parts.isEmpty) return 0;
-      
-      final String startTimePart = parts[0].trim();
-      return _parseTimeToMinutes(startTimePart);
-    } catch (e) {
-      print('Error parsing event time: $eventTime - $e');
-      return 0; // Default fallback
-    }
-  }
-
-  List<Widget> _buildEventPositioned(int stage, int baseTime, double pixelsPerMinute) {
-    final List<Widget> eventWidgets = [];
-    
-    // Get all events for this stage
-    final events = scheduleItems.expand((item) => 
-      stage == 1 ? (item.stage1Events ?? []) : (item.stage2Events ?? [])
-    ).toList();
-    
-    // Filter out empty events
-    final nonEmptyEvents = events.where((event) => event.title.isNotEmpty).toList();
-    
-    // For each event, position it based on its time
-    for (var event in nonEmptyEvents) {
-      try {
-        // Parse the event start time
-        final startTimeInMinutes = _parseEventStartTime(event.time);
-        final topPosition = (startTimeInMinutes - baseTime) * pixelsPerMinute;
-        
-        if (topPosition >= 0) { // Only add if it's visible in our timeline view
-          eventWidgets.add(
-            Positioned(
-              top: topPosition + 12, // Add padding at top
-              left: 10,
-              right: 10,
-              height: event.duration * pixelsPerMinute * 0.85, // Slightly reduce height to prevent overlap
-              child: PerformanceBox(eventItem: event, onTap: onEventTap),
-            ),
-          );
-        }
-      } catch (e) {
-        print('Error positioning event ${event.title}: $e');
-      }
-    }
-    
-    return eventWidgets;
   }
 }
 
@@ -623,7 +491,7 @@ class PerformanceBox extends StatefulWidget {
   final Function(EventItem) onTap;
 
   const PerformanceBox({Key? key, required this.eventItem, required this.onTap})
-      : super(key: key);
+    : super(key: key);
 
   @override
   _PerformanceBoxState createState() => _PerformanceBoxState();
@@ -637,86 +505,94 @@ class _PerformanceBoxState extends State<PerformanceBox>
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    double responsiveFontSize = screenWidth / 375;
 
     double timeSectionHeight = screenHeight * 0.253;
-    double eventHeight = widget.eventItem.duration / 60 * timeSectionHeight + 6.7;
+    double eventHeight =
+        widget.eventItem.duration / 60 * timeSectionHeight + 6.7;
+    double responsiveFontSize = screenWidth / 375;
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10.0), // Adds spacing to avoid overlap
-      child: GestureDetector(
-        onTap: () {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          isPressed = true;
+        });
+        Future.delayed(const Duration(milliseconds: 150), () {
+          widget.onTap(widget.eventItem);
           setState(() {
-            isPressed = true;
+            isPressed = false;
           });
-          Future.delayed(const Duration(milliseconds: 150), () {
-            widget.onTap(widget.eventItem);
-            setState(() {
-              isPressed = false;
-            });
-          });
-        },
-        child: AnimatedScale(
-          scale: isPressed ? 0.95 : 1.0,
-          duration: const Duration(milliseconds: 150),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(36),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.08),
-                  blurRadius: 8,
-                  offset: const Offset(0, 4),
-                ),
-              ],
+        });
+      },
+      child: AnimatedScale(
+        scale: isPressed ? 0.95 : 1.0,
+        duration: const Duration(milliseconds: 150),
+        child: Container(
+          width: 140,
+          height: eventHeight,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(45),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(isPressed ? 0.05 : 0.1),
+                blurRadius: isPressed ? 1 : 3,
+                offset: Offset(0, isPressed ? 0 : 1),
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 12.0,
+              horizontal: 8.0,
             ),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  width: 42,
-                  height: 42,
+                  width: 30,
+                  height: 30,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.white,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 4,
-                        offset: const Offset(0, 2),
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 2,
                       ),
                     ],
                   ),
-                  child: widget.eventItem.iconImage.isNotEmpty
-                      ? Padding(
-                          padding: const EdgeInsets.all(6),
-                          child: Image.asset(widget.eventItem.iconImage, fit: BoxFit.contain),
-                        )
-                      : const Icon(Icons.event, size: 20),
+                  child:
+                      widget.eventItem.iconImage.isNotEmpty
+                          ? Image.asset(
+                            widget.eventItem.iconImage,
+                            fit: BoxFit.cover,
+                          )
+                          : Icon(Icons.event, size: 20),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: eventHeight * 0.05),
                 Text(
-                  widget.eventItem.title,
-                  textAlign: TextAlign.center,
+                  widget.eventItem.title.length > 20
+                      ? widget.eventItem.title.substring(0, 17) + "..."
+                      : widget.eventItem.title,
                   style: TextStyle(
-                    fontSize: responsiveFontSize * 12.5,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                    fontSize: responsiveFontSize * 10,
+                    fontWeight: FontWeight.w500,
+                    height: 1.2,
                   ),
                   maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 4),
                 Text(
                   widget.eventItem.time,
                   style: TextStyle(
-                    fontSize: responsiveFontSize * 9.5,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.grey[600],
+                    fontSize: responsiveFontSize * 8,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey,
+                    height: 1.1,
                   ),
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),

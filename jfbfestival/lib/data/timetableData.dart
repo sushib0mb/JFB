@@ -5,7 +5,7 @@ class EventItem {
   final int duration;
   final String stage;
   final String description;
-  final String backgroundImage;
+  final String eventDetailImage;
 
   EventItem({
     required this.title,
@@ -14,7 +14,7 @@ class EventItem {
     required this.iconImage,
     required this.stage,
     required this.description,
-    required this.backgroundImage,
+    required this.eventDetailImage,
   });
 }
 
@@ -41,7 +41,7 @@ final List<ScheduleItem> day1ScheduleData = [
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Singing performance.png",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
       EventItem(
         title: "Showa Boston Dance Performance",
@@ -50,7 +50,7 @@ final List<ScheduleItem> day1ScheduleData = [
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
     ],
     stage2Events: [],
@@ -65,7 +65,7 @@ final List<ScheduleItem> day1ScheduleData = [
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Singing performance.png",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
     ],
     stage2Events: [
@@ -76,7 +76,7 @@ final List<ScheduleItem> day1ScheduleData = [
         stage: "Stage 2",
         iconImage: "assets/timetableIcons/Singing performance.png",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
     ],
   ),
@@ -90,7 +90,7 @@ final List<ScheduleItem> day1ScheduleData = [
         stage: "Stage 1",
         iconImage: "",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
     ],
     stage2Events: [],
@@ -105,7 +105,7 @@ final List<ScheduleItem> day1ScheduleData = [
         stage: "Stage 1",
         iconImage: "",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
     ],
     stage2Events: [],
@@ -120,7 +120,7 @@ final List<ScheduleItem> day1ScheduleData = [
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
     ],
     stage2Events: [
@@ -131,7 +131,7 @@ final List<ScheduleItem> day1ScheduleData = [
         stage: "Stage 2",
         iconImage: "",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
     ],
   ),
@@ -145,7 +145,7 @@ final List<ScheduleItem> day1ScheduleData = [
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
     ],
     stage2Events: [
@@ -156,7 +156,7 @@ final List<ScheduleItem> day1ScheduleData = [
         stage: "Stage 2",
         iconImage: "assets/timetableIcons/Anime stage.png",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
     ],
   ),
@@ -170,7 +170,7 @@ final List<ScheduleItem> day1ScheduleData = [
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Singing performance.png",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
     ],
     stage2Events: [
@@ -181,7 +181,7 @@ final List<ScheduleItem> day1ScheduleData = [
         stage: "Stage 2",
         iconImage: "assets/timetableIcons/Anime stage.png",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
     ],
   ),
@@ -195,7 +195,7 @@ final List<ScheduleItem> day1ScheduleData = [
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Anime stage.png",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
     ],
     stage2Events: [
@@ -206,7 +206,7 @@ final List<ScheduleItem> day1ScheduleData = [
         stage: "Stage 2",
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
     ],
   ),
@@ -220,7 +220,7 @@ final List<ScheduleItem> day1ScheduleData = [
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
     ],
     stage2Events: [],
@@ -235,7 +235,7 @@ final List<ScheduleItem> day1ScheduleData = [
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
     ],
     stage2Events: [],
@@ -250,7 +250,7 @@ final List<ScheduleItem> day1ScheduleData = [
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Advertising.png",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
       EventItem(
         title: "Move & Inspire Kids Dance",
@@ -259,7 +259,7 @@ final List<ScheduleItem> day1ScheduleData = [
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
     ],
     stage2Events: [],
@@ -274,7 +274,7 @@ final List<ScheduleItem> day1ScheduleData = [
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
       EventItem(
         title: "Bon Dance Event",
@@ -283,7 +283,7 @@ final List<ScheduleItem> day1ScheduleData = [
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
     ],
     stage2Events: [],
@@ -301,7 +301,7 @@ final List<ScheduleItem> day2ScheduleData = [
         iconImage: "assets/timetableIcons/Dancing performance.png",
         stage: "1",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
     ],
     stage2Events: [
@@ -312,7 +312,7 @@ final List<ScheduleItem> day2ScheduleData = [
         iconImage: "",
         description: "",
         stage: "1",
-        backgroundImage: "assets/timetableIcons/Opening ceremony.png",
+        eventDetailImage: "assets/timetableIcons/Opening ceremony.png",
       ),
       EventItem(
         title: "Anime Band",
@@ -321,7 +321,7 @@ final List<ScheduleItem> day2ScheduleData = [
         iconImage: "assets/timetableIcons/Singing performance.png",
         stage: "2",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
     ],
   ),
@@ -335,7 +335,7 @@ final List<ScheduleItem> day2ScheduleData = [
         iconImage: "assets/timetableIcons/Dancing performance.png",
         stage: "1",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
     ],
     stage2Events: [
@@ -346,7 +346,7 @@ final List<ScheduleItem> day2ScheduleData = [
         iconImage: "assets/timetableIcons/Dancing performance.png",
         stage: "2",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
     ],
   ),
@@ -360,7 +360,7 @@ final List<ScheduleItem> day2ScheduleData = [
         iconImage: "assets/timetableIcons/Dancing performance.png",
         stage: "1",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
     ],
     stage2Events: [
@@ -371,7 +371,7 @@ final List<ScheduleItem> day2ScheduleData = [
         iconImage: "assets/timetableIcons/Singing performance.png",
         stage: "2",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
     ],
   ),
@@ -385,7 +385,7 @@ final List<ScheduleItem> day2ScheduleData = [
         iconImage: "assets/timetableIcons/Dancing performance.png",
         stage: "1",
         description: "",
-        backgroundImage: "assets/timetableIcons/Opening ceremony.png",
+        eventDetailImage: "assets/timetableIcons/Opening ceremony.png",
       ),
       EventItem(
         title: "Showa Boston Dance Performance",
@@ -394,7 +394,7 @@ final List<ScheduleItem> day2ScheduleData = [
         stage: "Stage 1", // Changed to string
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
       EventItem(
         title: "Minami Toyama Noh, Utai, Shinobue",
@@ -403,8 +403,8 @@ final List<ScheduleItem> day2ScheduleData = [
         stage: "Stage 1", // Changed to string
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description: "",
-        backgroundImage: "",
-       ),
+        eventDetailImage: "",
+      ),
     ],
     stage2Events: [],
   ),
@@ -418,7 +418,7 @@ final List<ScheduleItem> day2ScheduleData = [
         stage: "Stage 1", // Changed to string
         iconImage: "",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
       EventItem(
         title: "Cosplay Fashion Show",
@@ -427,7 +427,7 @@ final List<ScheduleItem> day2ScheduleData = [
         stage: "Stage 1", // Changed to string
         iconImage: "assets/timetableIcons/Anime stage.png",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
       EventItem(
         title: "Parfait Soleil Dance Performance",
@@ -436,7 +436,7 @@ final List<ScheduleItem> day2ScheduleData = [
         stage: "Stage 1", // Changed to string
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
     ],
     stage2Events: [],
@@ -451,16 +451,7 @@ final List<ScheduleItem> day2ScheduleData = [
         stage: "Stage 1", // Changed to string
         iconImage: "assets/timetableIcons/Singing performance.png",
         description: "",
-        backgroundImage: "",
-      ),
-      EventItem(
-        title: "Cosplay Death Match",
-        time: "13:55-14:25",
-        duration: 30,
-        stage: "Stage 1", // Changed to string
-        iconImage: "assets/timetableIcons/Singing performance.png",
-        description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
     ],
     stage2Events: [],
@@ -476,7 +467,7 @@ final List<ScheduleItem> day2ScheduleData = [
         stage: "Stage 1", // Changed to string
         iconImage: "assets/timetableIcons/Singing performance.png",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
       EventItem(
         title: "Move & Inspire Kids dance",
@@ -485,7 +476,7 @@ final List<ScheduleItem> day2ScheduleData = [
         stage: "Stage 1", // Changed to string
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
     ],
     stage2Events: [],
@@ -500,7 +491,7 @@ final List<ScheduleItem> day2ScheduleData = [
         stage: "Stage 1", // Changed to string
         iconImage: "assets/timetableIcons/Singing performance.png",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
       EventItem(
         title: "Japan Airline Advertising and Raffle",
@@ -509,7 +500,7 @@ final List<ScheduleItem> day2ScheduleData = [
         stage: "Stage 1", // Changed to string
         iconImage: "assets/timetableIcons/Advertising.png",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
     ],
     stage2Events: [],
@@ -524,7 +515,7 @@ final List<ScheduleItem> day2ScheduleData = [
         stage: "Stage 1", // Changed to string
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
       EventItem(
         title: "Bon Dance Event",
@@ -533,7 +524,7 @@ final List<ScheduleItem> day2ScheduleData = [
         stage: "Stage 1", // Changed to string
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
       EventItem(
         title: "Closing Ceremony",
@@ -542,7 +533,7 @@ final List<ScheduleItem> day2ScheduleData = [
         stage: "Stage 1", // Changed to string
         iconImage: "assets/timetableIcons/Singing performance.png",
         description: "",
-        backgroundImage: "",
+        eventDetailImage: "",
       ),
     ],
     stage2Events: [],
