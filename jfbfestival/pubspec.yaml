@@ -72,7 +72,14 @@ flutter:
     - assets/allergens/soy.png
     - assets/allergens/egg.png
     - assets/vegan.png
-
+    
+    - assets/payments/cash.png
+    - assets/payments/credit card (Frame).png
+    - assets/payments/credit_card.png
+    - assets/payments/paypal.png
+    - assets/payments/venmo.png
+    - assets/payments/venmo(frame).png
+    - assets/payments/zelle.png
 
 
     - assets/bottomBar/Map.png
@@ -95,6 +102,13 @@ flutter:
     - assets/timetableIcons/Opening ceremony.png
     - assets/timetableIcons/Singing performance (Frame).png
     - assets/timetableIcons/Singing performance.png
+    - assets/timetableIcons/Band performance.png
+    - assets/timetableIcons/Band performance (Frame).png
+    - assets/timetableIcons/Kendo.png
+    - assets/timetableIcons/Kendo (Frame).png
+    - assets/timetableIcons/Closing ceremony.png
+    - assets/timetableIcons/Closing ceremony (Frame).png
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
