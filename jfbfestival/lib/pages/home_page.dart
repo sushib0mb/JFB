@@ -582,8 +582,8 @@ DateTime _parseTimeString(String timeStr, int day) {
             ),
             if (event.iconImage.isNotEmpty)
               Positioned(
-                top: -35,
-                left: 10,
+                top: -18,
+                left: 3,
                 child: Container(
                   padding: EdgeInsets.all(6),
                   decoration: BoxDecoration(
@@ -599,7 +599,7 @@ DateTime _parseTimeString(String timeStr, int day) {
                   ),
                   child: Image.asset(
                     event.iconImage,
-                    height: screenWidth * 0.18,
+                    height: screenWidth * 0.12,
                   ),
                 ),
               ),
