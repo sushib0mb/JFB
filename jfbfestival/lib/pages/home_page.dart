@@ -1,6 +1,54 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final List<String> backgroundImages = [
+    "assets/JFB-27.jpg", 
+    "assets/JFB-4.jpg",
+    "assets/JFB-3.jpg",
+    "assets/JFB-8.jpg",
+    "assets/JFB-15.jpg",
+    "assets/JFB-10.jpg",
+    "assets/JFB-22.jpg",
+    "assets/JFB-6.jpg",
+  ];
+
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
+  Timer? _autoScrollTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _startAutoScroll();
+  }
+
+  void _startAutoScroll() {
+    _autoScrollTimer = Timer.periodic(Duration(seconds: 5), (timer) {
+      if (_pageController.hasClients) {
+        int nextPage = (_currentPage + 1) % backgroundImages.length;
+        _pageController.animateToPage(
+          nextPage,
+          duration: Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _autoScrollTimer?.cancel();
+    _pageController.dispose();
+    super.dispose();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -22,11 +70,49 @@ class HomePage extends StatelessWidget {
                         Container(
                           width: double.infinity,
                           height: screenHeight * 0.6,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage("assets/JFB-27.jpg"),
-                              fit: BoxFit.cover,
-                            ),
+                          child: Stack(
+                            children: [
+                              PageView.builder(
+                                controller: _pageController,
+                                itemCount: backgroundImages.length,
+                                onPageChanged: (index) {
+                                  setState(() {
+                                    _currentPage = index;
+                                  });
+                                },
+                                itemBuilder: (context, index) {
+                                  return Image.asset(
+                                    backgroundImages[index],
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    height: screenHeight * 0.6,
+                                  );
+                                },
+                              ),
+                              Positioned(
+                                bottom: 10,
+                                left: 0,
+                                right: 0,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: List.generate(
+                                    backgroundImages.length,
+                                    (index) => AnimatedContainer(
+                                      duration: Duration(milliseconds: 300),
+                                      margin: EdgeInsets.symmetric(horizontal: 4),
+                                      width: _currentPage == index ? 10 : 6,
+                                      height: _currentPage == index ? 10 : 6,
+                                      decoration: BoxDecoration(
+                                        color: _currentPage == index
+                                            ? Colors.white
+                                            : Colors.white70,
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         Positioned(
@@ -68,29 +154,6 @@ class HomePage extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-
-  Widget _buildSocialMediaIcons(double screenWidth) {
-    return Container(
-      margin: EdgeInsets.all(16),
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _buildIcon("assets/instagram.png"),
-          _buildIcon("assets/facebook.png"),
-          _buildIcon("assets/youtube.png"),
-          _buildIcon("assets/website.png"),
-        ],
-      ),
     );
   }
 
@@ -244,6 +307,29 @@ class HomePage extends StatelessWidget {
     );
   }
 
+  Widget _buildSocialMediaIcons(double screenWidth) {
+    return Container(
+      margin: EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildIcon("assets/instagram.png"),
+          _buildIcon("assets/facebook.png"),
+          _buildIcon("assets/youtube.png"),
+          _buildIcon("assets/website.png"),
+        ],
+      ),
+    );
+  }
+
   Widget _buildSponsorsSection(double screenWidth) {
     return Container(
       margin: EdgeInsets.all(16),
@@ -317,10 +403,9 @@ class HomePage extends StatelessWidget {
           alignment: WrapAlignment.center,
           spacing: 20,
           runSpacing: 10,
-          children:
-              corporateLogos
-                  .map((logo) => Image.asset(logo, height: 50))
-                  .toList(),
+          children: corporateLogos
+              .map((logo) => Image.asset(logo, height: 50))
+              .toList(),
         ),
       ],
     );
