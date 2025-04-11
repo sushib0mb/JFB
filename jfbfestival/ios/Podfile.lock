@@ -2,21 +2,27 @@ PODS:
   - Flutter (1.0.0)
   - motion (0.0.1):
     - Flutter
+  - url_launcher_ios (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - motion (from `.symlinks/plugins/motion/ios`)
+  - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
   motion:
     :path: ".symlinks/plugins/motion/ios"
+  url_launcher_ios:
+    :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  motion: 7f0d608a472de69d1210c1d871600cde66ae4d54
+  motion: d6c42118259b7ff280ca7dc51b4dbfe6125d816e
+  url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
 
 PODFILE CHECKSUM: 4305caec6b40dde0ae97be1573c53de1882a07e5
 
-COCOAPODS: 1.15.2
+COCOAPODS: 1.16.2

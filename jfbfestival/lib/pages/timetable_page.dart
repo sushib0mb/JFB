@@ -222,7 +222,7 @@ Widget _buildStageHeader() {
                 child: Text(
                   "Boston Common",
                   style: TextStyle(
-                    fontSize: 17.5, // Reduced for better fit
+                    fontSize: 15.5, // Reduced for better fit
                     fontWeight: FontWeight.w500,
                     color: Colors.white,
                   ),
