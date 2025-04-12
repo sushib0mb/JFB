@@ -1,0 +1,126 @@
+name: jfbfestival
+description: "A new Flutter project."
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.7.0
+dependencies:
+  flutter:
+    sdk: flutter
+  motion: ^2.0.1
+  provider: ^6.0.0
+  flutter_blur: ^0.0.2 
+  cupertino_icons: ^1.0.8
+  intl: ^0.20.2
+  url_launcher: ^6.0.9
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^5.0.0
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter packages.
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/food/
+    - assets/foodLogo/
+    - assets/filter(white).png
+    - assets/JFBLogo.png
+    - assets/JFB-27.jpg
+    - assets/JFBHomeImage.png
+    - assets/map.png
+    - assets/Filter.png
+    - assets/payments/
+    - assets/allergens/
+    - assets/Takeda.jpg
+    - assets/sanipak.png
+    - assets/instagram.png
+    - assets/facebook.png
+    - assets/youtube.png
+    - assets/website.png
+    - assets/yamamoto.jpg
+    - assets/SDT.jpg
+    - assets/jal.jpg
+    - assets/mitsubishi.jpg
+    - assets/openwater.png
+    - assets/chopvalue.png
+    - assets/senko.png
+    - assets/showa.jpg
+    - assets/bosJapan.png
+    - assets/JAGB.jpg  
+    - assets/langChange.png
+    #home new
+    - assets/JFB-4.jpg 
+    - assets/JFB-3.jpg
+    - assets/JFB-8.jpg 
+    - assets/JFB-15.jpg
+    - assets/JFB-10.jpg 
+    - assets/JFB-22.jpg 
+    - assets/JFB-6.jpg
+    # - assets/allergens/tree nut.png
+    - assets/allergens/milk.png
+    - assets/allergens/fish.png
+    - assets/allergens/soy.png
+    - assets/allergens/egg.png
+    - assets/vegan.png
+    
+    
+
+
+    - assets/bottomBar/Map.png
+    - assets/bottomBar/Timetable.png
+    - assets/bottomBar/Home.png
+    - assets/bottomBar/Food.png
+    - assets/bottomBar/Map(Frame).png
+    - assets/bottomBar/Timetable(Frame).png
+    - assets/bottomBar/Home(Frame).png
+    - assets/bottomBar/Food(Frame).png
+    - assets/bottomBar/Home(Selected).png
+
+    - assets/timetableIcons/Advertising.png
+    - assets/timetableIcons/Advertising (Frame).png
+    - assets/timetableIcons/Anime stage (Frame).png
+    - assets/timetableIcons/Anime stage.png
+    - assets/timetableIcons/Dancing performance (Frame).png
+    - assets/timetableIcons/Dancing performance.png
+    - assets/timetableIcons/Opening ceremony (Frame).png
+    - assets/timetableIcons/Opening ceremony.png
+    - assets/timetableIcons/Singing performance (Frame).png
+    - assets/timetableIcons/Singing performance.png
+    - assets/timetableIcons/Band performance.png
+    - assets/timetableIcons/Band performance (Frame).png
+    - assets/timetableIcons/Kendo.png
+    - assets/timetableIcons/Kendo (Frame).png
+    - assets/timetableIcons/Closing ceremony.png
+    - assets/timetableIcons/Closing ceremony (Frame).png
+
+
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/to/resolution-aware-images
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/to/asset-from-package
+
+  # To add custom fonts to your application, add a fonts section here,
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
+
+  fonts:
+    - family: Fredoka
+      fonts:
+        - asset: assets/fonts/Fredoka-Regular.ttf
+        - asset: assets/fonts/Fredoka-Light.ttf
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/to/font-from-package
