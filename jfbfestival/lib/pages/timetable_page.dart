@@ -299,14 +299,44 @@ class ScheduleList extends StatelessWidget {
     final responsiveFontSize = baseFontSize * (screenWidth / 375);
     final pixelsPerMinute = 10.0;
 
+    // If scheduleItems is empty, return an empty container
+    if (scheduleItems.isEmpty) {
+      return Container();
+    }
+
     final timelineSlots =
         scheduleItems.map((item) => item.time).toSet().toList();
     final baseTime = _parseTimeToMinutes(timelineSlots.first);
 
-    // TODO: Change latest time to be the finish time of the last event
-    final latestTime =
-        _parseTimeToMinutes(timelineSlots.last) +
-        _parseTimeToMinutes(timelineSlots.last);
+    // Get the last event's duration from both stages based on scheduleItems
+    int latestEventEndTime = baseTime;
+
+    for (var item in scheduleItems) {
+      final itemStartTime = _parseTimeToMinutes(item.time);
+
+      // Check stage 1 events
+      if (item.stage1Events != null) {
+        for (var event in item.stage1Events!) {
+          final eventEndTime = itemStartTime + event.duration;
+          if (eventEndTime > latestEventEndTime) {
+            latestEventEndTime = eventEndTime;
+          }
+        }
+      }
+
+      // Check stage 2 events
+      if (item.stage2Events != null) {
+        for (var event in item.stage2Events!) {
+          final eventEndTime = itemStartTime + event.duration;
+          if (eventEndTime > latestEventEndTime) {
+            latestEventEndTime = eventEndTime;
+          }
+        }
+      }
+    }
+
+    // Add padding to latest time
+    final latestTime = latestEventEndTime + 35; // Add 30 minutes buffer
     final timelineHeight = (latestTime - baseTime) * pixelsPerMinute;
 
     return Row(
@@ -317,20 +347,23 @@ class ScheduleList extends StatelessWidget {
           padding: const EdgeInsets.only(top: 12, left: 13),
           child: SizedBox(
             width: 60,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            height: timelineHeight, // Set explicit height for time column
+            child: Stack(
               children:
                   timelineSlots.map((timeString) {
                     final timeParts = timeString.split(" ");
                     final timeText =
                         timeParts.isNotEmpty ? timeParts[0] : timeString;
                     final ampm = timeParts.length > 1 ? timeParts[1] : "";
+                    final timeInMinutes = _parseTimeToMinutes(timeString);
+                    final topPosition =
+                        (timeInMinutes - baseTime) * pixelsPerMinute;
 
-                    return SizedBox(
-                      height: 30 * pixelsPerMinute, // Height for 30-minute slot
+                    return Positioned(
+                      top: topPosition,
+                      left: 0,
                       child: Column(
-                        mainAxisAlignment:
-                            MainAxisAlignment.start, // Align items at the top
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             timeText,
@@ -358,6 +391,7 @@ class ScheduleList extends StatelessWidget {
           child: SizedBox(
             height: timelineHeight,
             child: Stack(
+              clipBehavior: Clip.none, // Prevent clipping of children
               children: [
                 _buildTimelineLines(
                   baseTime: baseTime,
@@ -365,11 +399,15 @@ class ScheduleList extends StatelessWidget {
                   pixelsPerMinute: pixelsPerMinute,
                   width: screenWidth / 2,
                 ),
-                Column(
-                  children: [
-                    ..._buildEventColumn(1, pixelsPerMinute),
-                    SizedBox(height: 100),
-                  ],
+                SingleChildScrollView(
+                  physics: NeverScrollableScrollPhysics(),
+                  child: SizedBox(
+                    height: timelineHeight,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: _buildEventColumn(1, pixelsPerMinute),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -380,6 +418,7 @@ class ScheduleList extends StatelessWidget {
           child: SizedBox(
             height: timelineHeight,
             child: Stack(
+              clipBehavior: Clip.none, // Prevent clipping of children
               children: [
                 _buildTimelineLines(
                   baseTime: baseTime,
@@ -387,12 +426,15 @@ class ScheduleList extends StatelessWidget {
                   pixelsPerMinute: pixelsPerMinute,
                   width: screenWidth / 2,
                 ),
-
-                Column(
-                  children: [
-                    ..._buildEventColumn(2, pixelsPerMinute),
-                    SizedBox(height: 200),
-                  ],
+                SingleChildScrollView(
+                  physics: NeverScrollableScrollPhysics(),
+                  child: SizedBox(
+                    height: timelineHeight,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: _buildEventColumn(2, pixelsPerMinute),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -411,7 +453,6 @@ class ScheduleList extends StatelessWidget {
     final List<Widget> lines = [];
 
     for (int t = baseTime; t <= latestTime; t += 30) {
-      // <-- now every 15 minutes
       final top = (t - baseTime) * pixelsPerMinute;
       lines.add(
         Positioned(
