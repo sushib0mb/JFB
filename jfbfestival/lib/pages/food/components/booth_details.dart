@@ -27,9 +27,9 @@ class BoothDetails extends StatelessWidget {
         Stack(
           children: [
             DraggableScrollableSheet(
-              initialChildSize: 0.9,
-              minChildSize: 0.5,
-              maxChildSize: 0.9,
+              initialChildSize: 0.8,
+              minChildSize: 0.8,
+              maxChildSize: 0.8,
               builder: (context, controller) {
                 return Container(
                   width: 284,
@@ -152,33 +152,33 @@ class BoothDetails extends StatelessWidget {
                 );
               },
             ),
-            // Positioned(
-            //   top: MediaQuery.of(context).size.height / 20,
-            //   left: MediaQuery.of(context).size.width / 2.8,
-            //   child: Container(
-            //     width: 150,
-            //     height: 100,
-            //     decoration: BoxDecoration(
-            //       color: Colors.white,
-            //       borderRadius: BorderRadius.circular(25),
-            //       boxShadow: [
-            //         BoxShadow(
-            //           color: Colors.black.withOpacity(0.5),
-            //           blurRadius: 10,
-            //           spreadRadius: 0,
-            //         ),
-            //       ],
-            //     ),
-            //     child: Center(
-            //       child: Image.asset(
-            //         booth.logoPath,
-            //         width: 80,
-            //         height: 60,
-            //         fit: BoxFit.contain,
-            //       ),
-            //     ),
-            //   ),
-            // ),
+            Positioned(
+              top: MediaQuery.of(context).size.height / 6.8,
+              left: MediaQuery.of(context).size.width / 3.2,
+              child: Container(
+                width: 150,
+                height: 100,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(25),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.5),
+                      blurRadius: 10,
+                      spreadRadius: 0,
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Image.asset(
+                    booth.logoPath,
+                    width: 300,
+                    height: 200,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ],
