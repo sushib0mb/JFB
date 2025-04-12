@@ -40,7 +40,7 @@ final List<ScheduleItem> day1ScheduleData = [
         duration: 15,
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Band performance.png",
-        description: "",
+        description: "Taka Ochi band will perform Japanese songs, I think",
         eventDetailImage: "",
       ),
       EventItem(
