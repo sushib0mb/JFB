@@ -318,7 +318,7 @@ final List<ScheduleItem> day2ScheduleData = [
   //     EventItem(
   //       title: "Opening Ceremony",
   //       time: "11:00-11:05",
-  //       duration: 10,
+  //       duration: 5,
   //       iconImage: "assets/timetableIcons/Opening ceremony.png",
   //       stage: "Stage 1",
   //       description: "",
