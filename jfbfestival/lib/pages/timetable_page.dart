@@ -577,7 +577,7 @@ class _PerformanceBoxState extends State<PerformanceBox>
         scale: isPressed ? 0.95 : 1.0,
         duration: const Duration(milliseconds: 150),
         child: Container(
-          width: 140,
+          width: screenWidth * 0.3,
           height: eventHeight,
           decoration: BoxDecoration(
             color: Colors.white,
