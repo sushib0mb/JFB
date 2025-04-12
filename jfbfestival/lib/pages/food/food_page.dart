@@ -240,15 +240,15 @@ Widget _buildAllBoothsSection(double screenWidth) {
           fontWeight: FontWeight.bold,
         ),
       ),
-      const SizedBox(height: 5), //
+      const SizedBox(height: .01), //
       GridView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: screenWidth > 600 ? 2 : 1,
-          crossAxisSpacing: 20, // 👈 reduced from 30
-          mainAxisSpacing: 20,  // 👈 reduced from 30
-          childAspectRatio: 1.25, // slight tweak for balance
+          crossAxisSpacing: 2, // 👈 reduced from 30
+          mainAxisSpacing: 2,  // 👈 reduced from 30
+          childAspectRatio: 1.34, // slight tweak for balance
         ),
         itemCount: filteredBooths.length,
         itemBuilder: (context, index) {
