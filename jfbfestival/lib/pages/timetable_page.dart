@@ -757,9 +757,9 @@ class _EventDetailViewState extends State<EventDetailView>
                             decoration: BoxDecoration(
                               color: const Color.fromARGB(
                                 255,
-                                208,
-                                85,
-                                85,
+                                86,
+                                24,
+                                24,
                               ).withOpacity(0.3),
                               borderRadius: const BorderRadius.only(
                                 topLeft: Radius.circular(20),
@@ -772,9 +772,11 @@ class _EventDetailViewState extends State<EventDetailView>
                                 Transform.scale(
                                   scale: _headerScaleAnimation.value,
                                   child: CircleAvatar(
-                                    radius: 30,
+                                    radius: 40,
                                     backgroundColor: Colors.white,
-                                    child: const Icon(Icons.image),
+                                    child: Image(
+                                      image: AssetImage(widget.event.iconImage),
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(height: 10),
@@ -783,11 +785,11 @@ class _EventDetailViewState extends State<EventDetailView>
                                   child: Text(
                                     widget.event.title,
                                     textAlign: TextAlign.center,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white,
-                                      shadows: [
+                                      shadows: const [
                                         Shadow(
                                           color: Colors.black54,
                                           offset: Offset(0, 1),
@@ -802,11 +804,44 @@ class _EventDetailViewState extends State<EventDetailView>
                           ),
                           // Stage and time information
                           Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 15),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                Chip(label: Text(widget.event.stage)),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color:
+                                        widget.event.stage == "Stage 1"
+                                            ? const Color.fromARGB(
+                                              77,
+                                              191,
+                                              29,
+                                              25,
+                                            )
+                                            : Colors.red,
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.12),
+                                        blurRadius: 4,
+                                      ),
+                                    ],
+                                  ),
+
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        MediaQuery.of(context).size.width *
+                                        0.08,
+                                    vertical: 10,
+                                  ),
+                                  child: Text(
+                                    widget.event.stage,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                ),
                                 Chip(label: Text(widget.event.time)),
                               ],
                             ),

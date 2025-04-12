@@ -103,6 +103,8 @@ flutter:
     - assets/timetableIcons/Closing ceremony.png
     - assets/timetableIcons/Closing ceremony (Frame).png
 
+    - assets/timetableBackgrounds/oneweekwonder.gif
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
