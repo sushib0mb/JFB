@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:jfbfestival/pages/food/components/booth_card.dart';
 import 'package:jfbfestival/pages/food/components/payment_filter.dart';
 import 'package:jfbfestival/pages/food/components/vegan_filter.dart';
 import 'package:jfbfestival/pages/food/components/allergy_filter.dart';
 import 'package:jfbfestival/pages/food/components/booth_details.dart';
 import 'package:jfbfestival/data/food_booths.dart';
 import 'package:jfbfestival/models/food_booth.dart';
+
 class AnimatedBoothDetailWrapper extends StatefulWidget {
   final FoodBooth booth;
   final VoidCallback onClose;
@@ -17,7 +17,8 @@ class AnimatedBoothDetailWrapper extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<AnimatedBoothDetailWrapper> createState() => _AnimatedBoothDetailWrapperState();
+  State<AnimatedBoothDetailWrapper> createState() =>
+      _AnimatedBoothDetailWrapperState();
 }
 
 class _AnimatedBoothDetailWrapperState extends State<AnimatedBoothDetailWrapper>
@@ -34,7 +35,10 @@ class _AnimatedBoothDetailWrapperState extends State<AnimatedBoothDetailWrapper>
       vsync: this,
     );
 
-    _fadeAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
+    _fadeAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    );
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.05),
       end: Offset.zero,
@@ -55,10 +59,7 @@ class _AnimatedBoothDetailWrapperState extends State<AnimatedBoothDetailWrapper>
       opacity: _fadeAnimation,
       child: SlideTransition(
         position: _slideAnimation,
-        child: BoothDetails(
-          booth: widget.booth,
-          onClose: widget.onClose,
-        ),
+        child: BoothDetails(booth: widget.booth, onClose: widget.onClose),
       ),
     );
   }
@@ -78,30 +79,27 @@ class _FoodPageState extends State<FoodPage> {
   Set<String> excludedAllergens = {};
 
   @override
-Widget build(BuildContext context) {
-  final screenSize = MediaQuery.of(context).size;
-  final screenWidth = screenSize.width;
-  final screenHeight = screenSize.height;
+  Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final screenWidth = screenSize.width;
+    final screenHeight = screenSize.height;
 
-  return Scaffold(
-    body: Stack(
-      children: [
-        _buildBackgroundGradient(),
-        _buildTopGradient(),
-        _buildBottomGradient(),
-        
-        // Ensure this is behind the filter button
-        Positioned.fill(
-          child: _buildMainContent(screenWidth, screenHeight),
-        ),
+    return Scaffold(
+      body: Stack(
+        children: [
+          _buildBackgroundGradient(),
+          _buildTopGradient(),
+          _buildBottomGradient(),
 
-        // This stays on top
-        _buildFilterButton(),
-      ],
-    ),
-  );
-}
+          // Ensure this is behind the filter button
+          Positioned.fill(child: _buildMainContent(screenWidth, screenHeight)),
 
+          // This stays on top
+          _buildFilterButton(),
+        ],
+      ),
+    );
+  }
 
   Widget _buildBackgroundGradient() {
     return Container(
@@ -170,180 +168,183 @@ Widget build(BuildContext context) {
       ),
     );
   }
-Widget _buildFilterButton() {
-  return Positioned(
-    top: MediaQuery.of(context).size.height * 0.05,
-    right: MediaQuery.of(context).size.width * 0.05,
-    child: GestureDetector(
-      onTap: _showFilterPopup,
-      child: Material( // Wrap with Material for better tap detection
-        color: Colors.transparent,
-        child: Container(
-          width: 50,
-          height: 50,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(25),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 10,
-                spreadRadius: 1,
-              ),
-            ],
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Image.asset('assets/Filter.png', fit: BoxFit.contain),
-          ),
-        ),
-      ),
-    ),
-  );
-}
 
- 
-Widget _buildMainContent(double screenWidth, double screenHeight) {
-  double maxWidth = screenWidth > 1200 ? 1300 : screenWidth * 0.95;
-  double padding = screenWidth < 600 ? 16 : 24;
-
-  return Center(
-    child: ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: maxWidth),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: padding),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: screenHeight * 0.1),
-              _buildAllBoothsSection(screenWidth),
-              SizedBox(height: screenHeight * 0.05),
-            ],
-          ),
-        ),
-      ),
-    ),
-  );
-}
-
-Widget _buildAllBoothsSection(double screenWidth) {
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    crossAxisAlignment: CrossAxisAlignment.center,
-    children: [
-      const SizedBox(height: 60), 
-      Text(
-        "All Food Booths",
-        style: TextStyle(
-          fontSize: screenWidth > 600 ? 20 : 16,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      const SizedBox(height: .01), //
-      GridView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: screenWidth > 600 ? 2 : 1,
-          crossAxisSpacing: 2, // 👈 reduced from 30
-          mainAxisSpacing: 2,  // 👈 reduced from 30
-          childAspectRatio: 1.34, // slight tweak for balance
-        ),
-        itemCount: filteredBooths.length,
-        itemBuilder: (context, index) {
-          final booth = filteredBooths[index];
-          return GestureDetector(
-            onTap: () => _showBoothDetails(context, booth),
-            child: Center(
-              child: Container(
-                width: 320,
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16), // 👈 tighter padding
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(30),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 10,
-                      offset: Offset(0, 4),
-                    ),
-                  ],
+  Widget _buildFilterButton() {
+    return Positioned(
+      top: MediaQuery.of(context).size.height * 0.05,
+      right: MediaQuery.of(context).size.width * 0.05,
+      child: GestureDetector(
+        onTap: _showFilterPopup,
+        child: Material(
+          // Wrap with Material for better tap detection
+          color: Colors.transparent,
+          child: Container(
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(25),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 10,
+                  spreadRadius: 1,
                 ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Image.asset(
-                        booth.logoPath,
-                        width: 80,
-                        height: 80,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                    const SizedBox(height: 12), // 👈 reduced
-                    Text(
-                      booth.name,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 6), // 👈 reduced
-                    Text(
-                      'Food Booth: ${booth.boothLocation}',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 10), // 👈 reduced
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 6, horizontal: 20),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.15),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        booth.genre,
-                        style: const TextStyle(fontSize: 14),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              ],
             ),
-          );
-        },
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Image.asset('assets/Filter.png', fit: BoxFit.contain),
+            ),
+          ),
+        ),
       ),
-    ],
-  );
-}
+    );
+  }
 
+  Widget _buildMainContent(double screenWidth, double screenHeight) {
+    double maxWidth = screenWidth > 1200 ? 1300 : screenWidth * 0.95;
+    double padding = screenWidth < 600 ? 16 : 24;
 
-void _showBoothDetails(BuildContext context, FoodBooth booth) {
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    backgroundColor: Colors.transparent,
-    transitionAnimationController: AnimationController(
-      duration: const Duration(milliseconds: 350),
-      vsync: Navigator.of(context),
-    ),
-    builder: (context) {
-      return AnimatedBoothDetailWrapper(
-        booth: booth,
-        onClose: () => Navigator.of(context).pop(),
-      );
-    },
-  );
-}
+    return Center(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: maxWidth),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: padding),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: screenHeight * 0.1),
+                _buildAllBoothsSection(screenWidth),
+                SizedBox(height: screenHeight * 0.05),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
+  Widget _buildAllBoothsSection(double screenWidth) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const SizedBox(height: 60),
+        Text(
+          "All Food Booths",
+          style: TextStyle(
+            fontSize: screenWidth > 600 ? 20 : 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: .01), //
+        GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: screenWidth > 600 ? 2 : 1,
+            crossAxisSpacing: 2, // 👈 reduced from 30
+            mainAxisSpacing: 2, // 👈 reduced from 30
+            childAspectRatio: 1.34, // slight tweak for balance
+          ),
+          itemCount: filteredBooths.length,
+          itemBuilder: (context, index) {
+            final booth = filteredBooths[index];
+            return GestureDetector(
+              onTap: () => _showBoothDetails(context, booth),
+              child: Center(
+                child: Container(
+                  width: 320,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 16,
+                  ), // 👈 tighter padding
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 10,
+                        offset: Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Image.asset(
+                          booth.logoPath,
+                          width: 80,
+                          height: 80,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                      const SizedBox(height: 12), // 👈 reduced
+                      Text(
+                        booth.name,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 6), // 👈 reduced
+                      Text(
+                        'Food Booth: ${booth.boothLocation}',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 10), // 👈 reduced
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 6,
+                          horizontal: 20,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.15),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          booth.genre,
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
 
+  void _showBoothDetails(BuildContext context, FoodBooth booth) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      transitionAnimationController: AnimationController(
+        duration: const Duration(milliseconds: 350),
+        vsync: Navigator.of(context),
+      ),
+      builder: (context) {
+        return AnimatedBoothDetailWrapper(
+          booth: booth,
+          onClose: () => Navigator.of(context).pop(),
+        );
+      },
+    );
+  }
 
   Set<String> selectedAllergens = {};
 
@@ -378,72 +379,72 @@ void _showBoothDetails(BuildContext context, FoodBooth booth) {
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: 600),
                       child: Column(
-  children: [
-    Align(
-      alignment: Alignment.topRight,
-      child: IconButton(
-        icon: const Icon(Icons.close),
-        onPressed: () => Navigator.of(context).pop(),
-      ),
-    ),
-    Expanded(
-      child: ListView(
-        controller: controller,
-        children: [
-          Center(child: _buildSectionTitle("Payment")),
-          Center(
-            child: PaymentFilterRow(
-              selectedPayments: selectedPayments,
-              onPaymentSelected: (method, isSelected) {
-                setModalState(() {
-                  if (isSelected) {
-                    selectedPayments.add(method);
-                  } else {
-                    selectedPayments.remove(method);
-                  }
-                });
-              },
-            ),
-          ),
-          const SizedBox(height: 15),
-          Center(child: _buildSectionTitle("Veganism")),
-          Center(
-            child: VeganFilterOption(
-              isVegan: veganOnly ?? false,
-              onChanged: (value) {
-                setModalState(() => veganOnly = value);
-              },
-            ),
-          ),
-          const SizedBox(height: 15),
-          Center(child: _buildSectionTitle("Allergens")),
-          Center(
-            child: AllergyFilterGrid(
-              selectedAllergens: selectedAllergens,
-              onAllergenSelected: (allergen, isSelected) {
-                setModalState(() {
-                  if (isSelected) {
-                    selectedAllergens.add(allergen);
-                  } else {
-                    selectedAllergens.remove(allergen);
-                  }
-                });
-              },
-            ),
-          ),
-          const SizedBox(height: 20),
-          Center(
-            child: _buildApplyButton(
-              onApply: _applyFilters,
-              closeModal: () => Navigator.of(context).pop(),
-            ),
-          ),
-        ],
-      ),
-    ),
-  ],
-)
-
+                        children: [
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: IconButton(
+                              icon: const Icon(Icons.close),
+                              onPressed: () => Navigator.of(context).pop(),
+                            ),
+                          ),
+                          Expanded(
+                            child: ListView(
+                              controller: controller,
+                              children: [
+                                Center(child: _buildSectionTitle("Payment")),
+                                Center(
+                                  child: PaymentFilterRow(
+                                    selectedPayments: selectedPayments,
+                                    onPaymentSelected: (method, isSelected) {
+                                      setModalState(() {
+                                        if (isSelected) {
+                                          selectedPayments.add(method);
+                                        } else {
+                                          selectedPayments.remove(method);
+                                        }
+                                      });
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(height: 15),
+                                Center(child: _buildSectionTitle("Veganism")),
+                                Center(
+                                  child: VeganFilterOption(
+                                    isVegan: veganOnly ?? false,
+                                    onChanged: (value) {
+                                      setModalState(() => veganOnly = value);
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(height: 15),
+                                Center(child: _buildSectionTitle("Allergens")),
+                                Center(
+                                  child: AllergyFilterGrid(
+                                    selectedAllergens: selectedAllergens,
+                                    onAllergenSelected: (allergen, isSelected) {
+                                      setModalState(() {
+                                        if (isSelected) {
+                                          selectedAllergens.add(allergen);
+                                        } else {
+                                          selectedAllergens.remove(allergen);
+                                        }
+                                      });
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
+                                Center(
+                                  child: _buildApplyButton(
+                                    onApply: _applyFilters,
+                                    closeModal:
+                                        () => Navigator.of(context).pop(),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
@@ -492,39 +493,42 @@ void _showBoothDetails(BuildContext context, FoodBooth booth) {
       ),
     );
   }
-Widget _buildApplyButton({required VoidCallback onApply, required VoidCallback closeModal}) {
-  return ElevatedButton(
-    style: ElevatedButton.styleFrom(
-      backgroundColor: Colors.red, // background color
-      foregroundColor: Colors.white, // text color
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30), // more rounded corners
-      ),
-      padding: const EdgeInsets.symmetric(
-        vertical: 18,
-        horizontal: 40,
-      ), // adjust padding for better proportions
-      elevation: 10, // add shadow for depth
-    ).copyWith(
-      shadowColor: MaterialStateProperty.all(
-        Colors.redAccent.withOpacity(0.5),
-      ), // custom shadow color
-    ),
-    onPressed: () {
-      onApply();      // Apply filters
-      closeModal();   // Close modal
-    },
-    child: const Text(
-      "Apply Filters",
-      style: TextStyle(
-        fontSize: 18, // slightly larger font
-        fontWeight: FontWeight.bold,
-        letterSpacing: 1.2, // increased letter spacing for better readability
-      ),
-    ),
-  );
-}
 
+  Widget _buildApplyButton({
+    required VoidCallback onApply,
+    required VoidCallback closeModal,
+  }) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.red, // background color
+        foregroundColor: Colors.white, // text color
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30), // more rounded corners
+        ),
+        padding: const EdgeInsets.symmetric(
+          vertical: 18,
+          horizontal: 40,
+        ), // adjust padding for better proportions
+        elevation: 10, // add shadow for depth
+      ).copyWith(
+        shadowColor: MaterialStateProperty.all(
+          Colors.redAccent.withOpacity(0.5),
+        ), // custom shadow color
+      ),
+      onPressed: () {
+        onApply(); // Apply filters
+        closeModal(); // Close modal
+      },
+      child: const Text(
+        "Apply Filters",
+        style: TextStyle(
+          fontSize: 18, // slightly larger font
+          fontWeight: FontWeight.bold,
+          letterSpacing: 1.2, // increased letter spacing for better readability
+        ),
+      ),
+    );
+  }
 
   void _applyFilters() {
     setState(() {

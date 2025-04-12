@@ -66,7 +66,7 @@ flutter:
     - assets/JFB-10.jpg 
     - assets/JFB-22.jpg 
     - assets/JFB-6.jpg
-    # - assets/allergens/tree nut.png
+    - assets/allergens/tree_nut.png
     - assets/allergens/milk.png
     - assets/allergens/fish.png
     - assets/allergens/soy.png
@@ -103,7 +103,7 @@ flutter:
     - assets/timetableIcons/Closing ceremony.png
     - assets/timetableIcons/Closing ceremony (Frame).png
 
-    - assets/timetableBackgrounds/oneweekwonder.gif
+    - assets/timetableBackgrounds/oneweekwonder.JPG
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

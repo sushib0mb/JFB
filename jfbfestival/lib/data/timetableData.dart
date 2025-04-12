@@ -53,7 +53,17 @@ final List<ScheduleItem> day1ScheduleData = [
         eventDetailImage: "",
       ),
     ],
-    stage2Events: [],
+    stage2Events: [
+      EventItem(
+        title: "",
+        time: "",
+        duration: 35,
+        stage: "",
+        iconImage: "",
+        description: "",
+        eventDetailImage: "",
+      ),
+    ],
   ),
   ScheduleItem(
     time: "11:30 am",
@@ -108,7 +118,17 @@ final List<ScheduleItem> day1ScheduleData = [
         eventDetailImage: "",
       ),
     ],
-    stage2Events: [],
+    stage2Events: [
+      EventItem(
+        title: "",
+        time: "",
+        duration: 55,
+        stage: "",
+        iconImage: "",
+        description: "",
+        eventDetailImage: "",
+      ),
+    ],
   ),
   ScheduleItem(
     time: "1:00 pm",
@@ -296,10 +316,19 @@ final List<ScheduleItem> day2ScheduleData = [
   //   time: "11:00 pm",
   //   stage1Events: [
   //     EventItem(
+  //       title: "Opening Ceremony",
+  //       time: "11:00-11:05",
+  //       duration: 10,
+  //       iconImage: "assets/timetableIcons/Opening ceremony.png",
+  //       stage: "Stage 1",
+  //       description: "",
+  //       eventDetailImage: "",
+  //     ),
+  //     EventItem(
   //       title: "Showa Boston Dance Performance",
   //       time: "11:05-11:20",
   //       duration: 15,
-  //       stage: "Stage 1", // Changed to string
+  //       stage: "Stage 1",
   //       iconImage: "assets/timetableIcons/Dancing performance.png",
   //       description: "",
   //       eventDetailImage: "",
@@ -308,22 +337,32 @@ final List<ScheduleItem> day2ScheduleData = [
   //       title: "Minami Toyama Noh, Utai, Shinobue",
   //       time: "11:20-11:55",
   //       duration: 35,
-  //       stage: "Stage 1", // Changed to string
+  //       stage: "Stage 1",
   //       iconImage: "assets/timetableIcons/Dancing performance.png",
   //       description: "",
   //       eventDetailImage: "",
   //     ),
   //   ],
-  //   stage2Events: [],
+  //   stage2Events: [
+  //     EventItem(
+  //       title: "",
+  //       time: "",
+  //       duration: 35,
+  //       stage: "",
+  //       iconImage: "360",
+  //       description: "",
+  //       eventDetailImage: "",
+  //     ),
+  //   ],
   // ),
   // ScheduleItem(
   //   time: "11:30 am",
   //   stage1Events: [
   //     EventItem(
-  //       title: "KENDO",
+  //       title: "Kendo",
   //       time: "11:55-12:25",
   //       duration: 30,
-  //       stage: "Stage 1", // Changed to string
+  //       stage: "Stage 1",
   //       iconImage: "assets/timetableIcons/Kendo.png",
   //       description: "",
   //       eventDetailImage: "",
@@ -338,7 +377,7 @@ final List<ScheduleItem> day2ScheduleData = [
   //       title: "Cosplay Fashion Show",
   //       time: "12:25-12:45",
   //       duration: 20,
-  //       stage: "Stage 1", // Changed to string
+  //       stage: "Stage 1",
   //       iconImage: "assets/timetableIcons/Anime stage.png",
   //       description: "",
   //       eventDetailImage: "",
@@ -353,7 +392,7 @@ final List<ScheduleItem> day2ScheduleData = [
   //       title: "Parfait Soleil Dance Performance",
   //       time: "12:45-13:15",
   //       duration: 30,
-  //       stage: "Stage 1", // Changed to string
+  //       stage: "Stage 1",
   //       iconImage: "assets/timetableIcons/Dancing performance.png",
   //       description: "",
   //       eventDetailImage: "",
@@ -361,123 +400,29 @@ final List<ScheduleItem> day2ScheduleData = [
   //   ],
   //   stage2Events: [],
   // ),
-  // ScheduleItem(
-  //   time: "1:00 pm",
-  //   stage1Events: [
-  //     EventItem(
-  //       title: "Kitanodai Gagaku Ensemble",
-  //       time: "13:00-13:30",
-  //       duration: 30,
-  //       iconImage: "assets/timetableIcons/Dancing performance.png",
-  //       stage: "1",
-  //       description: "",
-  //       eventDetailImage: "",
-  //     ),
-  //   ],
-  //   stage2Events: [
-  //     EventItem(
-  //       title: "",
-  //       time: "",
-  //       duration: 5,
-  //       iconImage: "",
-  //       description: "",
-  //       stage: "1",
-  //       eventDetailImage: "assets/timetableIcons/Opening ceremony.png",
-  //     ),
-  //     EventItem(
-  //       title: "Anime Band",
-  //       time: "13:05-13:45",
-  //       duration: 40,
-  //       iconImage: "assets/timetableIcons/Band performance.png",
-  //       stage: "2",
-  //       description: "",
-  //       eventDetailImage: "",
-  //     ),
-  //   ],
-  // ),
-  // ScheduleItem(
-  //   time: "1:30 pm",
-  //   stage1Events: [
-  //     EventItem(
-  //       title: "Okinawa Ryukyu Kokusai Taiko",
-  //       time: "13:30-14:00",
-  //       duration: 30,
-  //       iconImage: "assets/timetableIcons/Band performance.png",
-  //       stage: "1",
-  //       description: "",
-  //       eventDetailImage: "",
-  //     ),
-  //   ],
-  //   stage2Events: [
-  //     EventItem(
-  //       title: "Cosplay Fashion Show",
-  //       time: "13:45-14:05",
-  //       duration: 20,
-  //       iconImage: "assets/timetableIcons/Dancing performance.png",
-  //       stage: "2",
-  //       description: "",
-  //       eventDetailImage: "",
-  //     ),
-  //   ],
-  // ),
-  // ScheduleItem(
-  //   time: "2:00 pm",
-  //   stage1Events: [
-  //     EventItem(
-  //       title: "Jeiko Taiko Ensemble",
-  //       time: "14:00-14:30",
-  //       duration: 30,
-  //       iconImage: "assets/timetableIcons/Band performance.png",
-  //       stage: "1",
-  //       description: "",
-  //       eventDetailImage: "",
-  //     ),
-  //   ],
-  //   stage2Events: [
-  //     EventItem(
-  //       title: "Parade to Boston Common",
-  //       time: "14:05-14:25",
-  //       duration: 20,
-  //       iconImage: "assets/timetableIcons/Dancing performance.png",
-  //       stage: "2",
-  //       description: "",
-  //       eventDetailImage: "",
-  //     ),
-  //   ],
-  // ),
-  // ScheduleItem(
-  //   time: "2:30 pm",
-  //   stage1Events: [
-  //     EventItem(
-  //       title: "Cosplay Fashion Show",
-  //       time: "14:30-14:50",
-  //       duration: 20,
-  //       iconImage: "assets/timetableIcons/Anime stage.png",
-  //       stage: "1",
-  //       description: "",
-  //       eventDetailImage: "",
-  //     ),
-  //   ],
-  //   stage2Events: [],
-  // ),
-  // ScheduleItem(time: "3:30 pm", stage1Events: [], stage2Events: []),
   // ScheduleItem(
   //   time: "1:00 pm",
   //   stage1Events: [
   //     EventItem(
   //       title: "Hiroko Watanabe Calligraphy",
   //       time: "13:15-13:55",
-  //       duration: 30,
-  //       stage: "Stage 1", // Changed to string
+  //       duration: 40,
+  //       stage: "Stage 1",
   //       iconImage: "assets/timetableIcons/Band performance.png",
   //       description: "",
   //       eventDetailImage: "",
   //     ),
+  //   ],
+  //   stage2Events: [],
+  // ),
+  // ScheduleItem(
+  //   time: "1:30 pm",
+  //   stage1Events: [
   //     EventItem(
   //       title: "Cosplay Death Match",
-  //       time: "13:55-14:25",
-  //       duration: 30,
-  //       stage: "Stage 1", // Changed to string
+  //       time: "13:15-13:55",
+  //       duration: 40,
+  //       stage: "Stage 1",
   //       iconImage: "assets/timetableIcons/Anime stage.png",
   //       description: "",
   //       eventDetailImage: "",
@@ -492,17 +437,23 @@ final List<ScheduleItem> day2ScheduleData = [
   //       title: "Jeiko Taiko Ensemble",
   //       time: "14:25-14:55",
   //       duration: 30,
-  //       stage: "Stage 1", // Changed to string
   //       iconImage: "assets/timetableIcons/Band performance.png",
+  //       stage: "Stage 1",
   //       description: "",
   //       eventDetailImage: "",
   //     ),
+  //   ],
+  //   stage2Events: [],
+  // ),
+  // ScheduleItem(
+  //   time: "2:30 pm",
+  //   stage1Events: [
   //     EventItem(
-  //       title: "Move & Inspire Kids dance",
+  //       title: "Move & Inspire Kids Dance",
   //       time: "14:55-15:25",
   //       duration: 30,
-  //       stage: "Stage 1", // Changed to string
   //       iconImage: "assets/timetableIcons/Dancing performance.png",
+  //       stage: "Stage 1",
   //       description: "",
   //       eventDetailImage: "",
   //     ),
@@ -513,11 +464,11 @@ final List<ScheduleItem> day2ScheduleData = [
   //   time: "3:00 pm",
   //   stage1Events: [
   //     EventItem(
-  //       title: "OKINAWA Ryukyu Kokusai Taiko",
+  //       title: "Okinawa Ryukyu Kokusai Taiko",
   //       time: "15:25-15:55",
   //       duration: 30,
-  //       stage: "Stage 1", // Changed to string
   //       iconImage: "assets/timetableIcons/Band performance.png",
+  //       stage: "Stage 1",
   //       description: "",
   //       eventDetailImage: "",
   //     ),
@@ -528,10 +479,10 @@ final List<ScheduleItem> day2ScheduleData = [
   //   time: "3:30 pm",
   //   stage1Events: [
   //     EventItem(
-  //       title: "Japan Airline Advertising and Raffle",
+  //       title: "Japan Airlines Advertising and Raffle",
   //       time: "15:55-16:05",
   //       duration: 10,
-  //       stage: "Stage 1", // Changed to string
+  //       stage: "Stage 1",
   //       iconImage: "assets/timetableIcons/Advertising.png",
   //       description: "",
   //       eventDetailImage: "",
@@ -546,7 +497,7 @@ final List<ScheduleItem> day2ScheduleData = [
   //       title: "Showa Boston Dance Performance",
   //       time: "16:05-16:20",
   //       duration: 15,
-  //       stage: "Stage 1", // Changed to string
+  //       stage: "Stage 1",
   //       iconImage: "assets/timetableIcons/Dancing performance.png",
   //       description: "",
   //       eventDetailImage: "",
@@ -555,7 +506,7 @@ final List<ScheduleItem> day2ScheduleData = [
   //       title: "Bon Dance Event",
   //       time: "16:20-16:50",
   //       duration: 30,
-  //       stage: "Stage 1", // Changed to string
+  //       stage: "Stage 1",
   //       iconImage: "assets/timetableIcons/Dancing performance.png",
   //       description: "",
   //       eventDetailImage: "",
@@ -570,7 +521,7 @@ final List<ScheduleItem> day2ScheduleData = [
   //       title: "Closing Ceremony",
   //       time: "16:50-17:00",
   //       duration: 10,
-  //       stage: "Stage 1", // Changed to string
+  //       stage: "Stage 1",
   //       iconImage: "assets/timetableIcons/Closing ceremony.png",
   //       description: "",
   //       eventDetailImage: "",

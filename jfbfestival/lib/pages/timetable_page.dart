@@ -1,19 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:jfbfestival/data/timetableData.dart';
-import 'package:collection/collection.dart';
-import 'dart:math';
-
-class _EventData {
-  final EventItem event;
-  final int startMinutes;
-  final int endMinutes;
-
-  _EventData({
-    required this.event,
-    required this.startMinutes,
-    required this.endMinutes,
-  });
-}
 
 /// メインビュー：タイムテーブル
 class TimetablePage extends StatefulWidget {
@@ -400,11 +386,11 @@ class ScheduleList extends StatelessWidget {
                   width: screenWidth / 2,
                 ),
                 SingleChildScrollView(
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: BouncingScrollPhysics(),
                   child: SizedBox(
                     height: timelineHeight,
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                      mainAxisSize: MainAxisSize.max,
                       children: _buildEventColumn(1, pixelsPerMinute),
                     ),
                   ),
@@ -431,7 +417,7 @@ class ScheduleList extends StatelessWidget {
                   child: SizedBox(
                     height: timelineHeight,
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                      mainAxisSize: MainAxisSize.max,
                       children: _buildEventColumn(2, pixelsPerMinute),
                     ),
                   ),
