@@ -105,25 +105,26 @@ class _TimetablePageState extends State<TimetablePage> {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: widget.selectedEvent != null
-          ? AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              leading: Container(
-                margin: EdgeInsets.only(left: 8),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.5),
-                  shape: BoxShape.circle,
+      appBar:
+          widget.selectedEvent != null
+              ? AppBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                leading: Container(
+                  margin: EdgeInsets.only(left: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.5),
+                    shape: BoxShape.circle,
+                  ),
+                  child: IconButton(
+                    icon: Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
                 ),
-                child: IconButton(
-                  icon: Icon(Icons.arrow_back, color: Colors.white),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-              ),
-            )
-          : null,
+              )
+              : null,
       body: Padding(
         padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
         child: Stack(
@@ -142,17 +143,18 @@ class _TimetablePageState extends State<TimetablePage> {
                   height: dayButtonHeight,
                   decoration: ShapeDecoration(
                     gradient: LinearGradient(
-                      colors: selectedDay == 1
-                          ? [
-                              const Color.fromARGB(255, 255, 131, 135),
-                              const Color.fromARGB(128, 176, 113, 116),
-                              const Color.fromARGB(0, 96, 96, 96),
-                            ]
-                          : [
-                              const Color.fromARGB(128, 131, 131, 131),
-                              const Color.fromARGB(64, 114, 114, 114),
-                              const Color.fromARGB(0, 96, 96, 96),
-                            ],
+                      colors:
+                          selectedDay == 1
+                              ? [
+                                const Color.fromARGB(255, 255, 131, 135),
+                                const Color.fromARGB(128, 176, 113, 116),
+                                const Color.fromARGB(0, 96, 96, 96),
+                              ]
+                              : [
+                                const Color.fromARGB(128, 131, 131, 131),
+                                const Color.fromARGB(64, 114, 114, 114),
+                                const Color.fromARGB(0, 96, 96, 96),
+                              ],
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(100),
@@ -185,17 +187,18 @@ class _TimetablePageState extends State<TimetablePage> {
                   height: dayButtonHeight,
                   decoration: ShapeDecoration(
                     gradient: LinearGradient(
-                      colors: selectedDay == 2
-                          ? [
-                              const Color.fromARGB(49, 96, 96, 96),
-                              const Color.fromARGB(128, 107, 136, 175),
-                              const Color.fromARGB(255, 118, 175, 255),
-                            ]
-                          : [
-                              const Color.fromARGB(0, 96, 96, 96),
-                              const Color.fromARGB(64, 114, 114, 114),
-                              const Color.fromARGB(128, 131, 131, 131),
-                            ],
+                      colors:
+                          selectedDay == 2
+                              ? [
+                                const Color.fromARGB(49, 96, 96, 96),
+                                const Color.fromARGB(128, 107, 136, 175),
+                                const Color.fromARGB(255, 118, 175, 255),
+                              ]
+                              : [
+                                const Color.fromARGB(0, 96, 96, 96),
+                                const Color.fromARGB(64, 114, 114, 114),
+                                const Color.fromARGB(128, 131, 131, 131),
+                              ],
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(100),
@@ -344,7 +347,6 @@ class _TimetablePageState extends State<TimetablePage> {
   }
 }
 
-
 class ScheduleList extends StatelessWidget {
   final List<ScheduleItem> scheduleItems;
   final void Function(EventItem) onEventTap;
@@ -398,7 +400,7 @@ class ScheduleList extends StatelessWidget {
     }
 
     // Add padding to latest time
-    final latestTime = latestEventEndTime + 35; // Add 30 minutes buffer
+    final latestTime = latestEventEndTime + 40; // Add 30 minutes buffer
     final timelineHeight = (latestTime - baseTime) * pixelsPerMinute;
 
     return Row(
@@ -552,49 +554,53 @@ class ScheduleList extends StatelessWidget {
                       ? item.stage1Events ?? []
                       : item.stage2Events ?? [],
             )
+            .where((e) => e.title.isNotEmpty)
             .toList();
 
-   return [
-  for (var i = 0; i < events.length; i++)
-    ...(events[i].title != ""
-        ? [
-          SizedBox(
-            height: events[i].duration * pixelsPerMinute,
-            child: PerformanceBox(eventItem: events[i], onTap: onEventTap),
-          ),
-        ]
-        : [SizedBox(height: events[i].duration * pixelsPerMinute)]),
-];
+    // Sort events by time if needed
+    events.sort((a, b) => a.time.compareTo(b.time));
 
+    return [
+      const SizedBox(height: 12),
+      for (var i = 0; i < events.length; i++)
+        Column(
+          children: [
+            SizedBox(
+              height: events[i].duration * pixelsPerMinute,
+              child: PerformanceBox(eventItem: events[i], onTap: onEventTap),
+            ),
+          ],
+        ),
+    ];
   }
+}
 
-  // Parse time string (like "11:00 am") to minutes since midnight
-  int _parseTimeToMinutes(String timeString) {
-    try {
-      // Parse time format (handle both "11:00 am" and "11:00" formats)
-      final parts = timeString.split(' ');
-      final timePart = parts[0];
-      final isPM = parts.length > 1 && parts[1].toLowerCase() == 'pm';
+// Parse time string (like "11:00 am") to minutes since midnight
+int _parseTimeToMinutes(String timeString) {
+  try {
+    // Parse time format (handle both "11:00 am" and "11:00" formats)
+    final parts = timeString.split(' ');
+    final timePart = parts[0];
+    final isPM = parts.length > 1 && parts[1].toLowerCase() == 'pm';
 
-      final hourAndMinute = timePart.split(':');
-      int hour = int.parse(hourAndMinute[0]);
-      final int minute =
-          hourAndMinute.length > 1 ? int.parse(hourAndMinute[1]) : 0;
+    final hourAndMinute = timePart.split(':');
+    int hour = int.parse(hourAndMinute[0]);
+    final int minute =
+        hourAndMinute.length > 1 ? int.parse(hourAndMinute[1]) : 0;
 
-      // Convert to 24-hour format if PM
-      if (isPM && hour < 12) {
-        hour += 12;
-      }
-      // Handle 12 AM edge case
-      if (!isPM && hour == 12) {
-        hour = 0;
-      }
-
-      return hour * 60 + minute;
-    } catch (e) {
-      print('Error parsing time: $timeString - $e');
-      return 0; // Default fallback
+    // Convert to 24-hour format if PM
+    if (isPM && hour < 12) {
+      hour += 12;
     }
+    // Handle 12 AM edge case
+    if (!isPM && hour == 12) {
+      hour = 0;
+    }
+
+    return hour * 60 + minute;
+  } catch (e) {
+    print('Error parsing time: $timeString - $e');
+    return 0; // Default fallback
   }
 }
 
@@ -658,57 +664,118 @@ class _PerformanceBoxState extends State<PerformanceBox>
               vertical: 12.0,
               horizontal: 3.0,
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: 30,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 2,
-                      ),
-                    ],
-                  ),
-                  child:
-                      widget.eventItem.iconImage.isNotEmpty
-                          ? Image.asset(
-                            widget.eventItem.iconImage,
-                            fit: BoxFit.cover,
-                          )
-                          : Icon(Icons.event, size: 20),
-                ),
-                SizedBox(height: eventHeight * 0.05),
-                Text(
-                  widget.eventItem.title.length > 17
-                      ? "${widget.eventItem.title.substring(0, 17)}..."
-                      : widget.eventItem.title,
-                  style: TextStyle(
-                    fontSize: responsiveFontSize * 10,
-                    fontWeight: FontWeight.w500,
-                    height: 0.8,
-                  ),
-                  maxLines: 2,
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: screenHeight * 0.003),
-                Text(
-                  widget.eventItem.time,
-                  style: TextStyle(
-                    fontSize: responsiveFontSize * 8,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey,
-                    height: 1.1,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
+            child:
+                widget.eventItem.duration < 10
+                    // If duration less than 10
+                    ? Row(
+                      children: [
+                        SizedBox(width: screenWidth * 0.01),
+                        Container(
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                blurRadius: 2,
+                              ),
+                            ],
+                          ),
+                          child:
+                              widget.eventItem.iconImage.isNotEmpty
+                                  ? Image.asset(
+                                    widget.eventItem.iconImage,
+                                    fit: BoxFit.cover,
+                                  )
+                                  : Icon(Icons.event, size: 20),
+                        ),
+                        SizedBox(width: screenWidth * 0.017),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.eventItem.title.length > 17
+                                    ? "${widget.eventItem.title.substring(0, 17)}..."
+                                    : widget.eventItem.title,
+                                style: TextStyle(
+                                  fontSize: responsiveFontSize * 8,
+                                  fontWeight: FontWeight.w500,
+                                  height: 0.8,
+                                ),
+                                maxLines: 2,
+                                textAlign: TextAlign.center,
+                              ),
+                              SizedBox(height: screenHeight * 0.003),
+                              Text(
+                                widget.eventItem.time,
+                                style: TextStyle(
+                                  fontSize: responsiveFontSize * 6,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey,
+                                  height: 1.1,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
+                    : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                blurRadius: 2,
+                              ),
+                            ],
+                          ),
+                          child:
+                              widget.eventItem.iconImage.isNotEmpty
+                                  ? Image.asset(
+                                    widget.eventItem.iconImage,
+                                    fit: BoxFit.cover,
+                                  )
+                                  : Icon(Icons.event, size: 20),
+                        ),
+                        SizedBox(height: eventHeight * 0.05),
+                        Text(
+                          widget.eventItem.title.length > 17
+                              ? "${widget.eventItem.title.substring(0, 17)}..."
+                              : widget.eventItem.title,
+                          style: TextStyle(
+                            fontSize: responsiveFontSize * 10,
+                            fontWeight: FontWeight.w500,
+                            height: 0.8,
+                          ),
+                          maxLines: 2,
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: screenHeight * 0.003),
+                        Text(
+                          widget.eventItem.time,
+                          style: TextStyle(
+                            fontSize: responsiveFontSize * 8,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey,
+                            height: 1.1,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
           ),
         ),
       ),
