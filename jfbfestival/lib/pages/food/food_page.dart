@@ -5,6 +5,7 @@ import 'package:jfbfestival/pages/food/components/allergy_filter.dart';
 import 'package:jfbfestival/pages/food/components/booth_details.dart';
 import 'package:jfbfestival/data/food_booths.dart';
 import 'package:jfbfestival/models/food_booth.dart';
+import '/models/dish.dart';
 
 class AnimatedBoothDetailWrapper extends StatefulWidget {
   final FoodBooth booth;
@@ -216,7 +217,19 @@ class _FoodPageState extends State<FoodPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height: screenHeight * 0.1),
+                Container(
+  height: 1.5,
+  color: Colors.grey.shade300,
+  margin: const EdgeInsets.only(bottom: 12),
+),
+
                 _buildAllBoothsSection(screenWidth),
+                Container(
+  height: 1.5,
+  color: Colors.grey.shade300,
+  margin: const EdgeInsets.symmetric(vertical: 12),
+),
+
                 SizedBox(height: screenHeight * 0.05),
               ],
             ),
@@ -233,12 +246,23 @@ class _FoodPageState extends State<FoodPage> {
       children: [
         const SizedBox(height: 60),
         Text(
-          "All Food Booths",
-          style: TextStyle(
-            fontSize: screenWidth > 600 ? 20 : 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+  "All Food Booths",
+  style: TextStyle(
+    fontSize: screenWidth > 600 ? 26 : 22,
+    fontWeight: FontWeight.w700,
+    letterSpacing: 1.2,
+    color: const Color(0xFF2B2B2B), // rich neutral for contrast
+    shadows: [
+      Shadow(
+        color: Colors.black.withOpacity(0.05),
+        offset: Offset(0, 1.5),
+        blurRadius: 2,
+      ),
+    ],
+  ),
+  textAlign: TextAlign.center,
+),
+
         const SizedBox(height: .01), //
         GridView.builder(
           shrinkWrap: true,
@@ -530,21 +554,30 @@ class _FoodPageState extends State<FoodPage> {
     );
   }
 
-  void _applyFilters() {
-    setState(() {
-      filteredBooths =
-          foodBooths.where((booth) {
-            if (selectedPayments.isNotEmpty &&
-                !booth.payments.any((p) => selectedPayments.contains(p))) {
-              return false;
-            }
-            if (veganOnly == true && !booth.isVegan) return false;
-            if (selectedAllergens.isNotEmpty &&
-                booth.allergens.any((a) => selectedAllergens.contains(a))) {
-              return false;
-            }
-            return true;
-          }).toList();
-    });
-  }
+ void _applyFilters() {
+  setState(() {
+    filteredBooths = foodBooths.where((booth) {
+      // Payments filter
+      if (selectedPayments.isNotEmpty &&
+          !booth.payments.any((p) => selectedPayments.contains(p))) {
+        return false;
+      }
+
+      // Vegan filter
+      if (veganOnly == true && !booth.isVegan) return false;
+
+      // Allergen filter (dish-based)
+      if (selectedAllergens.isNotEmpty) {
+  
+  bool hasSafeDish = booth.dishes.any((dish) =>
+      !dish.allergens.any((a) => selectedAllergens.contains(a)));
+  if (!hasSafeDish) return false;
+}
+
+
+      return true;
+    }).toList();
+  });
+}
+
 }

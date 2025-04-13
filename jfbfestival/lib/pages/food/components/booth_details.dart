@@ -131,7 +131,7 @@ class BoothDetails extends StatelessWidget {
                                   "Payment",
                                   _buildPaymentOptions(booth.payments),
                                 ),
-                                const SizedBox(height: 20),
+                                const SizedBox(height: 10),
                                 _buildSection(
                                   "Vegan Options",
                                   _buildVeganism(booth.isVegan),
@@ -184,45 +184,42 @@ class BoothDetails extends StatelessWidget {
       ],
     );
   }
-
-  Widget _buildSection(String title, Widget content) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: Container(
-              width: 140,
-              height: 30,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(25),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.45),
-                    blurRadius: 5,
-                    spreadRadius: 0,
-                  ),
-                ],
-              ),
-              child: Center(
-                child: Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w300,
-                  ),
+Widget _buildSection(String title, Widget content) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Center(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(25),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  blurRadius: 5,
+                  spreadRadius: 0,
                 ),
+              ],
+            ),
+            child: Text(
+              title,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w400,
               ),
             ),
           ),
-          const SizedBox(height: 12),
-          content,
-        ],
-      ),
-    );
-  }
+        ),
+        const SizedBox(height: 12),
+        content,
+      ],
+    ),
+  );
+}
+
 
   Widget _buildDishesSection(List<Dish> dishes) {
     return Column(
@@ -269,7 +266,7 @@ Widget _buildPaymentItem(String label, String assetPath, bool isAccepted) {
         width: 60,
         height: 60,
         decoration: BoxDecoration(
-          color: isAccepted ? Colors.white : Colors.grey[200],
+          color: isAccepted ? Colors.white : Colors.grey[500],
           shape: BoxShape.circle,
           boxShadow: isAccepted
               ? [

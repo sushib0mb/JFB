@@ -43,7 +43,7 @@ final List<FoodBooth> foodBooths = [
     genre: "Japanese",
     logoPath: "assets/foodLogo/cafe_itadaki.jpg",
     dishImagePath: "assets/food/itadaki_takoyaki.jpg",
-    isVegan: false,
+    isVegan: true,
     payments: ["Cash"],
     allergens: ["Wheat", "Soy"],
     dishes: [
@@ -82,7 +82,7 @@ final List<FoodBooth> foodBooths = [
     genre: "Japanese",
     logoPath: "assets/foodLogo/tori_jori_logo.jpg",
     dishImagePath: "assets/food/tori_jori.jpg",
-    isVegan: false,
+    isVegan: true,
     payments: ["Cash"],
     allergens: ["Soy"],
     dishes: [
