@@ -10,11 +10,13 @@ import '/models/dish.dart';
 class AnimatedBoothDetailWrapper extends StatefulWidget {
   final FoodBooth booth;
   final VoidCallback onClose;
+  final List<String> selectedAllergens; 
 
   const AnimatedBoothDetailWrapper({
     Key? key,
     required this.booth,
     required this.onClose,
+    required this.selectedAllergens,
   }) : super(key: key);
 
   @override
@@ -55,19 +57,25 @@ class _AnimatedBoothDetailWrapperState extends State<AnimatedBoothDetailWrapper>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _fadeAnimation,
-      child: SlideTransition(
-        position: _slideAnimation,
-        child: BoothDetails(booth: widget.booth, onClose: widget.onClose),
+Widget build(BuildContext context) {
+  return FadeTransition(
+    opacity: _fadeAnimation,
+    child: SlideTransition(
+      position: _slideAnimation,
+      child: BoothDetails(
+        booth: widget.booth,
+        onClose: widget.onClose,
+        selectedAllergens: widget.selectedAllergens, 
       ),
-    );
-  }
+    ),
+  );
+}
+
 }
 
 class FoodPage extends StatefulWidget {
   const FoodPage({super.key});
+  
 
   @override
   State<FoodPage> createState() => _FoodPageState();
@@ -78,6 +86,10 @@ class _FoodPageState extends State<FoodPage> {
   Set<String> selectedPayments = {};
   bool? veganOnly = false;
   Set<String> excludedAllergens = {};
+  List<FoodBooth> safeBooths = [];
+  List<FoodBooth> unsafeBoothsWithAllergens = [];
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -238,119 +250,140 @@ class _FoodPageState extends State<FoodPage> {
       ),
     );
   }
+Widget _buildAllBoothsSection(double screenWidth) {
+  final bool showSplitSections =
+      safeBooths.isNotEmpty || unsafeBoothsWithAllergens.isNotEmpty;
 
-  Widget _buildAllBoothsSection(double screenWidth) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const SizedBox(height: 60),
-        Text(
-  "All Food Booths",
-  style: TextStyle(
-    fontSize: screenWidth > 600 ? 26 : 22,
-    fontWeight: FontWeight.w700,
-    letterSpacing: 1.2,
-    color: const Color(0xFF2B2B2B), // rich neutral for contrast
-    shadows: [
-      Shadow(
-        color: Colors.black.withOpacity(0.05),
-        offset: Offset(0, 1.5),
-        blurRadius: 2,
-      ),
-    ],
-  ),
-  textAlign: TextAlign.center,
-),
-
-        const SizedBox(height: .01), //
-        GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: screenWidth > 600 ? 2 : 1,
-            crossAxisSpacing: 2, // 👈 reduced from 30
-            mainAxisSpacing: 2, // 👈 reduced from 30
-            childAspectRatio: 1.34, // slight tweak for balance
-          ),
-          itemCount: filteredBooths.length,
-          itemBuilder: (context, index) {
-            final booth = filteredBooths[index];
-            return GestureDetector(
-              onTap: () => _showBoothDetails(context, booth),
-              child: Center(
-                child: Container(
-                  width: 320,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 16,
-                  ), // 👈 tighter padding
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 10,
-                        offset: Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Image.asset(
-                          booth.logoPath,
-                          width: 80,
-                          height: 80,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                      const SizedBox(height: 12), // 👈 reduced
-                      Text(
-                        booth.name,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 6), // 👈 reduced
-                      Text(
-                        'Food Booth: ${booth.boothLocation}',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 10), // 👈 reduced
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 6,
-                          horizontal: 20,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.15),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          booth.genre,
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      const SizedBox(height: 60),
+      Text(
+        "All Food Booths",
+        style: TextStyle(
+          fontSize: screenWidth > 600 ? 26 : 22,
+          fontWeight: FontWeight.w700,
+          letterSpacing: 1.2,
+          color: const Color(0xFF2B2B2B),
+          shadows: [
+            Shadow(
+              color: Colors.black.withOpacity(0.05),
+              offset: Offset(0, 1.5),
+              blurRadius: 2,
+            ),
+          ],
         ),
+        textAlign: TextAlign.center,
+      ),
+      const SizedBox(height: 20),
+
+      if (showSplitSections) ...[
+        if (safeBooths.isNotEmpty) ...[
+          Text("✅ Safe Options", style: TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 10),
+          _buildBoothGrid(safeBooths, screenWidth),
+        ],
+
+        if (unsafeBoothsWithAllergens.isNotEmpty) ...[
+          const SizedBox(height: 30),
+          Text(
+            "⚠️ May Contain Allergens",
+            style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 10),
+          _buildBoothGrid(unsafeBoothsWithAllergens, screenWidth, faded: true),
+        ],
+      ] else ...[
+        _buildBoothGrid(filteredBooths, screenWidth),
       ],
-    );
-  }
+    ],
+  );
+}
+
+
+Widget _buildBoothGrid(List<FoodBooth> booths, double screenWidth, {bool faded = false}) {
+  return GridView.builder(
+    shrinkWrap: true,
+    physics: const NeverScrollableScrollPhysics(),
+    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: screenWidth > 600 ? 2 : 1,
+      crossAxisSpacing: 2,
+      mainAxisSpacing: 2,
+      childAspectRatio: 1.34,
+    ),
+    itemCount: booths.length,
+    itemBuilder: (context, index) {
+      final booth = booths[index];
+      return GestureDetector(
+        onTap: () => _showBoothDetails(context, booth),
+        child: Center(
+          child: Opacity(
+            opacity: faded ? 0.5 : 1.0,
+            child: Container(
+              width: 320,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(30),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 10,
+                    offset: Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.asset(
+                      booth.logoPath,
+                      width: 80,
+                      height: 80,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    booth.name,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    'Food Booth: ${booth.boothLocation}',
+                    style: const TextStyle(fontSize: 16, color: Colors.grey),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 6,
+                      horizontal: 20,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      booth.genre,
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    },
+  );
+}
 
   void _showBoothDetails(BuildContext context, FoodBooth booth) {
     showModalBottomSheet(
@@ -362,11 +395,13 @@ class _FoodPageState extends State<FoodPage> {
         vsync: Navigator.of(context),
       ),
       builder: (context) {
-        return AnimatedBoothDetailWrapper(
-          booth: booth,
-          onClose: () => Navigator.of(context).pop(),
-        );
-      },
+  return AnimatedBoothDetailWrapper(
+    booth: booth,
+    onClose: () => Navigator.of(context).pop(),
+    selectedAllergens: selectedAllergens.toList(), // ✅ pass it here
+  );
+},
+
     );
   }
 
@@ -556,28 +591,40 @@ class _FoodPageState extends State<FoodPage> {
 
  void _applyFilters() {
   setState(() {
-    filteredBooths = foodBooths.where((booth) {
+    safeBooths = [];
+    unsafeBoothsWithAllergens = [];
+
+    for (var booth in foodBooths) {
       // Payments filter
       if (selectedPayments.isNotEmpty &&
           !booth.payments.any((p) => selectedPayments.contains(p))) {
-        return false;
+        continue;
       }
 
       // Vegan filter
-      if (veganOnly == true && !booth.isVegan) return false;
+      if (veganOnly == true && !booth.isVegan) continue;
 
-      // Allergen filter (dish-based)
+      // Allergen filtering
       if (selectedAllergens.isNotEmpty) {
-  
-  bool hasSafeDish = booth.dishes.any((dish) =>
-      !dish.allergens.any((a) => selectedAllergens.contains(a)));
-  if (!hasSafeDish) return false;
+  final hasAllergenDish = booth.dishes.any((dish) =>
+      dish.allergens.any((a) => selectedAllergens.contains(a)));
+
+  if (hasAllergenDish) {
+    unsafeBoothsWithAllergens.add(booth);
+  } else {
+    safeBooths.add(booth);
+  }
 }
+else {
+        // No allergen filter, so treat all booths as safe
+        safeBooths.add(booth);
+      }
+    }
 
-
-      return true;
-    }).toList();
+    // If no allergen filter applied, treat all as "safe"
+    if (selectedAllergens.isEmpty) {
+      unsafeBoothsWithAllergens.clear();
+    }
   });
 }
-
 }

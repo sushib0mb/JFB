@@ -6,8 +6,15 @@ import 'dart:ui';
 class BoothDetails extends StatelessWidget {
   final FoodBooth booth;
   final VoidCallback onClose;
+  final List<String> selectedAllergens; // ✅ add this
 
-  const BoothDetails({required this.booth, required this.onClose, super.key});
+  const BoothDetails({
+    required this.booth,
+    required this.onClose,
+    required this.selectedAllergens, // ✅ add this
+    super.key,
+  });
+
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +146,7 @@ class BoothDetails extends StatelessWidget {
                                 const SizedBox(height: 40),
                                 _buildSection(
                                   "Dishes",
-                                  _buildDishesSection(booth.dishes),
+                                  _buildDishesSection(booth.dishes, selectedAllergens),
                                 ),
                                 const SizedBox(height: 20),
                               ],
@@ -221,11 +228,15 @@ Widget _buildSection(String title, Widget content) {
 }
 
 
-  Widget _buildDishesSection(List<Dish> dishes) {
-    return Column(
-      children: dishes.map((dish) => DishCard(dish: dish)).toList(),
-    );
-  }
+ Widget _buildDishesSection(List<Dish> dishes, List<String> selectedAllergens) {
+  return Column(
+    children: dishes.map((dish) => DishCard(
+      dish: dish,
+      selectedAllergens: selectedAllergens,
+    )).toList(),
+  );
+}
+
 
   Widget _buildPaymentOptions(List<String> payments) {
     return Column(
@@ -339,8 +350,10 @@ Widget _buildVeganism(bool isVegan) {
 
 class DishCard extends StatefulWidget {
   final Dish dish;
-  
-  const DishCard({required this.dish, super.key});
+  final List<String> selectedAllergens;
+
+  const DishCard({required this.dish, required this.selectedAllergens, super.key});
+
   
   @override
   State<DishCard> createState() => _DishCardState();
@@ -348,6 +361,7 @@ class DishCard extends StatefulWidget {
 
 class _DishCardState extends State<DishCard> {
   bool _showAllergenDetails = false;
+  
   
   // Map allergen names to their corresponding icon paths
   final Map<String, String> _allergenIcons = {
@@ -361,7 +375,6 @@ class _DishCardState extends State<DishCard> {
     "Shellfish": "assets/allergens/shellfish.png",
     "Sesame": "assets/allergens/sesame.png",
   };
-  
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -377,7 +390,7 @@ class _DishCardState extends State<DishCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Dish image and basic info
+            // Dish image and badges
             Stack(
               children: [
                 ClipRRect(
@@ -389,6 +402,63 @@ class _DishCardState extends State<DishCard> {
                     fit: BoxFit.cover,
                   ),
                 ),
+
+                // ⚠ Allergen warning badge
+                if (widget.dish.allergens.any((a) => widget.selectedAllergens.contains(a)))
+                  Positioned(
+                    top: 8,
+                    left: 8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.red.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Text(
+                        "⚠ Selected Allergen",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                // 🌱 Vegan badge
+                if (widget.dish.isVegan)
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.green.withOpacity(0.8),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.eco,
+                            color: Colors.white,
+                            size: 14,
+                          ),
+                          SizedBox(width: 4),
+                          Text(
+                            "Vegan",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                // Name and price bar
                 Positioned(
                   bottom: 0,
                   right: 0,
@@ -432,40 +502,9 @@ class _DishCardState extends State<DishCard> {
                     ),
                   ),
                 ),
-                if (widget.dish.isVegan)
-                  Positioned(
-                    top: 8,
-                    right: 8,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.green.withOpacity(0.8),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.eco,
-                            color: Colors.white,
-                            size: 14,
-                          ),
-                          SizedBox(width: 4),
-                          Text(
-                            "Vegan",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
               ],
             ),
-            // Dish description
+            // Dish description & allergen dropdown
             Padding(
               padding: const EdgeInsets.all(12),
               child: Column(
@@ -479,7 +518,6 @@ class _DishCardState extends State<DishCard> {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  // Allergen information
                   if (widget.dish.allergens.isNotEmpty)
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -505,7 +543,7 @@ class _DishCardState extends State<DishCard> {
                                 _showAllergenDetails
                                     ? Icons.keyboard_arrow_up
                                     : Icons.keyboard_arrow_down,
-                                size: 18, 
+                                size: 18,
                                 color: Color.fromARGB(255, 151, 73, 0),
                               ),
                             ],
@@ -513,21 +551,22 @@ class _DishCardState extends State<DishCard> {
                         ),
                         if (_showAllergenDetails) ...[
                           const SizedBox(height: 8),
-                          // Allergen icons
                           Wrap(
                             spacing: 8,
                             runSpacing: 8,
                             children: widget.dish.allergens.map((allergen) {
                               final iconPath = _allergenIcons[allergen] ?? "assets/allergens/default.png";
                               return SizedBox(
-                                width: 70, // Fixed width for consistent spacing
+                                width: 70,
                                 child: Column(
                                   children: [
                                     Container(
                                       width: 40,
                                       height: 40,
                                       decoration: BoxDecoration(
-                                        color: Colors.white,
+                                        color: widget.selectedAllergens.contains(allergen)
+                                            ? Colors.red.withOpacity(0.15)
+                                            : Colors.white,
                                         borderRadius: BorderRadius.circular(20),
                                         boxShadow: [
                                           BoxShadow(

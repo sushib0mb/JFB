@@ -5,6 +5,7 @@ class Dish {
   final List<String> allergens;
   final bool isVegan;
   final double price;
+  
 
   Dish({
     required this.name,
