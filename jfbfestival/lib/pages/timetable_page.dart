@@ -954,7 +954,8 @@ class _EventDetailViewState extends State<EventDetailView>
                                 ConstrainedBox(
                                   constraints: BoxConstraints(
                                     maxWidth:
-                                        MediaQuery.of(context).size.width * 0.3,
+                                        MediaQuery.of(context).size.width *
+                                        0.25,
                                   ),
                                   child: Container(
                                     decoration: BoxDecoration(
@@ -989,6 +990,7 @@ class _EventDetailViewState extends State<EventDetailView>
                                         style: TextStyle(
                                           fontWeight: FontWeight.w400,
                                           color: Colors.black87,
+                                          fontSize: 17,
                                         ),
                                         textAlign: TextAlign.center,
                                       ),
@@ -1000,7 +1002,7 @@ class _EventDetailViewState extends State<EventDetailView>
                                   constraints: BoxConstraints(
                                     maxWidth:
                                         MediaQuery.of(context).size.width *
-                                        0.3, // Time width
+                                        0.25, // Time width
                                   ),
                                   child: Container(
                                     decoration: BoxDecoration(
@@ -1022,6 +1024,7 @@ class _EventDetailViewState extends State<EventDetailView>
                                         style: TextStyle(
                                           fontWeight: FontWeight.w400,
                                           color: Colors.black87,
+                                          fontSize: 17,
                                         ),
                                         textAlign: TextAlign.center,
                                       ),
