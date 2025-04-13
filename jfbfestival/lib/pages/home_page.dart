@@ -146,17 +146,17 @@ class _HomePageState extends State<HomePage> {
                             onTap: () {},
                             child: Container(
                               padding: EdgeInsets.all(6),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 5,
-                                    spreadRadius: 2,
-                                  ),
-                                ],
-                              ),
+                              // decoration: BoxDecoration(
+                              //   color: Colors.white,
+                              //   shape: BoxShape.circle,
+                              //   boxShadow: [
+                              //     BoxShadow(
+                              //       color: Colors.black12,
+                              //       blurRadius: 5,
+                              //       spreadRadius: 2,
+                              //     ),
+                              //   ],
+                              // ),
                               // child: Image.asset(
                               //   "assets/langChange.png",
                               //   height: isSmallScreen ? 40 : 50,
