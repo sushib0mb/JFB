@@ -1,3 +1,5 @@
+// Removed black arrow from map and added to timetable
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -139,11 +141,34 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                         ),
-                        Positioned(
-                          top: screenHeight * 0.05,
-                          right: screenWidth * 0.05,
+                      ],
+                    ),
+                    SizedBox(height: screenHeight * 0.02),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 16.0),
                           child: GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                  transitionDuration: const Duration(milliseconds: 400),
+                                  pageBuilder: (_, __, ___) => MainScreen(initialIndex: 2),
+                                  transitionsBuilder: (_, animation, __, child) {
+                                    const begin = Offset(1.0, 0.0);
+                                    const end = Offset.zero;
+                                    final tween = Tween(begin: begin, end: end)
+                                        .chain(CurveTween(curve: Curves.easeInOut));
+                                    return SlideTransition(
+                                      position: animation.drive(tween),
+                                      child: child,
+                                    );
+                                  },
+                                ),
+                              );
+                            },
                             child: Container(
                               padding: EdgeInsets.all(6),
                               decoration: BoxDecoration(
@@ -157,16 +182,12 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ],
                               ),
-                              // child: Image.asset(
-                              //   "assets/langChange.png",
-                              //   height: isSmallScreen ? 40 : 50,
-                              // ), #COMMENT OUT FOR NOW!!
+                              child: Icon(Icons.arrow_forward, size: 30, color: Colors.black),
                             ),
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: screenHeight * 0.02),
                     _buildLiveTimetable(screenWidth),
                     _buildSocialMediaIcons(screenWidth),
                     _buildSponsorsSection(screenWidth),
@@ -180,6 +201,9 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
+
+
+
 
   // Helper class to organize events
 

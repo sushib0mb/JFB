@@ -47,6 +47,7 @@ class MapPageState extends State<MapPage> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        automaticallyImplyLeading: false, // 🔥 Removes the default back arrow
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,

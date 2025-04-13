@@ -6,8 +6,16 @@ import 'package:jfbfestival/pages/home_page.dart';
 import 'package:jfbfestival/pages/map_page.dart';
 import 'package:jfbfestival/pages/timetable_page.dart';
 import 'package:jfbfestival/data/timetableData.dart';
+import 'package:flutter/services.dart'; // ← add this
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // ← required before locking orientation
+
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
   runApp(const MyApp());
 }
 

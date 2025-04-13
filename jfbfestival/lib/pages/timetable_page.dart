@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jfbfestival/data/timetableData.dart';
 
+/// メインビュー：タイムテーブル
 class TimetablePage extends StatefulWidget {
   final EventItem? selectedEvent;
 
@@ -35,6 +36,7 @@ class _TimetablePageState extends State<TimetablePage> {
 
     for (var item in currentSchedule) {
       final allEvents = [...?item.stage1Events, ...?item.stage2Events];
+
       for (var e in allEvents) {
         if (e.title == selected.title &&
             e.time == selected.time &&
@@ -49,17 +51,6 @@ class _TimetablePageState extends State<TimetablePage> {
         }
       }
     }
-  }
-
-  void _scrollToEventTime(String time) {
-    final startMinutes = _parseTimeToMinutes(time);
-    final offset = (startMinutes - _parseTimeToMinutes("11:00 am")) * 10.0;
-
-    _scrollController.animateTo(
-      offset,
-      duration: Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-    );
   }
 
   int _parseTimeToMinutes(String timeString) {
@@ -87,6 +78,17 @@ class _TimetablePageState extends State<TimetablePage> {
     }
   }
 
+  void _scrollToEventTime(String time) {
+    final startMinutes = _parseTimeToMinutes(time);
+    final offset = (startMinutes - _parseTimeToMinutes("11:00 am")) * 10.0;
+
+    _scrollController.animateTo(
+      offset,
+      duration: Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
+  }
+
   @override
   void dispose() {
     _scrollController.dispose();
@@ -102,7 +104,26 @@ class _TimetablePageState extends State<TimetablePage> {
         selectedDay == 1 ? day1ScheduleData : day2ScheduleData;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      extendBodyBehindAppBar: true,
+      appBar: widget.selectedEvent != null
+          ? AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leading: Container(
+                margin: EdgeInsets.only(left: 8),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.5),
+                  shape: BoxShape.circle,
+                ),
+                child: IconButton(
+                  icon: Icon(Icons.arrow_back, color: Colors.white),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+            )
+          : null,
       body: Padding(
         padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
         child: Stack(
@@ -196,7 +217,8 @@ class _TimetablePageState extends State<TimetablePage> {
             Column(
               children: [
                 SizedBox(
-                  height: topPadding + MediaQuery.of(context).size.height * 0.015,
+                  height:
+                      topPadding + MediaQuery.of(context).size.height * 0.015,
                 ),
                 Expanded(
                   child: Container(
@@ -258,6 +280,7 @@ class _TimetablePageState extends State<TimetablePage> {
 
   Widget _buildStageHeader() {
     const double fontSize = 17;
+
     return Padding(
       padding: const EdgeInsets.only(top: 25, bottom: 10),
       child: Container(
