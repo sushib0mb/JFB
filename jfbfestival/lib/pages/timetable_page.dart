@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:jfbfestival/data/timetableData.dart';
 
-/// メインビュー：タイムテーブル
 class TimetablePage extends StatefulWidget {
-  const TimetablePage({super.key});
+  final EventItem? selectedEvent;
+
+  const TimetablePage({super.key, this.selectedEvent});
 
   @override
   _TimetablePageState createState() => _TimetablePageState();
@@ -14,13 +15,76 @@ class _TimetablePageState extends State<TimetablePage> {
   int selectedStage = 1;
   EventItem? selectedEvent;
   bool isShowingDetail = false;
-  double animationAmount = 1.0;
   late ScrollController _scrollController;
 
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController();
+
+    if (widget.selectedEvent != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _highlightSelectedEvent(widget.selectedEvent!);
+      });
+    }
+  }
+
+  void _highlightSelectedEvent(EventItem selected) {
+    final currentSchedule =
+        selectedDay == 1 ? day1ScheduleData : day2ScheduleData;
+
+    for (var item in currentSchedule) {
+      final allEvents = [...?item.stage1Events, ...?item.stage2Events];
+      for (var e in allEvents) {
+        if (e.title == selected.title &&
+            e.time == selected.time &&
+            e.stage == selected.stage) {
+          setState(() {
+            selectedEvent = e;
+            isShowingDetail = true;
+          });
+
+          _scrollToEventTime(e.time);
+          return;
+        }
+      }
+    }
+  }
+
+  void _scrollToEventTime(String time) {
+    final startMinutes = _parseTimeToMinutes(time);
+    final offset = (startMinutes - _parseTimeToMinutes("11:00 am")) * 10.0;
+
+    _scrollController.animateTo(
+      offset,
+      duration: Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  int _parseTimeToMinutes(String timeString) {
+    try {
+      final parts = timeString.split(' ');
+      final timePart = parts[0];
+      final isPM = parts.length > 1 && parts[1].toLowerCase() == 'pm';
+
+      final hourAndMinute = timePart.split(':');
+      int hour = int.parse(hourAndMinute[0]);
+      final int minute =
+          hourAndMinute.length > 1 ? int.parse(hourAndMinute[1]) : 0;
+
+      if (isPM && hour < 12) {
+        hour += 12;
+      }
+      if (!isPM && hour == 12) {
+        hour = 0;
+      }
+
+      return hour * 60 + minute;
+    } catch (e) {
+      print('Error parsing time: $timeString - $e');
+      return 0;
+    }
   }
 
   @override
@@ -28,8 +92,6 @@ class _TimetablePageState extends State<TimetablePage> {
     _scrollController.dispose();
     super.dispose();
   }
-
-  //   // サンプルのスケジュールデータ（実際にはもっと項目が必要）
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +108,7 @@ class _TimetablePageState extends State<TimetablePage> {
         child: Stack(
           children: [
             Positioned(
-              left: MediaQuery.of(context).size.width * 0.06, // Adjust position
+              left: MediaQuery.of(context).size.width * 0.06,
               top: MediaQuery.of(context).size.height * 0.002,
               child: GestureDetector(
                 onTap: () {
@@ -59,18 +121,17 @@ class _TimetablePageState extends State<TimetablePage> {
                   height: dayButtonHeight,
                   decoration: ShapeDecoration(
                     gradient: LinearGradient(
-                      colors:
-                          selectedDay == 1
-                              ? [
-                                const Color.fromARGB(255, 255, 131, 135),
-                                const Color.fromARGB(128, 176, 113, 116),
-                                const Color.fromARGB(0, 96, 96, 96),
-                              ]
-                              : [
-                                const Color.fromARGB(128, 131, 131, 131),
-                                const Color.fromARGB(64, 114, 114, 114),
-                                const Color.fromARGB(0, 96, 96, 96),
-                              ],
+                      colors: selectedDay == 1
+                          ? [
+                              const Color.fromARGB(255, 255, 131, 135),
+                              const Color.fromARGB(128, 176, 113, 116),
+                              const Color.fromARGB(0, 96, 96, 96),
+                            ]
+                          : [
+                              const Color.fromARGB(128, 131, 131, 131),
+                              const Color.fromARGB(64, 114, 114, 114),
+                              const Color.fromARGB(0, 96, 96, 96),
+                            ],
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(100),
@@ -89,10 +150,8 @@ class _TimetablePageState extends State<TimetablePage> {
                 ),
               ),
             ),
-
             Positioned(
-              right:
-                  MediaQuery.of(context).size.width * 0.06, // Adjust position
+              right: MediaQuery.of(context).size.width * 0.06,
               top: MediaQuery.of(context).size.height * 0.002,
               child: GestureDetector(
                 onTap: () {
@@ -100,24 +159,22 @@ class _TimetablePageState extends State<TimetablePage> {
                     selectedDay = 2;
                   });
                 },
-
                 child: Container(
                   width: dayButtonWidth,
                   height: dayButtonHeight,
                   decoration: ShapeDecoration(
                     gradient: LinearGradient(
-                      colors:
-                          selectedDay == 2
-                              ? [
-                                const Color.fromARGB(49, 96, 96, 96),
-                                const Color.fromARGB(128, 107, 136, 175),
-                                const Color.fromARGB(255, 118, 175, 255),
-                              ]
-                              : [
-                                const Color.fromARGB(0, 96, 96, 96),
-                                const Color.fromARGB(64, 114, 114, 114),
-                                const Color.fromARGB(128, 131, 131, 131),
-                              ],
+                      colors: selectedDay == 2
+                          ? [
+                              const Color.fromARGB(49, 96, 96, 96),
+                              const Color.fromARGB(128, 107, 136, 175),
+                              const Color.fromARGB(255, 118, 175, 255),
+                            ]
+                          : [
+                              const Color.fromARGB(0, 96, 96, 96),
+                              const Color.fromARGB(64, 114, 114, 114),
+                              const Color.fromARGB(128, 131, 131, 131),
+                            ],
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(100),
@@ -139,8 +196,7 @@ class _TimetablePageState extends State<TimetablePage> {
             Column(
               children: [
                 SizedBox(
-                  height:
-                      topPadding + MediaQuery.of(context).size.height * 0.015,
+                  height: topPadding + MediaQuery.of(context).size.height * 0.015,
                 ),
                 Expanded(
                   child: Container(
@@ -164,9 +220,9 @@ class _TimetablePageState extends State<TimetablePage> {
                           ),
                           child: _buildStageHeader(),
                         ),
-
                         Expanded(
                           child: SingleChildScrollView(
+                            controller: _scrollController,
                             child: ScheduleList(
                               scheduleItems: currentSchedule,
                               onEventTap: (event) {
@@ -184,7 +240,6 @@ class _TimetablePageState extends State<TimetablePage> {
                 ),
               ],
             ),
-            // イベント詳細ポップアップ
             if (isShowingDetail && selectedEvent != null)
               EventDetailView(
                 event: selectedEvent!,
@@ -203,7 +258,6 @@ class _TimetablePageState extends State<TimetablePage> {
 
   Widget _buildStageHeader() {
     const double fontSize = 17;
-
     return Padding(
       padding: const EdgeInsets.only(top: 25, bottom: 10),
       child: Container(
@@ -213,7 +267,6 @@ class _TimetablePageState extends State<TimetablePage> {
           color: Color(0xFF8D8D97),
           borderRadius: BorderRadius.circular(36),
         ),
-
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -243,7 +296,6 @@ class _TimetablePageState extends State<TimetablePage> {
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
-
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(left: 8, right: 12),
@@ -268,6 +320,7 @@ class _TimetablePageState extends State<TimetablePage> {
     );
   }
 }
+
 
 class ScheduleList extends StatelessWidget {
   final List<ScheduleItem> scheduleItems;
@@ -478,17 +531,18 @@ class ScheduleList extends StatelessWidget {
             )
             .toList();
 
-    return [
-      for (var i = 0; i < events.length; i++)
-        ...(events[i].title != ""
-            ? [
-              SizedBox(
-                height: events[i].duration * pixelsPerMinute,
-                child: PerformanceBox(eventItem: events[i], onTap: onEventTap),
-              ),
-            ]
-            : [SizedBox(height: events[i].duration * pixelsPerMinute)]),
-    ];
+   return [
+  for (var i = 0; i < events.length; i++)
+    ...(events[i].title != ""
+        ? [
+          SizedBox(
+            height: events[i].duration * pixelsPerMinute,
+            child: PerformanceBox(eventItem: events[i], onTap: onEventTap),
+          ),
+        ]
+        : [SizedBox(height: events[i].duration * pixelsPerMinute)]),
+];
+
   }
 
   // Parse time string (like "11:00 am") to minutes since midnight

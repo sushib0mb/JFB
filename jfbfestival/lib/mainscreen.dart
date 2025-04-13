@@ -5,6 +5,7 @@ import 'package:jfbfestival/pages/food/food_page.dart';
 import 'package:jfbfestival/pages/home_page.dart';
 import 'package:jfbfestival/pages/map_page.dart';
 import 'package:jfbfestival/pages/timetable_page.dart';
+import 'package:jfbfestival/data/timetableData.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,7 +26,10 @@ class MyApp extends StatelessWidget {
 
 class MainScreen extends StatefulWidget {
   final int initialIndex;
-  const MainScreen({Key? key, this.initialIndex = 0}) : super(key: key);
+  final EventItem? selectedEvent;
+
+  const MainScreen({Key? key, this.initialIndex = 0, this.selectedEvent}) : super(key: key);
+
 
   @override
   _MainScreenState createState() => _MainScreenState();
@@ -53,9 +57,15 @@ class _MainScreenState extends State<MainScreen> {
       body: Stack(
         children: [
           IndexedStack(
-            index: selectedIndex,
-            children: [HomePage(), FoodPage(), TimetablePage(), MapPage()],
-          ),
+  index: selectedIndex,
+  children: [
+    HomePage(),
+    FoodPage(),
+    TimetablePage(selectedEvent: widget.selectedEvent), // 👈 use it
+    MapPage(),
+  ],
+),
+
           SafeArea(child: TopBar(selectedIndex: selectedIndex)),
           Align(
             alignment: Alignment.bottomCenter,

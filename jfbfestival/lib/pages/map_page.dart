@@ -64,9 +64,9 @@ class MapPageState extends State<MapPage> {
                   color: _isMiniWindowVisible ? Colors.grey.shade300 : Colors.white,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 6,
-                      offset: Offset(0, 2),
+                      color: Colors.black.withOpacity(0.07),
+                      blurRadius: 12,
+                      offset: Offset(0, 6),
                     ),
                   ],
                   border: Border.all(
@@ -86,55 +86,77 @@ class MapPageState extends State<MapPage> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _transformationController.value = Matrix4.identity();
+        },
+        backgroundColor: Colors.white,
+        child: Icon(Icons.center_focus_strong, color: Colors.black),
+      ),
       body: Stack(
         children: [
-          // Background Gradient with lighter colors
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  const Color.fromARGB(255, 204, 233, 245),  // Lighter blue
-                  const Color.fromARGB(255, 246, 221, 221),        // Lighter red
+                  const Color.fromARGB(255, 204, 233, 245),
+                  const Color.fromARGB(255, 246, 221, 221),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
             ),
           ),
-
-          // Map Viewer with pinch-to-zoom (InteractiveViewer)
-          Center(
-            child: Container(
-              width: screenSize.width * 0.85,
-              height: screenSize.height * 0.65,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(30),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 10,
-                    spreadRadius: 2,
-                  ),
-                ],
-              ),
-              padding: EdgeInsets.all(10),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: InteractiveViewer(
-                  transformationController: _transformationController,
-                  minScale: 1.0, // Minimum scale factor (no zoom out smaller than original size)
-                  maxScale: 5.0, // Maximum zoom level (can be adjusted as needed)
-                  child: Image.asset(
-                    _currentMap,
-                    fit: BoxFit.contain,
+          SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 130),
+                Center(
+                  child: Text(
+                    "Festival Grounds Map",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
+                      color: Colors.black87,
+                    ),
                   ),
                 ),
-              ),
+                const SizedBox(height: 20),
+                Center(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: InteractiveViewer(
+                      transformationController: _transformationController,
+                      minScale: 1.0,
+                      maxScale: 5.0,
+                      child: AspectRatio(
+                        aspectRatio: 1.3,
+                        child: Image.asset(
+                          _currentMap,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: ExpansionTile(
+                    title: Text("Legend", style: TextStyle(fontWeight: FontWeight.bold)),
+                    children: const [
+                      ListTile(title: Text("🟩 Portable Toilets")),
+                      ListTile(title: Text("🟨 Light Poles")),
+                      ListTile(title: Text("⬛ Entrances?")),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 80),
+              ],
             ),
           ),
-
-          // Fullscreen expanding mini window
           Positioned(
             top: _isMiniWindowVisible ? 0 : 40,
             left: _isMiniWindowVisible ? 0 : screenSize.width * 0.75,
@@ -151,7 +173,7 @@ class MapPageState extends State<MapPage> {
                         child: Center(
                           child: Container(
                             width: screenSize.width * 0.9,
-                            height: screenSize.height * 0.9,
+                            height: screenSize.height * 0.6,
                             padding: EdgeInsets.all(24),
                             decoration: BoxDecoration(
                               color: Colors.white,
