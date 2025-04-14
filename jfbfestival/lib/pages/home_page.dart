@@ -118,13 +118,29 @@ class _HomePageState extends State<HomePage> {
                                       });
                                     },
                                     itemBuilder: (context, index) {
-                                      return Image.asset(
+                                      final isLadyInKimono = backgroundImages[index] == "assets/JFB-27.jpg";
+
+                                      Widget image = Image.asset(
                                         backgroundImages[index],
                                         fit: BoxFit.cover,
                                         width: double.infinity,
                                         height: screenHeight * 0.6,
+                                        alignment: isLadyInKimono ? Alignment.topCenter : Alignment.center,
                                       );
+
+                                      if (isLadyInKimono) {
+                                        image = Transform.scale(
+                                          scale: 1.1, // zoom in a bit
+                                          child: Align(
+                                            alignment: Alignment.topCenter,
+                                            child: image,
+                                          ),
+                                        );
+                                      }
+
+                                      return image;
                                     },
+
                                   ),
                                   Positioned(
                                     bottom: 10,
@@ -596,125 +612,124 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildEventCard(EventItem event, bool isCurrent, double screenWidth) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            transitionDuration: const Duration(milliseconds: 400),
-            pageBuilder:
-                (_, __, ___) => MainScreen(
-                  initialIndex: 2, // Tab index for TimetablePage
-                  selectedEvent: event, // 👈 Pass the event to TimetablePage
-                ),
-            transitionsBuilder: (_, animation, __, child) {
-              const begin = Offset(1.0, 0.0); // slide from right
-              const end = Offset.zero;
-              final tween = Tween(
-                begin: begin,
-                end: end,
-              ).chain(CurveTween(curve: Curves.easeInOut));
-              return SlideTransition(
-                position: animation.drive(tween),
-                child: child,
-              );
-            },
+  return GestureDetector(
+    onTap: () {
+      Navigator.push(
+        context,
+        PageRouteBuilder(
+          transitionDuration: const Duration(milliseconds: 400),
+          pageBuilder: (_, __, ___) => MainScreen(
+            initialIndex: 2,
+            selectedEvent: event,
           ),
-        );
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 5,
-                    spreadRadius: 2,
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Icon(Icons.mic, color: Colors.black),
-                      SizedBox(width: 10),
-                      Text(
-                        event.stage,
-                        style: TextStyle(
-                          color: Colors.pinkAccent,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    event.title,
-                    style: TextStyle(
-                      fontSize: screenWidth * 0.045,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(event.time, style: TextStyle(color: Colors.grey)),
-                  if (isCurrent)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5.0),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 4,
-                          horizontal: 8,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.orange,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Text(
-                          "Going on now!",
-                          style: TextStyle(color: Colors.white),
-                        ),
+          transitionsBuilder: (_, animation, __, child) {
+            const begin = Offset(1.0, 0.0);
+            const end = Offset.zero;
+            final tween = Tween(
+              begin: begin,
+              end: end,
+            ).chain(CurveTween(curve: Curves.easeInOut));
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          },
+        ),
+      );
+    },
+    child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 5,
+                  spreadRadius: 2,
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      event.stage,
+                      style: TextStyle(
+                        color: Colors.pinkAccent,
+                        fontWeight: FontWeight.bold,
+                        fontSize: screenWidth * 0.045 + 2, // Slightly increased
                       ),
                     ),
-                ],
+                  ],
+                ),
+                SizedBox(height: 5),
+                Text(
+                  event.title,
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.045,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(event.time, style: TextStyle(color: Colors.grey)),
+                if (isCurrent)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5.0),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 4,
+                        horizontal: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.orange,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Text(
+                        "Going on now!",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          if (event.iconImage.isNotEmpty)
+            Positioned(
+              top: -18,
+              left: 3,
+              child: Container(
+                padding: EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 5,
+                      spreadRadius: 2,
+                    ),
+                  ],
+                ),
+                child: Image.asset(
+                  event.iconImage,
+                  height: screenWidth * 0.12,
+                ),
               ),
             ),
-            if (event.iconImage.isNotEmpty)
-              Positioned(
-                top: -18,
-                left: 3,
-                child: Container(
-                  padding: EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 5,
-                        spreadRadius: 2,
-                      ),
-                    ],
-                  ),
-                  child: Image.asset(
-                    event.iconImage,
-                    height: screenWidth * 0.12,
-                  ),
-                ),
-              ),
-          ],
-        ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Widget _buildSocialMediaIcons(double screenWidth) {
     return Container(
