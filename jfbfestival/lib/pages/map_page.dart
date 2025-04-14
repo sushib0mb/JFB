@@ -10,16 +10,16 @@ class MapPage extends StatefulWidget {
 class MapPageState extends State<MapPage> {
   bool _isMiniWindowVisible = false;
   String _selectedFilter = '';
-  String _currentMap = 'assets/map.png';
-  final TransformationController _transformationController =
-      TransformationController();
+  String _currentMap = 'assets/MapNew.png';
+  final TransformationController _transformationController = TransformationController();
   final Duration _animationDuration = Duration(milliseconds: 300);
 
   final Map<String, String> mapImages = {
-    'Food Vendors': 'assets/map1.png',
-    'Help Center': 'assets/map2.png',
-    'Restrooms': 'assets/map3.png',
-    'Others': 'assets/map4.png',
+    'All': 'assets/MapNew.png',
+    'Food Vendors': 'assets/MapNew4.png',
+    'Information Center': 'assets/MapNew3.png',
+    'Toilets': 'assets/MapNew1.png',
+    'Trash Station': 'assets/MapNew2.png',
   };
 
   void _toggleMiniWindow() {
@@ -32,56 +32,61 @@ class MapPageState extends State<MapPage> {
     setState(() {
       if (_selectedFilter == filter) {
         _selectedFilter = '';
-        _currentMap = 'assets/map.png';
+        _currentMap = 'assets/MapNew.png';
       } else {
         _selectedFilter = filter;
-        _currentMap = mapImages[filter] ?? 'assets/map.png';
+        _currentMap = mapImages[filter] ?? 'assets/MapNew.png';
       }
       _isMiniWindowVisible = false;
     });
   }
 
+  void _onLetterTap(String letter) {
+    print('Letter $letter tapped');
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
+    
+    // Filter button should be highlighted if a filter is selected, but not "All"
+    final bool isFilterActive = _selectedFilter.isNotEmpty && _selectedFilter != 'All';
 
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        automaticallyImplyLeading: false, // 🔥 Removes the default back arrow
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 30.0),
+            padding: const EdgeInsets.only(right: 20.0, top: 12.0),
             child: GestureDetector(
               onTap: _toggleMiniWindow,
               child: AnimatedContainer(
                 duration: _animationDuration,
-                width: 50,
-                height: 50,
+                width: 75,
+                height: 75,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color:
-                      _isMiniWindowVisible
-                          ? Colors.grey.shade300
-                          : Colors.white,
+                  color: _isMiniWindowVisible || isFilterActive ? Colors.grey.shade300 : Colors.white,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.07),
-                      blurRadius: 12,
-                      offset: Offset(0, 6),
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 6,
+                      offset: Offset(0, 2),
                     ),
                   ],
-                  border: Border.all(color: Colors.black26),
+                  border: Border.all(
+                    color: Colors.black26,
+                  ),
                 ),
-                padding: EdgeInsets.all(10),
+                padding: EdgeInsets.all(8),
                 child: ClipOval(
                   child: Image.asset(
                     'assets/Filter.png',
                     fit: BoxFit.contain,
-                    color: _isMiniWindowVisible ? Colors.black : null,
+                    color: _isMiniWindowVisible || isFilterActive ? Colors.black : null,
                   ),
                 ),
               ),
@@ -89,127 +94,140 @@ class MapPageState extends State<MapPage> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _transformationController.value = Matrix4.identity();
-        },
-        backgroundColor: Colors.white,
-        child: Icon(Icons.center_focus_strong, color: Colors.black),
-      ),
       body: Stack(
         children: [
+          // Background Gradient with lighter colors
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                begin: Alignment.bottomLeft,
-                end: Alignment.bottomRight,
                 colors: [
-                  const Color.fromRGBO(10, 56, 117, 0.15),
-                  const Color.fromRGBO(191, 28, 36, 0.15),
+                  const Color.fromARGB(255, 204, 233, 245), // Lighter blue
+                  const Color.fromARGB(255, 246, 221, 221), // Lighter red
                 ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
             ),
           ),
-          SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(height: 130),
-                Center(
-                  child: Text(
-                    "Festival Grounds Map",
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.2,
-                      color: Colors.black87,
-                    ),
+
+          // Map Viewer with pinch-to-zoom (InteractiveViewer)
+          Center(
+            child: Container(
+              width: screenSize.width * 0.85,
+              height: screenSize.height * 0.65,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(30),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 10,
+                    spreadRadius: 2,
                   ),
-                ),
-                const SizedBox(height: 20),
-                Center(
-                  child: ClipRRect(
+                ],
+              ),
+              padding: EdgeInsets.all(10),
+              child: Stack(
+                children: [
+                  // Map base
+                  ClipRRect(
                     borderRadius: BorderRadius.circular(20),
                     child: InteractiveViewer(
                       transformationController: _transformationController,
                       minScale: 1.0,
                       maxScale: 5.0,
-                      child: AspectRatio(
-                        aspectRatio: 1.3,
-                        child: Image.asset(_currentMap, fit: BoxFit.contain),
+                      child: Image.asset(
+                        _currentMap,
+                        fit: BoxFit.contain,
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  child: ExpansionTile(
-                    title: Text(
-                      "Legend",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                  
+                  // Only show food vendor markers when 'Food Vendors' filter is selected
+                  if (_selectedFilter == 'Food Vendors') ...[
+                    Positioned(
+                      top: 30,
+                      right: 145,
+                      child: _buildImageMarker('MapButtonA.png', 'A', width: 68, height: 68),
                     ),
-                    children: const [
-                      ListTile(title: Text("🟩 Portable Toilets")),
-                      ListTile(title: Text("🟨 Light Poles")),
-                      ListTile(title: Text("⬛ Entrances?")),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 80),
-              ],
+                    Positioned(
+                      bottom: 382,
+                      left: 26,
+                      child: _buildImageMarker('MapButtonB.png', 'B', width: 50, height: 50),
+                    ),
+                    Positioned(
+                      bottom: 266,
+                      left: 25,
+                      child: _buildImageMarker('MapButtonC.png', 'C', width: 50, height: 50),
+                    ),
+                  ]
+                ],
+              ),
             ),
           ),
+
+          // Fullscreen expanding mini window
           Positioned(
-            top: _isMiniWindowVisible ? 0 : 40,
+            top: _isMiniWindowVisible ? -20 : 10, // Lifted up more by -20
             left: _isMiniWindowVisible ? 0 : screenSize.width * 0.75,
             right: _isMiniWindowVisible ? 0 : screenSize.width * 0.75,
-            bottom: _isMiniWindowVisible ? 0 : 40,
+            bottom: 40, // Keep the bottom unchanged
             child: AnimatedOpacity(
               duration: _animationDuration,
               opacity: _isMiniWindowVisible ? 1 : 0,
-              child:
-                  _isMiniWindowVisible
-                      ? GestureDetector(
-                        onTap: _toggleMiniWindow,
-                        child: Container(
-                          color: Colors.black.withOpacity(0.4),
-                          child: Center(
-                            child: Container(
-                              width: screenSize.width * 0.9,
-                              height: screenSize.height * 0.6,
-                              padding: EdgeInsets.all(24),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(24),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.2),
-                                    blurRadius: 12,
-                                    spreadRadius: 4,
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  _buildFilterButton(
-                                    'Food Vendors',
-                                    screenSize,
-                                  ),
-                                  _buildFilterButton('Help Center', screenSize),
-                                  _buildFilterButton('Restrooms', screenSize),
-                                  _buildFilterButton('Others', screenSize),
-                                ],
-                              ),
+              child: _isMiniWindowVisible
+                  ? GestureDetector(
+                      onTap: _toggleMiniWindow,
+                      child: Container(
+                        color: Colors.black.withOpacity(0.4),
+                        child: Center(
+                          child: Container(
+                            width: screenSize.width * 0.9,
+                            height: screenSize.height * 0.8, // Adjust the height as needed
+                            padding: EdgeInsets.all(24),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(24),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  blurRadius: 12,
+                                  spreadRadius: 4,
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                _buildFilterButton('All', screenSize), // Added "All" button
+                                _buildFilterButton('Food Vendors', screenSize),
+                                _buildFilterButton('Information Center', screenSize),
+                                _buildFilterButton('Toilets', screenSize),
+                                _buildFilterButton('Trash Station', screenSize),
+                              ],
                             ),
                           ),
                         ),
-                      )
-                      : SizedBox.shrink(),
+                      ),
+                    )
+                  : SizedBox.shrink(),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildImageMarker(String imageName, String letter, {double width = 40, double height = 40}) {
+    return GestureDetector(
+      onTap: () => _onLetterTap(letter),
+      child: Container(
+        width: width,
+        height: height,
+        child: Image.asset(
+          'assets/$imageName',
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }
