@@ -241,7 +241,7 @@ class _TimetablePageState extends State<TimetablePage> {
                       children: [
                         Padding(
                           padding: EdgeInsets.only(
-                            left: MediaQuery.of(context).size.height * 0.0725,
+                            left: MediaQuery.of(context).size.width * 0.1,
                           ),
                           child: _buildStageHeader(),
                         ),
@@ -287,7 +287,7 @@ class _TimetablePageState extends State<TimetablePage> {
     return Padding(
       padding: const EdgeInsets.only(top: 25, bottom: 10),
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.67,
+        width: MediaQuery.of(context).size.width * 0.64,
         height: 50,
         decoration: BoxDecoration(
           color: Color(0xFF8D8D97),
@@ -410,7 +410,7 @@ class ScheduleList extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 13),
           child: SizedBox(
-            width: 60,
+            width: screenWidth * 0.14,
             height: timelineHeight, // Set explicit height for time column
             child: Stack(
               children:
@@ -461,7 +461,7 @@ class ScheduleList extends StatelessWidget {
                   baseTime: baseTime,
                   latestTime: latestTime,
                   pixelsPerMinute: pixelsPerMinute,
-                  width: screenWidth / 2,
+                  width: screenWidth * 0,
                 ),
                 SingleChildScrollView(
                   physics: BouncingScrollPhysics(),
