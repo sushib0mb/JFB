@@ -408,7 +408,7 @@ class ScheduleList extends StatelessWidget {
       children: [
         // Time Column
         Padding(
-          padding: const EdgeInsets.only(top: 12, left: 13),
+          padding: const EdgeInsets.only(left: 13),
           child: SizedBox(
             width: 60,
             height: timelineHeight, // Set explicit height for time column
@@ -524,7 +524,7 @@ class ScheduleList extends StatelessWidget {
           left: 0,
           right: 0,
           child: Container(
-            height: 3,
+            height: 4,
             decoration: BoxDecoration(
               color: const Color.fromARGB(8, 0, 0, 0),
               borderRadius: BorderRadius.circular(4),
@@ -564,8 +564,9 @@ class ScheduleList extends StatelessWidget {
       for (var i = 0; i < events.length; i++)
         Column(
           children: [
+            SizedBox(height: 4), // Add small gap between events in timetable
             SizedBox(
-              height: events[i].duration * pixelsPerMinute,
+              height: ((events[i].duration) * pixelsPerMinute) - 4,
               child: PerformanceBox(eventItem: events[i], onTap: onEventTap),
             ),
           ],
@@ -598,7 +599,6 @@ int _parseTimeToMinutes(String timeString) {
 
     return hour * 60 + minute;
   } catch (e) {
-    print('Error parsing time: $timeString - $e');
     return 0; // Default fallback
   }
 }

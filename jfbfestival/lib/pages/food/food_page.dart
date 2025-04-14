@@ -5,7 +5,6 @@ import 'package:jfbfestival/pages/food/components/allergy_filter.dart';
 import 'package:jfbfestival/pages/food/components/booth_details.dart';
 import 'package:jfbfestival/data/food_booths.dart';
 import 'package:jfbfestival/models/food_booth.dart';
-import '/models/dish.dart';
 
 class AnimatedBoothDetailWrapper extends StatefulWidget {
   final FoodBooth booth;
