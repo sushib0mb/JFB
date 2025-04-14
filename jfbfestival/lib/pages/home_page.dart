@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage> {
     return LayoutBuilder(
       builder: (context, constraints) {
         return Container(
-          color: const Color(0xFFFFF5F5), // light base color underneath
+          color: const Color(0xFFFFF5F5),
           child: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -104,7 +104,7 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         Stack(
                           children: [
-                            Container(
+                            SizedBox(
                               width: double.infinity,
                               height: screenHeight * 0.6,
                               child: Stack(
@@ -118,14 +118,19 @@ class _HomePageState extends State<HomePage> {
                                       });
                                     },
                                     itemBuilder: (context, index) {
-                                      final isLadyInKimono = backgroundImages[index] == "assets/JFB-27.jpg";
+                                      final isLadyInKimono =
+                                          backgroundImages[index] ==
+                                          "assets/JFB-27.jpg";
 
                                       Widget image = Image.asset(
                                         backgroundImages[index],
                                         fit: BoxFit.cover,
                                         width: double.infinity,
                                         height: screenHeight * 0.6,
-                                        alignment: isLadyInKimono ? Alignment.topCenter : Alignment.center,
+                                        alignment:
+                                            isLadyInKimono
+                                                ? Alignment.topCenter
+                                                : Alignment.center,
                                       );
 
                                       if (isLadyInKimono) {
@@ -140,7 +145,6 @@ class _HomePageState extends State<HomePage> {
 
                                       return image;
                                     },
-
                                   ),
                                   Positioned(
                                     bottom: 10,
@@ -240,7 +244,7 @@ class _HomePageState extends State<HomePage> {
                         _buildLiveTimetable(screenWidth),
                         _buildSocialMediaIcons(screenWidth),
                         _buildSponsorsSection(screenWidth),
-                        SizedBox(height: screenHeight * 0.3),
+                        SizedBox(height: 125),
                       ],
                     ),
                   ),
@@ -432,8 +436,6 @@ class _HomePageState extends State<HomePage> {
               }
             }
           } catch (e) {
-            // Skip this event if there's a parsing error
-            print('Error parsing Stage 1 event: $e');
             continue;
           }
         }
@@ -498,8 +500,6 @@ class _HomePageState extends State<HomePage> {
               }
             }
           } catch (e) {
-            // Skip this event if there's a parsing error
-            print('Error parsing Stage 2 event: $e');
             continue;
           }
         }
@@ -612,124 +612,123 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildEventCard(EventItem event, bool isCurrent, double screenWidth) {
-  return GestureDetector(
-    onTap: () {
-      Navigator.push(
-        context,
-        PageRouteBuilder(
-          transitionDuration: const Duration(milliseconds: 400),
-          pageBuilder: (_, __, ___) => MainScreen(
-            initialIndex: 2,
-            selectedEvent: event,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            transitionDuration: const Duration(milliseconds: 400),
+            pageBuilder:
+                (_, __, ___) =>
+                    MainScreen(initialIndex: 2, selectedEvent: event),
+            transitionsBuilder: (_, animation, __, child) {
+              const begin = Offset(1.0, 0.0);
+              const end = Offset.zero;
+              final tween = Tween(
+                begin: begin,
+                end: end,
+              ).chain(CurveTween(curve: Curves.easeInOut));
+              return SlideTransition(
+                position: animation.drive(tween),
+                child: child,
+              );
+            },
           ),
-          transitionsBuilder: (_, animation, __, child) {
-            const begin = Offset(1.0, 0.0);
-            const end = Offset.zero;
-            final tween = Tween(
-              begin: begin,
-              end: end,
-            ).chain(CurveTween(curve: Curves.easeInOut));
-            return SlideTransition(
-              position: animation.drive(tween),
-              child: child,
-            );
-          },
-        ),
-      );
-    },
-    child: Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 5,
-                  spreadRadius: 2,
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      event.stage,
-                      style: TextStyle(
-                        color: Colors.pinkAccent,
-                        fontWeight: FontWeight.bold,
-                        fontSize: screenWidth * 0.045 + 2, // Slightly increased
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 5),
-                Text(
-                  event.title,
-                  style: TextStyle(
-                    fontSize: screenWidth * 0.045,
-                    fontWeight: FontWeight.bold,
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 5,
+                    spreadRadius: 2,
                   ),
-                ),
-                Text(event.time, style: TextStyle(color: Colors.grey)),
-                if (isCurrent)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5.0),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        vertical: 4,
-                        horizontal: 8,
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        event.stage,
+                        style: TextStyle(
+                          color: Colors.pinkAccent,
+                          fontWeight: FontWeight.bold,
+                          fontSize:
+                              screenWidth * 0.045 + 2, // Slightly increased
+                        ),
                       ),
-                      decoration: BoxDecoration(
-                        color: Colors.orange,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: Text(
-                        "Going on now!",
-                        style: TextStyle(color: Colors.white),
-                      ),
+                    ],
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    event.title,
+                    style: TextStyle(
+                      fontSize: screenWidth * 0.045,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-              ],
-            ),
-          ),
-          if (event.iconImage.isNotEmpty)
-            Positioned(
-              top: -18,
-              left: 3,
-              child: Container(
-                padding: EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 5,
-                      spreadRadius: 2,
+                  Text(event.time, style: TextStyle(color: Colors.grey)),
+                  if (isCurrent)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 4,
+                          horizontal: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.orange,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Text(
+                          "Going on now!",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
                     ),
-                  ],
-                ),
-                child: Image.asset(
-                  event.iconImage,
-                  height: screenWidth * 0.12,
-                ),
+                ],
               ),
             ),
-        ],
+            if (event.iconImage.isNotEmpty)
+              Positioned(
+                top: -18,
+                left: 3,
+                child: Container(
+                  padding: EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 5,
+                        spreadRadius: 2,
+                      ),
+                    ],
+                  ),
+                  child: Image.asset(
+                    event.iconImage,
+                    height: screenWidth * 0.12,
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
   Widget _buildSocialMediaIcons(double screenWidth) {
     return Container(
@@ -802,12 +801,21 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       child: Column(
+        spacing: screenWidth * 0.02,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           _buildSponsorCategory("Sustainability", "assets/sponsors/Takeda.jpg"),
           _buildSponsorCategory("Airline", "assets/sponsors/jal.jpg"),
+          SizedBox(height: 7),
+          _buildSponsorCategory(
+            "Transportation",
+            "assets/sponsors/yamatotransport.jpg",
+          ),
+          SizedBox(height: 3),
           _buildCorporateSponsors(),
+          _buildIndividualSponsors(),
           _buildJfbOrganizers(),
+          _buildSupportingSponsors(),
         ],
       ),
     );
@@ -817,19 +825,18 @@ class _HomePageState extends State<HomePage> {
     return Column(
       children: [
         Container(
-          padding: EdgeInsets.symmetric(vertical: 6, horizontal: 26),
-          margin: EdgeInsets.symmetric(vertical: 10),
+          padding: EdgeInsets.symmetric(vertical: 3, horizontal: 26),
+          margin: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
           decoration: BoxDecoration(
             color: Colors.grey[200],
             borderRadius: BorderRadius.circular(40),
           ),
           child: Text(
             title,
-            style: TextStyle(fontSize: 21, fontWeight: FontWeight.w400),
+            style: TextStyle(fontSize: 21, fontWeight: FontWeight.w300),
           ),
         ),
-        Image.asset(imagePath, height: 50),
-        SizedBox(height: 10),
+        Image.asset(imagePath, height: 65),
       ],
     );
   }
@@ -852,32 +859,73 @@ class _HomePageState extends State<HomePage> {
       children: [
         Container(
           padding: EdgeInsets.symmetric(vertical: 6, horizontal: 26),
-          margin: EdgeInsets.symmetric(vertical: 10),
+          margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           decoration: BoxDecoration(
             color: Colors.grey[200],
             borderRadius: BorderRadius.circular(40),
           ),
           child: Text(
             "Corporate",
-            style: TextStyle(fontSize: 21, fontWeight: FontWeight.w400),
+            style: TextStyle(fontSize: 21, fontWeight: FontWeight.w300),
           ),
         ),
-        Wrap(
-          alignment: WrapAlignment.center,
-          spacing: 10,
-          runSpacing: 10,
-          children:
-              corporateLogos
-                  .map(
-                    (logo) => Image.asset(
-                      logo,
-                      height: 50,
-                      width: MediaQuery.of(context).size.height * 0.2,
-                    ),
-                  )
-                  .toList(),
+        GridView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          itemCount: corporateLogos.length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 4,
+            mainAxisSpacing: 10,
+            childAspectRatio: 3,
+          ),
+          itemBuilder: (context, index) {
+            return Center(
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.15,
+                width: MediaQuery.of(context).size.width * 0.3,
+                child: Image.asset(corporateLogos[index], fit: BoxFit.contain),
+              ),
+            );
+          },
         ),
       ],
+    );
+  }
+
+  Widget _buildIndividualSponsors() {
+    return Padding(
+      padding: EdgeInsets.only(top: 10, bottom: 10),
+      child: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 6, horizontal: 26),
+            margin: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(40),
+            ),
+            child: Text(
+              "Individual",
+              style: TextStyle(fontSize: 21, fontWeight: FontWeight.w300),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text(
+                "   NK JPN\nFoundation",
+                style: TextStyle(fontSize: 19, height: 1.25),
+              ),
+              Text(
+                "William\nHawes",
+                style: TextStyle(fontSize: 19, height: 1.25),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -886,14 +934,14 @@ class _HomePageState extends State<HomePage> {
       children: [
         Container(
           padding: EdgeInsets.symmetric(vertical: 6, horizontal: 26),
-          margin: EdgeInsets.symmetric(vertical: 10),
+          margin: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
           decoration: BoxDecoration(
             color: Colors.grey[200],
             borderRadius: BorderRadius.circular(40),
           ),
           child: Text(
             "JFB Organizers",
-            style: TextStyle(fontSize: 21, fontWeight: FontWeight.w400),
+            style: TextStyle(fontSize: 21, fontWeight: FontWeight.w300),
           ),
         ),
         Wrap(
@@ -901,16 +949,87 @@ class _HomePageState extends State<HomePage> {
           spacing: 20,
           runSpacing: 10,
           children: [
-            Image.asset("assets/sponsors/showa.jpg", height: 50),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.11,
+              width: MediaQuery.of(context).size.width * 0.25,
+              child: Image.asset(
+                "assets/sponsors/showa.jpg",
+                fit: BoxFit.contain,
+              ),
+            ),
             Column(
               children: [
-                Image.asset("assets/sponsors/bosJapan.png", height: 50),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.08,
+                  width: MediaQuery.of(context).size.width * 0.2,
+                  child: Image.asset(
+                    "assets/sponsors/bosJapan.png",
+                    fit: BoxFit.contain,
+                  ),
+                ),
                 SizedBox(height: 4),
-                Text("Boston Japan", style: TextStyle(fontSize: 12)),
-                Text("Community Hub", style: TextStyle(fontSize: 12)),
+                Column(
+                  children: [
+                    Text(
+                      "Boston Japan",
+                      style: TextStyle(fontSize: 12, height: 1),
+                    ),
+                    Text(
+                      "Community Hub",
+                      style: TextStyle(fontSize: 12, height: 1.1),
+                    ),
+                  ],
+                ),
               ],
             ),
-            Image.asset("assets/sponsors/JAGB.jpg", height: 50),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.11,
+              width: MediaQuery.of(context).size.width * 0.25,
+              child: Image.asset(
+                "assets/sponsors/JAGB.jpg",
+                fit: BoxFit.contain,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSupportingSponsors() {
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(vertical: 6, horizontal: 26),
+          margin: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(40),
+          ),
+          child: Text(
+            "Individual",
+            style: TextStyle(fontSize: 21, fontWeight: FontWeight.w300),
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.12,
+              width: MediaQuery.of(context).size.width * 0.35,
+              child: Image.asset(
+                "assets/sponsors/consultatejapan.jpg",
+                fit: BoxFit.contain,
+              ),
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.12,
+              width: MediaQuery.of(context).size.width * 0.35,
+              child: Image.asset(
+                "assets/sponsors/JSoc.jpg",
+                fit: BoxFit.contain,
+              ),
+            ),
           ],
         ),
       ],

@@ -123,59 +123,6 @@ class _FoodPageState extends State<FoodPage> {
     );
   }
 
-  Widget _buildTopGradient() {
-    return Positioned(
-      top: 0,
-      left: 0,
-      right: 0,
-      child: Container(
-        height:
-            MediaQuery.of(context).size.height *
-            0.25, // Adjust based on screen height
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.white.withOpacity(0.15),
-              Colors.white.withOpacity(0.08),
-              Colors.transparent,
-            ],
-            stops: const [0.59, 0.62, 0.66],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBottomGradient() {
-    return Positioned(
-      bottom: 0,
-      left: 0,
-      right: 0,
-      child: Transform.rotate(
-        angle: 3.14159,
-        child: Container(
-          height:
-              MediaQuery.of(context).size.height *
-              0.25, // Adjust based on screen height
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Colors.white.withOpacity(0.15),
-                Colors.white.withOpacity(0.08),
-                Colors.transparent,
-              ],
-              stops: const [0.57, 0.60, 0.64],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildFilterButton() {
     return Positioned(
       top: MediaQuery.of(context).size.height * 0.05,

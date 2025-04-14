@@ -1,1 +1,2 @@
 # JFB
+Welcome to the first creation of the JFB App. We are a group of students working to create a general information app for the annual Japan Festival Boston. We hope that our app will be able to be useful for those who visit the festival, and we look forward to everyone using our app!

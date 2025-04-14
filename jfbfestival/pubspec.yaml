@@ -79,6 +79,7 @@ flutter:
     # Home page sponsors
     - assets/sponsors/Takeda.jpg
     - assets/sponsors/jal.jpg
+    - assets/sponsors/yamatotransport.jpg
     - assets/sponsors/meetboston.jpg
     - assets/sponsors/sanipak.png
     - assets/sponsors/chopvalue.png
@@ -91,7 +92,9 @@ flutter:
     - assets/sponsors/downtown.png
     - assets/sponsors/showa.jpg
     - assets/sponsors/bosJapan.png
-    - assets/sponsors/JAGB.jpg  
+    - assets/sponsors/JAGB.jpg
+    - assets/sponsors/consultatejapan.jpg
+    - assets/sponsors/JSoc.jpg
 
     # Page selection bar
     - assets/bottomBar/Map.png
