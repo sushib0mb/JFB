@@ -561,7 +561,6 @@ class ScheduleList extends StatelessWidget {
     events.sort((a, b) => a.time.compareTo(b.time));
 
     return [
-      const SizedBox(height: 12),
       for (var i = 0; i < events.length; i++)
         Column(
           children: [
