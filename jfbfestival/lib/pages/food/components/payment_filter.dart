@@ -71,21 +71,20 @@ class _PaymentFilterItem extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           SizedBox(
-  height: 44, // bump this up a bit more
-  child: Padding(
-    padding: const EdgeInsets.only(bottom: 4.0), // 👈 add a bit of bottom padding
-    child: Text(
-      method == "Credit Card" ? "Credit\nCard" : method,
-      textAlign: TextAlign.center,
-      style: TextStyle(
-        fontSize: 16,
-        color: isSelected ? Colors.black : Colors.grey[400],
-        fontWeight: FontWeight.normal,
-      ),
-    ),
-  ),
-),
-
+            height: 44, // bump this up a bit more
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 4.0), // 👈 add a bit of bottom padding
+              child: Text(
+                method == "Credit Card" ? "Credit\nCard" : method,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: isSelected ? Colors.black : Colors.grey[400],
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
