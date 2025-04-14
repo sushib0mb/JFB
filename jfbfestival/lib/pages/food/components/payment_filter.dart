@@ -43,6 +43,7 @@ class _PaymentFilterItem extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Container(
             width: 40,
@@ -60,7 +61,7 @@ class _PaymentFilterItem extends StatelessWidget {
             ),
             child: Center(
               child: Image.asset(
-                  'assets/payments/${method.toLowerCase().replaceAll(' ', '_')}.png',
+                'assets/payments/${method.toLowerCase().replaceAll(' ', '_')}.png',
                 width: 44,
                 height: 44,
                 color: isSelected ? null : Colors.grey.withOpacity(0.5),
@@ -69,14 +70,22 @@ class _PaymentFilterItem extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Text(
-            method,
-            style: TextStyle(
-              fontSize: 18,
-              color: isSelected ? Colors.black : Colors.grey[400],
-              fontWeight: FontWeight.normal,
-            ),
-          ),
+          SizedBox(
+  height: 44, // bump this up a bit more
+  child: Padding(
+    padding: const EdgeInsets.only(bottom: 4.0), // 👈 add a bit of bottom padding
+    child: Text(
+      method == "Credit Card" ? "Credit\nCard" : method,
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        fontSize: 16,
+        color: isSelected ? Colors.black : Colors.grey[400],
+        fontWeight: FontWeight.normal,
+      ),
+    ),
+  ),
+),
+
         ],
       ),
     );

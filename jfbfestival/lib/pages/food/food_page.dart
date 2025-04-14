@@ -472,7 +472,7 @@ class _FoodPageState extends State<FoodPage> {
                                     },
                                   ),
                                 ),
-                                const SizedBox(height: 15),
+                                const SizedBox(height: 35),
                                 Center(child: _buildSectionTitle("Veganism")),
                                 Center(
                                   child: VeganFilterOption(
