@@ -41,7 +41,7 @@ final List<ScheduleItem> day1ScheduleData = [
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Band performance.png",
         description: "Taka Ochi band will perform Japanese songs, I think",
-        eventDetailImage: "assets/timetableBackgrounds/oneweekwonder.gif",
+        eventDetailImage: "assets/timetableBackgrounds/oneweekwonder.JPG",
       ),
       EventItem(
         title: "Showa Boston Dance Performance",
