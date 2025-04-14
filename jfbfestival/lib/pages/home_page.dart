@@ -82,140 +82,155 @@ class _HomePageState extends State<HomePage> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final isSmallScreen = constraints.maxWidth < 600;
-
-        return Scaffold(
-          backgroundColor: Color(0xFFFFF5F5),
-          body: Stack(
-            children: [
-              SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Stack(
+        return Container(
+          color: const Color(0xFFFFF5F5), // light base color underneath
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.bottomLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  const Color.fromRGBO(10, 56, 117, 0.15),
+                  const Color.fromRGBO(191, 28, 36, 0.15),
+                ],
+              ),
+            ),
+            child: Scaffold(
+              backgroundColor: Colors.transparent,
+              body: Stack(
+                children: [
+                  SingleChildScrollView(
+                    child: Column(
                       children: [
-                        Container(
-                          width: double.infinity,
-                          height: screenHeight * 0.6,
-                          child: Stack(
-                            children: [
-                              PageView.builder(
-                                controller: _pageController,
-                                itemCount: backgroundImages.length,
-                                onPageChanged: (index) {
-                                  setState(() {
-                                    _currentPage = index;
-                                  });
-                                },
-                                itemBuilder: (context, index) {
-                                  return Image.asset(
-                                    backgroundImages[index],
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                    height: screenHeight * 0.6,
-                                  );
-                                },
-                              ),
-                              Positioned(
-                                bottom: 10,
-                                left: 0,
-                                right: 0,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: List.generate(
-                                    backgroundImages.length,
-                                    (index) => AnimatedContainer(
-                                      duration: Duration(milliseconds: 300),
-                                      margin: EdgeInsets.symmetric(
-                                        horizontal: 4,
-                                      ),
-                                      width: _currentPage == index ? 10 : 6,
-                                      height: _currentPage == index ? 10 : 6,
-                                      decoration: BoxDecoration(
-                                        color:
-                                            _currentPage == index
-                                                ? Colors.white
-                                                : Colors.white70,
-                                        shape: BoxShape.circle,
+                        Stack(
+                          children: [
+                            Container(
+                              width: double.infinity,
+                              height: screenHeight * 0.6,
+                              child: Stack(
+                                children: [
+                                  PageView.builder(
+                                    controller: _pageController,
+                                    itemCount: backgroundImages.length,
+                                    onPageChanged: (index) {
+                                      setState(() {
+                                        _currentPage = index;
+                                      });
+                                    },
+                                    itemBuilder: (context, index) {
+                                      return Image.asset(
+                                        backgroundImages[index],
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        height: screenHeight * 0.6,
+                                      );
+                                    },
+                                  ),
+                                  Positioned(
+                                    bottom: 10,
+                                    left: 0,
+                                    right: 0,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: List.generate(
+                                        backgroundImages.length,
+                                        (index) => AnimatedContainer(
+                                          duration: Duration(milliseconds: 300),
+                                          margin: EdgeInsets.symmetric(
+                                            horizontal: 4,
+                                          ),
+                                          width: _currentPage == index ? 10 : 6,
+                                          height:
+                                              _currentPage == index ? 10 : 6,
+                                          decoration: BoxDecoration(
+                                            color:
+                                                _currentPage == index
+                                                    ? Colors.white
+                                                    : Colors.white70,
+                                            shape: BoxShape.circle,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: screenHeight * 0.02),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 16.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                PageRouteBuilder(
-                                  transitionDuration: const Duration(
-                                    milliseconds: 400,
-                                  ),
-                                  pageBuilder:
-                                      (_, __, ___) =>
-                                          MainScreen(initialIndex: 2),
-                                  transitionsBuilder: (
-                                    _,
-                                    animation,
-                                    __,
-                                    child,
-                                  ) {
-                                    const begin = Offset(1.0, 0.0);
-                                    const end = Offset.zero;
-                                    final tween = Tween(
-                                      begin: begin,
-                                      end: end,
-                                    ).chain(
-                                      CurveTween(curve: Curves.easeInOut),
-                                    );
-                                    return SlideTransition(
-                                      position: animation.drive(tween),
-                                      child: child,
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(6),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 5,
-                                    spreadRadius: 2,
-                                  ),
                                 ],
                               ),
-                              child: Icon(
-                                Icons.arrow_forward,
-                                size: 30,
-                                color: Colors.black,
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: screenHeight * 0.02),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 16.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    PageRouteBuilder(
+                                      transitionDuration: const Duration(
+                                        milliseconds: 400,
+                                      ),
+                                      pageBuilder:
+                                          (_, __, ___) =>
+                                              MainScreen(initialIndex: 2),
+                                      transitionsBuilder: (
+                                        _,
+                                        animation,
+                                        __,
+                                        child,
+                                      ) {
+                                        const begin = Offset(1.0, 0.0);
+                                        const end = Offset.zero;
+                                        final tween = Tween(
+                                          begin: begin,
+                                          end: end,
+                                        ).chain(
+                                          CurveTween(curve: Curves.easeInOut),
+                                        );
+                                        return SlideTransition(
+                                          position: animation.drive(tween),
+                                          child: child,
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black12,
+                                        blurRadius: 5,
+                                        spreadRadius: 2,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Icon(
+                                    Icons.arrow_forward,
+                                    size: 30,
+                                    color: Colors.black,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
+                          ],
                         ),
+                        _buildLiveTimetable(screenWidth),
+                        _buildSocialMediaIcons(screenWidth),
+                        _buildSponsorsSection(screenWidth),
+                        SizedBox(height: screenHeight * 0.3),
                       ],
                     ),
-                    _buildLiveTimetable(screenWidth),
-                    _buildSocialMediaIcons(screenWidth),
-                    _buildSponsorsSection(screenWidth),
-                    SizedBox(height: screenHeight * 0.3),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         );
       },
@@ -548,38 +563,6 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  // Update this method to handle AM/PM format properly if needed
-  DateTime _parseTimeString(String timeStr, int day) {
-    try {
-      final parts = timeStr.split(' ');
-      if (parts.length != 2) {
-        // Return current time if parsing fails
-        return DateTime.now();
-      }
-
-      final timeParts = parts[0].split(':');
-      if (timeParts.length != 2) {
-        // Return current time if parsing fails
-        return DateTime.now();
-      }
-
-      var hour = int.parse(timeParts[0]);
-      final minute = int.parse(timeParts[1]);
-
-      if (parts[1].toLowerCase() == 'pm' && hour != 12) {
-        hour += 12;
-      } else if (parts[1].toLowerCase() == 'am' && hour == 12) {
-        hour = 0;
-      }
-
-      return DateTime(2025, 4, day, hour, minute);
-    } catch (e) {
-      // Return current time if parsing fails
-      print('Error parsing time string: $e');
-      return DateTime.now();
-    }
-  }
-
   Widget _buildEventSection(
     String title,
     List<EventItem> stage1Events,
@@ -806,8 +789,8 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          _buildSponsorCategory("Sustainability", "assets/Takeda.jpg"),
-          _buildSponsorCategory("Airline", "assets/jal.jpg"),
+          _buildSponsorCategory("Sustainability", "assets/sponsors/Takeda.jpg"),
+          _buildSponsorCategory("Airline", "assets/sponsors/jal.jpg"),
           _buildCorporateSponsors(),
           _buildJfbOrganizers(),
         ],
@@ -819,15 +802,15 @@ class _HomePageState extends State<HomePage> {
     return Column(
       children: [
         Container(
-          padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+          padding: EdgeInsets.symmetric(vertical: 6, horizontal: 26),
           margin: EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
             color: Colors.grey[200],
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(40),
           ),
           child: Text(
             title,
-            style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 21, fontWeight: FontWeight.w400),
           ),
         ),
         Image.asset(imagePath, height: 50),
@@ -838,36 +821,45 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildCorporateSponsors() {
     List<String> corporateLogos = [
-      "assets/sanipak.png",
-      "assets/chopvalue.png",
-      "assets/openwater.png",
-      "assets/mitsubishi.jpg",
-      "assets/SDT.jpg",
-      "assets/senko.png",
-      "assets/yamamoto.jpg",
+      "assets/sponsors/meetboston.jpg",
+      "assets/sponsors/sanipak.png",
+      "assets/sponsors/chopvalue.png",
+      "assets/sponsors/mitsubishi.jpg",
+      "assets/sponsors/SDT.jpg",
+      "assets/sponsors/senko.png",
+      "assets/sponsors/yamamoto.jpg",
+      "assets/sponsors/openwater.png",
+      "assets/sponsors/idamerica.png",
+      "assets/sponsors/downtown.png",
     ];
 
     return Column(
       children: [
         Container(
-          padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+          padding: EdgeInsets.symmetric(vertical: 6, horizontal: 26),
           margin: EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
             color: Colors.grey[200],
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(40),
           ),
           child: Text(
             "Corporate",
-            style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 21, fontWeight: FontWeight.w400),
           ),
         ),
         Wrap(
           alignment: WrapAlignment.center,
-          spacing: 20,
+          spacing: 10,
           runSpacing: 10,
           children:
               corporateLogos
-                  .map((logo) => Image.asset(logo, height: 50))
+                  .map(
+                    (logo) => Image.asset(
+                      logo,
+                      height: 50,
+                      width: MediaQuery.of(context).size.height * 0.2,
+                    ),
+                  )
                   .toList(),
         ),
       ],
@@ -878,15 +870,15 @@ class _HomePageState extends State<HomePage> {
     return Column(
       children: [
         Container(
-          padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+          padding: EdgeInsets.symmetric(vertical: 6, horizontal: 26),
           margin: EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
             color: Colors.grey[200],
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(40),
           ),
           child: Text(
             "JFB Organizers",
-            style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 21, fontWeight: FontWeight.w400),
           ),
         ),
         Wrap(
@@ -894,16 +886,16 @@ class _HomePageState extends State<HomePage> {
           spacing: 20,
           runSpacing: 10,
           children: [
-            Image.asset("assets/showa.jpg", height: 50),
+            Image.asset("assets/sponsors/showa.jpg", height: 50),
             Column(
               children: [
-                Image.asset("assets/bosJapan.png", height: 50),
+                Image.asset("assets/sponsors/bosJapan.png", height: 50),
                 SizedBox(height: 4),
                 Text("Boston Japan", style: TextStyle(fontSize: 12)),
                 Text("Community Hub", style: TextStyle(fontSize: 12)),
               ],
             ),
-            Image.asset("assets/JAGB.jpg", height: 50),
+            Image.asset("assets/sponsors/JAGB.jpg", height: 50),
           ],
         ),
       ],

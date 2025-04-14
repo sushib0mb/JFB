@@ -97,8 +97,6 @@ class _FoodPageState extends State<FoodPage> {
       body: Stack(
         children: [
           _buildBackgroundGradient(),
-          _buildTopGradient(),
-          _buildBottomGradient(),
 
           // Ensure this is behind the filter button
           Positioned.fill(child: _buildMainContent(screenWidth, screenHeight)),

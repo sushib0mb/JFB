@@ -41,22 +41,18 @@ flutter:
     - assets/Filter.png
     - assets/payments/
     - assets/allergens/
-    - assets/Takeda.jpg
-    - assets/sanipak.png
+    
     - assets/instagram.png
     - assets/facebook.png
     - assets/youtube.png
     - assets/website.png
-    - assets/yamamoto.jpg
-    - assets/SDT.jpg
-    - assets/jal.jpg
-    - assets/mitsubishi.jpg
-    - assets/openwater.png
-    - assets/chopvalue.png
-    - assets/senko.png
-    - assets/showa.jpg
-    - assets/bosJapan.png
-    - assets/JAGB.jpg  
+    
+    
+    
+    
+    
+    
+    
     - assets/langChange.png
     #home new
     - assets/JFB-4.jpg 
@@ -73,9 +69,24 @@ flutter:
     - assets/allergens/egg.png
     - assets/vegan.png
     
-    
+    # Home page sponsors
+    - assets/sponsors/Takeda.jpg
+    - assets/sponsors/jal.jpg
+    - assets/sponsors/meetboston.jpg
+    - assets/sponsors/sanipak.png
+    - assets/sponsors/chopvalue.png
+    - assets/sponsors/mitsubishi.jpg
+    - assets/sponsors/SDT.jpg
+    - assets/sponsors/senko.png
+    - assets/sponsors/yamamoto.jpg
+    - assets/sponsors/openwater.png
+    - assets/sponsors/idamerica.png
+    - assets/sponsors/downtown.png
+    - assets/sponsors/showa.jpg
+    - assets/sponsors/bosJapan.png
+    - assets/sponsors/JAGB.jpg  
 
-
+    # Page selection bar
     - assets/bottomBar/Map.png
     - assets/bottomBar/Timetable.png
     - assets/bottomBar/Home.png
@@ -103,6 +114,7 @@ flutter:
     - assets/timetableIcons/Closing ceremony.png
     - assets/timetableIcons/Closing ceremony (Frame).png
 
+    # Timetable event images
     - assets/timetableBackgrounds/oneweekwonder.JPG
 
 

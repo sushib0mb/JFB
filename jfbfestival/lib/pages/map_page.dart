@@ -11,7 +11,8 @@ class MapPageState extends State<MapPage> {
   bool _isMiniWindowVisible = false;
   String _selectedFilter = '';
   String _currentMap = 'assets/map.png';
-  final TransformationController _transformationController = TransformationController();
+  final TransformationController _transformationController =
+      TransformationController();
   final Duration _animationDuration = Duration(milliseconds: 300);
 
   final Map<String, String> mapImages = {
@@ -62,7 +63,10 @@ class MapPageState extends State<MapPage> {
                 height: 50,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: _isMiniWindowVisible ? Colors.grey.shade300 : Colors.white,
+                  color:
+                      _isMiniWindowVisible
+                          ? Colors.grey.shade300
+                          : Colors.white,
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.07),
@@ -70,9 +74,7 @@ class MapPageState extends State<MapPage> {
                       offset: Offset(0, 6),
                     ),
                   ],
-                  border: Border.all(
-                    color: Colors.black26,
-                  ),
+                  border: Border.all(color: Colors.black26),
                 ),
                 padding: EdgeInsets.all(10),
                 child: ClipOval(
@@ -99,12 +101,12 @@ class MapPageState extends State<MapPage> {
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  const Color.fromARGB(255, 204, 233, 245),
-                  const Color.fromARGB(255, 246, 221, 221),
-                ],
-                begin: Alignment.topLeft,
+                begin: Alignment.bottomLeft,
                 end: Alignment.bottomRight,
+                colors: [
+                  const Color.fromRGBO(10, 56, 117, 0.15),
+                  const Color.fromRGBO(191, 28, 36, 0.15),
+                ],
               ),
             ),
           ),
@@ -134,10 +136,7 @@ class MapPageState extends State<MapPage> {
                       maxScale: 5.0,
                       child: AspectRatio(
                         aspectRatio: 1.3,
-                        child: Image.asset(
-                          _currentMap,
-                          fit: BoxFit.contain,
-                        ),
+                        child: Image.asset(_currentMap, fit: BoxFit.contain),
                       ),
                     ),
                   ),
@@ -146,7 +145,10 @@ class MapPageState extends State<MapPage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24.0),
                   child: ExpansionTile(
-                    title: Text("Legend", style: TextStyle(fontWeight: FontWeight.bold)),
+                    title: Text(
+                      "Legend",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     children: const [
                       ListTile(title: Text("🟩 Portable Toilets")),
                       ListTile(title: Text("🟨 Light Poles")),
@@ -166,41 +168,45 @@ class MapPageState extends State<MapPage> {
             child: AnimatedOpacity(
               duration: _animationDuration,
               opacity: _isMiniWindowVisible ? 1 : 0,
-              child: _isMiniWindowVisible
-                  ? GestureDetector(
-                      onTap: _toggleMiniWindow,
-                      child: Container(
-                        color: Colors.black.withOpacity(0.4),
-                        child: Center(
-                          child: Container(
-                            width: screenSize.width * 0.9,
-                            height: screenSize.height * 0.6,
-                            padding: EdgeInsets.all(24),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(24),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 12,
-                                  spreadRadius: 4,
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                _buildFilterButton('Food Vendors', screenSize),
-                                _buildFilterButton('Help Center', screenSize),
-                                _buildFilterButton('Restrooms', screenSize),
-                                _buildFilterButton('Others', screenSize),
-                              ],
+              child:
+                  _isMiniWindowVisible
+                      ? GestureDetector(
+                        onTap: _toggleMiniWindow,
+                        child: Container(
+                          color: Colors.black.withOpacity(0.4),
+                          child: Center(
+                            child: Container(
+                              width: screenSize.width * 0.9,
+                              height: screenSize.height * 0.6,
+                              padding: EdgeInsets.all(24),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(24),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.2),
+                                    blurRadius: 12,
+                                    spreadRadius: 4,
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  _buildFilterButton(
+                                    'Food Vendors',
+                                    screenSize,
+                                  ),
+                                  _buildFilterButton('Help Center', screenSize),
+                                  _buildFilterButton('Restrooms', screenSize),
+                                  _buildFilterButton('Others', screenSize),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    )
-                  : SizedBox.shrink(),
+                      )
+                      : SizedBox.shrink(),
             ),
           ),
         ],

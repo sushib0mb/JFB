@@ -36,8 +36,7 @@ class MainScreen extends StatefulWidget {
   final int initialIndex;
   final EventItem? selectedEvent;
 
-  const MainScreen({Key? key, this.initialIndex = 0, this.selectedEvent})
-    : super(key: key);
+  const MainScreen({super.key, this.initialIndex = 0, this.selectedEvent});
 
   @override
   _MainScreenState createState() => _MainScreenState();
@@ -69,7 +68,7 @@ class _MainScreenState extends State<MainScreen> {
             children: [
               HomePage(),
               FoodPage(),
-              TimetablePage(selectedEvent: widget.selectedEvent), // 👈 use it
+              TimetablePage(selectedEvent: widget.selectedEvent),
               MapPage(),
             ],
           ),
