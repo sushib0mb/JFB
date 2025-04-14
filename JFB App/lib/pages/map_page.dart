@@ -15,6 +15,7 @@ class MapPageState extends State<MapPage> {
   final Duration _animationDuration = Duration(milliseconds: 300);
 
   final Map<String, String> mapImages = {
+    'All': 'assets/MapNew.png',
     'Food Vendors': 'assets/MapNew4.png',
     'Information Center': 'assets/MapNew3.png',
     'Toilets': 'assets/MapNew1.png',
@@ -47,6 +48,9 @@ class MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
+    
+    // Filter button should be highlighted if a filter is selected, but not "All"
+    final bool isFilterActive = _selectedFilter.isNotEmpty && _selectedFilter != 'All';
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -56,18 +60,16 @@ class MapPageState extends State<MapPage> {
         centerTitle: true,
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 30.0, top: 17.0),
+            padding: const EdgeInsets.only(right: 20.0, top: 12.0),
             child: GestureDetector(
               onTap: _toggleMiniWindow,
               child: AnimatedContainer(
                 duration: _animationDuration,
-                width: 65,
-                height: 65,
+                width: 75,
+                height: 75,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: (_isMiniWindowVisible || _selectedFilter.isNotEmpty)
-                      ? Colors.grey.shade300
-                      : Colors.white,
+                  color: _isMiniWindowVisible || isFilterActive ? Colors.grey.shade300 : Colors.white,
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.1),
@@ -84,9 +86,7 @@ class MapPageState extends State<MapPage> {
                   child: Image.asset(
                     'assets/Filter.png',
                     fit: BoxFit.contain,
-                    color: (_isMiniWindowVisible || _selectedFilter.isNotEmpty)
-                        ? Colors.black
-                        : null,
+                    color: _isMiniWindowVisible || isFilterActive ? Colors.black : null,
                   ),
                 ),
               ),
@@ -142,7 +142,7 @@ class MapPageState extends State<MapPage> {
                       ),
                     ),
                   ),
-
+                  
                   // Only show food vendor markers when 'Food Vendors' filter is selected
                   if (_selectedFilter == 'Food Vendors') ...[
                     Positioned(
@@ -168,10 +168,10 @@ class MapPageState extends State<MapPage> {
 
           // Fullscreen expanding mini window
           Positioned(
-            top: _isMiniWindowVisible ? -20 : 10,
+            top: _isMiniWindowVisible ? -20 : 10, // Lifted up more by -20
             left: _isMiniWindowVisible ? 0 : screenSize.width * 0.75,
             right: _isMiniWindowVisible ? 0 : screenSize.width * 0.75,
-            bottom: 40,
+            bottom: 40, // Keep the bottom unchanged
             child: AnimatedOpacity(
               duration: _animationDuration,
               opacity: _isMiniWindowVisible ? 1 : 0,
@@ -183,7 +183,7 @@ class MapPageState extends State<MapPage> {
                         child: Center(
                           child: Container(
                             width: screenSize.width * 0.9,
-                            height: screenSize.height * 0.8,
+                            height: screenSize.height * 0.8, // Adjust the height as needed
                             padding: EdgeInsets.all(24),
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -199,6 +199,7 @@ class MapPageState extends State<MapPage> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
+                                _buildFilterButton('All', screenSize), // Added "All" button
                                 _buildFilterButton('Food Vendors', screenSize),
                                 _buildFilterButton('Information Center', screenSize),
                                 _buildFilterButton('Toilets', screenSize),
