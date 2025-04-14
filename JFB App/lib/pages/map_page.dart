@@ -10,15 +10,15 @@ class MapPage extends StatefulWidget {
 class MapPageState extends State<MapPage> {
   bool _isMiniWindowVisible = false;
   String _selectedFilter = '';
-  String _currentMap = 'assets/map.png';
+  String _currentMap = 'assets/MapNew.png';
   final TransformationController _transformationController = TransformationController();
   final Duration _animationDuration = Duration(milliseconds: 300);
 
   final Map<String, String> mapImages = {
-    'Food Vendors': 'assets/map1.png',
-    'Help Center': 'assets/map2.png',
-    'Restrooms': 'assets/map3.png',
-    'Others': 'assets/map4.png',
+    'Food Vendors': 'assets/MapNew4.png',
+    'Information Center': 'assets/MapNew3.png',
+    'Toilets': 'assets/MapNew1.png',
+    'Trash Station': 'assets/MapNew2.png',
   };
 
   void _toggleMiniWindow() {
@@ -31,13 +31,17 @@ class MapPageState extends State<MapPage> {
     setState(() {
       if (_selectedFilter == filter) {
         _selectedFilter = '';
-        _currentMap = 'assets/map.png';
+        _currentMap = 'assets/MapNew.png';
       } else {
         _selectedFilter = filter;
-        _currentMap = mapImages[filter] ?? 'assets/map.png';
+        _currentMap = mapImages[filter] ?? 'assets/MapNew.png';
       }
       _isMiniWindowVisible = false;
     });
+  }
+
+  void _onLetterTap(String letter) {
+    print('Letter $letter tapped');
   }
 
   @override
@@ -52,16 +56,18 @@ class MapPageState extends State<MapPage> {
         centerTitle: true,
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 30.0),
+            padding: const EdgeInsets.only(right: 30.0, top: 17.0),
             child: GestureDetector(
               onTap: _toggleMiniWindow,
               child: AnimatedContainer(
                 duration: _animationDuration,
-                width: 50,
-                height: 50,
+                width: 65,
+                height: 65,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: _isMiniWindowVisible ? Colors.grey.shade300 : Colors.white,
+                  color: (_isMiniWindowVisible || _selectedFilter.isNotEmpty)
+                      ? Colors.grey.shade300
+                      : Colors.white,
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.1),
@@ -73,12 +79,14 @@ class MapPageState extends State<MapPage> {
                     color: Colors.black26,
                   ),
                 ),
-                padding: EdgeInsets.all(10),
+                padding: EdgeInsets.all(8),
                 child: ClipOval(
                   child: Image.asset(
                     'assets/Filter.png',
                     fit: BoxFit.contain,
-                    color: _isMiniWindowVisible ? Colors.black : null,
+                    color: (_isMiniWindowVisible || _selectedFilter.isNotEmpty)
+                        ? Colors.black
+                        : null,
                   ),
                 ),
               ),
@@ -93,8 +101,8 @@ class MapPageState extends State<MapPage> {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  const Color.fromARGB(255, 204, 233, 245),  // Lighter blue
-                  const Color.fromARGB(255, 246, 221, 221),        // Lighter red
+                  const Color.fromARGB(255, 204, 233, 245), // Lighter blue
+                  const Color.fromARGB(255, 246, 221, 221), // Lighter red
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -119,27 +127,51 @@ class MapPageState extends State<MapPage> {
                 ],
               ),
               padding: EdgeInsets.all(10),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: InteractiveViewer(
-                  transformationController: _transformationController,
-                  minScale: 1.0, // Minimum scale factor (no zoom out smaller than original size)
-                  maxScale: 5.0, // Maximum zoom level (can be adjusted as needed)
-                  child: Image.asset(
-                    _currentMap,
-                    fit: BoxFit.contain,
+              child: Stack(
+                children: [
+                  // Map base
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: InteractiveViewer(
+                      transformationController: _transformationController,
+                      minScale: 1.0,
+                      maxScale: 5.0,
+                      child: Image.asset(
+                        _currentMap,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
                   ),
-                ),
+
+                  // Only show food vendor markers when 'Food Vendors' filter is selected
+                  if (_selectedFilter == 'Food Vendors') ...[
+                    Positioned(
+                      top: 30,
+                      right: 145,
+                      child: _buildImageMarker('MapButtonA.png', 'A', width: 68, height: 68),
+                    ),
+                    Positioned(
+                      bottom: 382,
+                      left: 26,
+                      child: _buildImageMarker('MapButtonB.png', 'B', width: 50, height: 50),
+                    ),
+                    Positioned(
+                      bottom: 266,
+                      left: 25,
+                      child: _buildImageMarker('MapButtonC.png', 'C', width: 50, height: 50),
+                    ),
+                  ]
+                ],
               ),
             ),
           ),
 
           // Fullscreen expanding mini window
           Positioned(
-            top: _isMiniWindowVisible ? 0 : 40,
+            top: _isMiniWindowVisible ? -20 : 10,
             left: _isMiniWindowVisible ? 0 : screenSize.width * 0.75,
             right: _isMiniWindowVisible ? 0 : screenSize.width * 0.75,
-            bottom: _isMiniWindowVisible ? 0 : 40,
+            bottom: 40,
             child: AnimatedOpacity(
               duration: _animationDuration,
               opacity: _isMiniWindowVisible ? 1 : 0,
@@ -151,7 +183,7 @@ class MapPageState extends State<MapPage> {
                         child: Center(
                           child: Container(
                             width: screenSize.width * 0.9,
-                            height: screenSize.height * 0.9,
+                            height: screenSize.height * 0.8,
                             padding: EdgeInsets.all(24),
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -168,9 +200,9 @@ class MapPageState extends State<MapPage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 _buildFilterButton('Food Vendors', screenSize),
-                                _buildFilterButton('Help Center', screenSize),
-                                _buildFilterButton('Restrooms', screenSize),
-                                _buildFilterButton('Others', screenSize),
+                                _buildFilterButton('Information Center', screenSize),
+                                _buildFilterButton('Toilets', screenSize),
+                                _buildFilterButton('Trash Station', screenSize),
                               ],
                             ),
                           ),
@@ -181,6 +213,20 @@ class MapPageState extends State<MapPage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildImageMarker(String imageName, String letter, {double width = 40, double height = 40}) {
+    return GestureDetector(
+      onTap: () => _onLetterTap(letter),
+      child: Container(
+        width: width,
+        height: height,
+        child: Image.asset(
+          'assets/$imageName',
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }

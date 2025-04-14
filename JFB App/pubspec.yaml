@@ -58,6 +58,15 @@ flutter:
     - assets/bosJapan.png
     - assets/JAGB.jpg  
     - assets/langChange.png
+    - assets/MapNew.png
+    - assets/MapNew1.png
+    - assets/MapNew2.png
+    - assets/MapNew3.png
+    - assets/MapNew4.png
+    - assets/MapButtonA.png
+    - assets/MapButtonB.png
+    - assets/MapButtonC.png
+
     #home new
     - assets/JFB-4.jpg 
     - assets/JFB-3.jpg
