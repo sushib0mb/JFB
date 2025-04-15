@@ -180,67 +180,6 @@ class _HomePageState extends State<HomePage> {
                           ],
                         ),
                         SizedBox(height: screenHeight * 0.02),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 16.0),
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    PageRouteBuilder(
-                                      transitionDuration: const Duration(
-                                        milliseconds: 400,
-                                      ),
-                                      pageBuilder:
-                                          (_, __, ___) =>
-                                              MainScreen(initialIndex: 2),
-                                      transitionsBuilder: (
-                                        _,
-                                        animation,
-                                        __,
-                                        child,
-                                      ) {
-                                        const begin = Offset(1.0, 0.0);
-                                        const end = Offset.zero;
-                                        final tween = Tween(
-                                          begin: begin,
-                                          end: end,
-                                        ).chain(
-                                          CurveTween(curve: Curves.easeInOut),
-                                        );
-                                        return SlideTransition(
-                                          position: animation.drive(tween),
-                                          child: child,
-                                        );
-                                      },
-                                    ),
-                                  );
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.all(6),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black12,
-                                        blurRadius: 5,
-                                        spreadRadius: 2,
-                                      ),
-                                    ],
-                                  ),
-                                  child: Icon(
-                                    Icons.arrow_forward,
-                                    size: 30,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
                         _buildLiveTimetable(screenWidth),
                         _buildSocialMediaIcons(screenWidth),
                         _buildSponsorsSection(screenWidth),
