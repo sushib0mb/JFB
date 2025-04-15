@@ -12,11 +12,11 @@ class AnimatedBoothDetailWrapper extends StatefulWidget {
   final List<String> selectedAllergens;
 
   const AnimatedBoothDetailWrapper({
-    Key? key,
+    super.key,
     required this.booth,
     required this.onClose,
     required this.selectedAllergens,
-  }) : super(key: key);
+  });
 
   @override
   State<AnimatedBoothDetailWrapper> createState() =>
@@ -86,12 +86,12 @@ class _FoodPageState extends State<FoodPage> {
   List<FoodBooth> safeBooths = [];
   List<FoodBooth> unsafeBoothsWithAllergens = [];
   Set<String> selectedAllergens = {};
-  
+
   // Search related variables
   bool _isSearching = false;
   final TextEditingController _searchController = TextEditingController();
   FocusNode _searchFocusNode = FocusNode();
-  
+
   @override
   void initState() {
     super.initState();
@@ -108,33 +108,61 @@ class _FoodPageState extends State<FoodPage> {
   void _onSearchChanged() {
     _applyFilters();
   }
-@override
-Widget build(BuildContext context) {
-  final screenSize = MediaQuery.of(context).size;
-  final screenWidth = screenSize.width;
-  final screenHeight = screenSize.height;
 
-  return Scaffold(
-    body: Stack(
-      children: [
-        // Background first
-        _buildBackgroundGradient(),
-        
-        // Main content with top padding when search is active
-        Padding(
-          padding: EdgeInsets.only(top: _isSearching ? 70 : 0),
-          child: _buildMainContent(screenWidth, screenHeight),
-        ),
-        
-        // Search bar (fixed position, won't scroll)
-        if (_isSearching) _buildSearchBar(),
-        
-        // Filter button on top of everything
-        _buildTopActionButtons(),
-      ],
-    ),
-  );
-}
+  @override
+  Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final screenWidth = screenSize.width;
+    final screenHeight = screenSize.height;
+    final topPadding = MediaQuery.of(context).size.height * 0.082;
+
+    return Scaffold(
+      body: Stack(
+        children: [
+          // Background first
+          _buildBackgroundGradient(),
+
+          // Adding white background
+          Column(
+            children: [
+              SizedBox(
+                height:
+                    MediaQuery.of(context).padding.top +
+                    topPadding +
+                    MediaQuery.of(context).size.height * 0.015,
+              ),
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.all(25),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    color: Colors.white,
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.only(top: _isSearching ? 70 : 0),
+                    child: _buildMainContent(screenWidth, screenHeight),
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          // Main content with top padding when search is active
+          // Padding(
+          //   padding: EdgeInsets.only(top: _isSearching ? 70 : 0),
+          //   child: _buildMainContent(screenWidth, screenHeight),
+          // ),
+
+          // Search bar (fixed position, won't scroll)
+          if (_isSearching) _buildSearchBar(),
+
+          // Filter button on top of everything
+          _buildTopActionButtons(),
+        ],
+      ),
+    );
+  }
+
   Widget _buildBackgroundGradient() {
     return Container(
       decoration: BoxDecoration(
@@ -160,19 +188,20 @@ Widget build(BuildContext context) {
           // Search Button
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
-            child: _isSearching
-                ? Container() // Empty container when searching
-                : _buildIconButton(
-                    icon: Icons.search,
-                    onPressed: () {
-                      setState(() {
-                        _isSearching = true;
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          _searchFocusNode.requestFocus();
+            child:
+                _isSearching
+                    ? Container() // Empty container when searching
+                    : _buildIconButton(
+                      icon: Icons.search,
+                      onPressed: () {
+                        setState(() {
+                          _isSearching = true;
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            _searchFocusNode.requestFocus();
+                          });
                         });
-                      });
-                    },
-                  ),
+                      },
+                    ),
           ),
           const SizedBox(width: 10),
           // Filter Button
@@ -210,64 +239,68 @@ Widget build(BuildContext context) {
           ),
           child: Padding(
             padding: const EdgeInsets.all(10.0),
-            child: iconAsset != null
-                ? Image.asset(iconAsset, fit: BoxFit.contain)
-                : Icon(icon, size: 24),
+            child:
+                iconAsset != null
+                    ? Image.asset(iconAsset, fit: BoxFit.contain)
+                    : Icon(icon, size: 24),
           ),
         ),
       ),
     );
-  }Widget _buildSearchBar() {
-  return Positioned(
-    top: MediaQuery.of(context).padding.top + 80, // Just below status bar
-    left: 16,
-    right: 16,
-    child: Material(
-      elevation: 4,
-      borderRadius: BorderRadius.circular(30),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(30),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              spreadRadius: 1,
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            const SizedBox(width: 16),
-            Expanded(
-              child: TextField(
-                controller: _searchController,
-                focusNode: _searchFocusNode,
-                decoration: InputDecoration(
-                  hintText: 'Search food booths...',
-                  border: InputBorder.none,
-                  suffixIcon: _searchController.text.isNotEmpty
-                      ? IconButton(
-                          icon: Icon(Icons.clear, color: Colors.grey),
-                          onPressed: () {
-                            setState(() {
-                              _searchController.clear();
-                            });
-                          },
-                        )
-                      : null,
-                ),
-                style: TextStyle(fontSize: 16),
+  }
+
+  Widget _buildSearchBar() {
+    return Positioned(
+      top: MediaQuery.of(context).padding.top + 80, // Just below status bar
+      left: 16,
+      right: 16,
+      child: Material(
+        elevation: 4,
+        borderRadius: BorderRadius.circular(30),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(30),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 10,
+                spreadRadius: 1,
               ),
-            ),
-            // Removed the close (X) button completely
-          ],
+            ],
+          ),
+          child: Row(
+            children: [
+              const SizedBox(width: 16),
+              Expanded(
+                child: TextField(
+                  controller: _searchController,
+                  focusNode: _searchFocusNode,
+                  decoration: InputDecoration(
+                    hintText: 'Search food booths...',
+                    border: InputBorder.none,
+                    suffixIcon:
+                        _searchController.text.isNotEmpty
+                            ? IconButton(
+                              icon: Icon(Icons.clear, color: Colors.grey),
+                              onPressed: () {
+                                setState(() {
+                                  _searchController.clear();
+                                });
+                              },
+                            )
+                            : null,
+                  ),
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              // Removed the close (X) button completely
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _buildMainContent(double screenWidth, double screenHeight) {
     double maxWidth = screenWidth > 1200 ? 1300 : screenWidth * 0.95;
@@ -282,12 +315,6 @@ Widget build(BuildContext context) {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: screenHeight * 0.1),
-                Container(
-                  height: 1.5,
-                  color: Colors.grey.shade300,
-                  margin: const EdgeInsets.only(bottom: 12),
-                ),
                 _buildAllBoothsSection(screenWidth),
                 Container(
                   height: 1.5,
@@ -306,9 +333,10 @@ Widget build(BuildContext context) {
   Widget _buildAllBoothsSection(double screenWidth) {
     final bool showSplitSections =
         safeBooths.isNotEmpty || unsafeBoothsWithAllergens.isNotEmpty;
-    final List<FoodBooth> boothsToShow = showSplitSections
-        ? [...safeBooths, ...unsafeBoothsWithAllergens]
-        : filteredBooths;
+    final List<FoodBooth> boothsToShow =
+        showSplitSections
+            ? [...safeBooths, ...unsafeBoothsWithAllergens]
+            : filteredBooths;
 
     // Show empty state if no results
     if (boothsToShow.isEmpty) {
@@ -319,18 +347,12 @@ Widget build(BuildContext context) {
           const SizedBox(height: 20),
           Text(
             "No food booths found",
-            style: TextStyle(
-              fontSize: 22,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 22, color: Colors.grey[600]),
           ),
           const SizedBox(height: 10),
           Text(
             "Try different search terms or filters",
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[500],
-            ),
+            style: TextStyle(fontSize: 16, color: Colors.grey[500]),
           ),
           const SizedBox(height: 40),
         ],
@@ -340,7 +362,7 @@ Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const SizedBox(height: 60),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.05),
         Text(
           "All Food Booths",
           style: TextStyle(
@@ -359,28 +381,26 @@ Widget build(BuildContext context) {
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 20),
-        if (showSplitSections) ...[
-          if (safeBooths.isNotEmpty) ...[
-            Text(
-              "✅ Safe Options",
-              style: TextStyle(fontWeight: FontWeight.bold),
+        if (showSplitSections && safeBooths.isNotEmpty) ...[
+          Text(
+            "✅ Safe Options",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          ),
+          const SizedBox(height: 10), // Added spacing after title
+          _buildBoothGrid(safeBooths, screenWidth),
+        ],
+        if (showSplitSections && unsafeBoothsWithAllergens.isNotEmpty) ...[
+          const SizedBox(height: 30), // Space between safe and unsafe sections
+          Text(
+            "⚠️ May Contain Allergens",
+            style: TextStyle(
+              color: Colors.red,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
             ),
-            const SizedBox(height: 10),
-            _buildBoothGrid(safeBooths, screenWidth),
-          ],
-          if (unsafeBoothsWithAllergens.isNotEmpty) ...[
-            const SizedBox(height: 30),
-            Text(
-              "⚠️ May Contain Allergens",
-              style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            _buildBoothGrid(
-              unsafeBoothsWithAllergens,
-              screenWidth,
-              faded: true,
-            ),
-          ],
+          ),
+          const SizedBox(height: 10),
+          _buildBoothGrid(unsafeBoothsWithAllergens, screenWidth, faded: true),
         ] else ...[
           _buildBoothGrid(filteredBooths, screenWidth),
         ],
@@ -400,7 +420,7 @@ Widget build(BuildContext context) {
         crossAxisCount: screenWidth > 600 ? 2 : 1,
         crossAxisSpacing: 2,
         mainAxisSpacing: 2,
-        childAspectRatio: 1.34,
+        childAspectRatio: 1.3,
       ),
       itemCount: booths.length,
       itemBuilder: (context, index) {
@@ -586,7 +606,8 @@ Widget build(BuildContext context) {
                                 Center(
                                   child: _buildApplyButton(
                                     onApply: _applyFilters,
-                                    closeModal: () => Navigator.of(context).pop(),
+                                    closeModal:
+                                        () => Navigator.of(context).pop(),
                                   ),
                                 ),
                               ],
@@ -651,13 +672,8 @@ Widget build(BuildContext context) {
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.red,
         foregroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
-        ),
-        padding: const EdgeInsets.symmetric(
-          vertical: 18,
-          horizontal: 40,
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 40),
         elevation: 10,
       ).copyWith(
         shadowColor: MaterialStateProperty.all(
@@ -691,14 +707,20 @@ Widget build(BuildContext context) {
         // Search filter
         if (searchQuery.isNotEmpty) {
           final matchesName = booth.name.toLowerCase().contains(searchQuery);
-          final matchesLocation =
-              booth.boothLocation.toLowerCase().contains(searchQuery);
+          final matchesLocation = booth.boothLocation.toLowerCase().contains(
+            searchQuery,
+          );
           final matchesGenre = booth.genre.toLowerCase().contains(searchQuery);
-          final matchesDish = booth.dishes.any((dish) =>
-              dish.name.toLowerCase().contains(searchQuery) ||
-              dish.description.toLowerCase().contains(searchQuery));
+          final matchesDish = booth.dishes.any(
+            (dish) =>
+                dish.name.toLowerCase().contains(searchQuery) ||
+                dish.description.toLowerCase().contains(searchQuery),
+          );
 
-          if (!matchesName && !matchesLocation && !matchesGenre && !matchesDish) {
+          if (!matchesName &&
+              !matchesLocation &&
+              !matchesGenre &&
+              !matchesDish) {
             continue;
           }
         }

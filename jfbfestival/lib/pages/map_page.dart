@@ -102,7 +102,6 @@ class MapPageState extends State<MapPage> {
       ),
       body: Stack(
         children: [
-          // Background Gradient with lighter colors
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
