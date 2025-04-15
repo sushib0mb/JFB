@@ -143,7 +143,7 @@ class MapPageState extends State<MapPage> {
                   // A, B, C buttons when filter is active
                   if (_selectedFilter == 'Food Vendors')
                     Positioned(
-                      bottom: 20,
+                      bottom: 10,
                       left: 0,
                       right: 0,
                       child: Row(
