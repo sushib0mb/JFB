@@ -852,210 +852,70 @@ class _EventDetailViewState extends State<EventDetailView>
               ),
             ),
             // Event detail card animation
-            Transform.translate(
-              offset: Offset(0, _cardOffsetAnimation.value),
-              child: Center(
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  height: MediaQuery.of(context).size.height * 0.6,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        blurRadius: 10,
+          Transform.translate(
+  offset: Offset(0, _cardOffsetAnimation.value),
+  child: Stack(
+    clipBehavior: Clip.none,
+    children: [
+      // Event Detail Card
+      Center(
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.7,
+          height: MediaQuery.of(context).size.height * 0.6,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.3),
+                blurRadius: 10,
+              ),
+            ],
+          ),
+          child: Stack(
+            children: [
+              Column(
+                children: [
+                  // Header image
+                  Container(
+                    height: 200,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(widget.event.eventDetailImage),
+                        fit: BoxFit.cover,
                       ),
-                    ],
-                  ),
-                  child: Stack(
-                    children: [
-                      // Content
-                      Column(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20),
+                      ),
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.3),
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
+                        ),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          // Header (background, icon, title)
-                          Container(
-                            height: 200,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage(
-                                  widget.event.eventDetailImage,
-                                ),
-                                fit: BoxFit.cover,
-                              ),
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(20),
-                                topRight: Radius.circular(20),
-                              ),
-                            ),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(
-                                  0.3,
-                                ), // Optional overlay for readability
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(20),
-                                  topRight: Radius.circular(20),
-                                ),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Transform.scale(
-                                    scale: _headerScaleAnimation.value,
-                                    child: CircleAvatar(
-                                      radius: 40,
-                                      backgroundColor: Colors.white,
-                                      child: Image.asset(
-                                        widget.event.iconImage,
-                                        gaplessPlayback: true,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Transform.scale(
-                                    scale: _headerScaleAnimation.value,
-                                    child: Text(
-                                      widget.event.title,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                        shadows: [
-                                          Shadow(
-                                            color: Colors.black54,
-                                            offset: Offset(0, 1),
-                                            blurRadius: 2,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          // Stage and time information
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                // Stage container with equal size but smaller width
-                                ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    maxWidth:
-                                        MediaQuery.of(context).size.width *
-                                        0.25,
-                                  ),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color:
-                                          widget.event.stage == "Stage 1"
-                                              ? const Color.fromARGB(
-                                                120,
-                                                191,
-                                                29,
-                                                25,
-                                              )
-                                              : const Color.fromARGB(
-                                                76,
-                                                11,
-                                                55,
-                                                117,
-                                              ),
-                                      borderRadius: BorderRadius.circular(20),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.3),
-                                          blurRadius: 20,
-                                        ),
-                                      ],
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 10,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        widget.event.stage,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          color: Colors.black87,
-                                          fontSize: 17,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-
-                                ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    maxWidth:
-                                        MediaQuery.of(context).size.width *
-                                        0.25, // Time width
-                                  ),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(20),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.2),
-                                          blurRadius: 10,
-                                        ),
-                                      ],
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 10,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        widget.event.time,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          color: Colors.black87,
-                                          fontSize: 17,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          // Expanded content area with scrolling
-                          Expanded(
-                            child: SingleChildScrollView(
-                              padding: const EdgeInsets.all(16),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: 242,
-                                    height: 200,
-                                    decoration: ShapeDecoration(
-                                      color: const Color.fromARGB(13, 0, 0, 0),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(25),
-                                      ),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        widget.event.description,
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                          color:
-                                              Colors
-                                                  .black87, // Adjust the text color if needed
-                                        ),
-                                      ),
-                                    ),
+                          const SizedBox(height: 50), // space for floating icon
+                          Transform.scale(
+                            scale: _headerScaleAnimation.value,
+                            child: Text(
+                              widget.event.title,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                shadows: [
+                                  Shadow(
+                                    color: Colors.black54,
+                                    offset: Offset(0, 1),
+                                    blurRadius: 2,
                                   ),
                                 ],
                               ),
@@ -1063,31 +923,167 @@ class _EventDetailViewState extends State<EventDetailView>
                           ),
                         ],
                       ),
-                      // Close button - positioned properly at the top right
-                      Positioned(
-                        top: 10,
-                        right: 10,
-                        child: GestureDetector(
-                          onTap: _close,
+                    ),
+                  ),
+
+                  // Stage and time info
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth:
+                                MediaQuery.of(context).size.width * 0.25,
+                          ),
                           child: Container(
-                            padding: const EdgeInsets.all(5),
                             decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.3),
-                              shape: BoxShape.circle,
+                              color: widget.event.stage == "Stage 1"
+                                  ? const Color.fromARGB(120, 191, 29, 25)
+                                  : const Color.fromARGB(76, 11, 55, 117),
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.3),
+                                  blurRadius: 20,
+                                ),
+                              ],
                             ),
-                            child: const Icon(
-                              Icons.close,
-                              size: 20,
-                              color: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: Center(
+                              child: Text(
+                                widget.event.stage,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.black87,
+                                  fontSize: 17,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                           ),
                         ),
+                        ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth:
+                                MediaQuery.of(context).size.width * 0.25,
+                          ),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  blurRadius: 10,
+                                ),
+                              ],
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: Center(
+                              child: Text(
+                                widget.event.time,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.black87,
+                                  fontSize: 17,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Description section
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: 242,
+                            height: 200,
+                            decoration: ShapeDecoration(
+                              color: const Color.fromARGB(13, 0, 0, 0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                            ),
+                            child: Center(
+                              child: Text(
+                                widget.event.description,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
+                  ),
+                ],
+              ),
+
+              // Close Button
+              Positioned(
+                top: 10,
+                right: 10,
+                child: GestureDetector(
+                  onTap: _close,
+                  child: Container(
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.3),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.close,
+                      size: 20,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
+            ],
+          ),
+        ),
+      ),
+
+      // Floating Icon
+      Positioned(
+        top: MediaQuery.of(context).size.height * 0.12,
+        left: 0,
+        right: 0,
+        child: Center(
+          child: CircleAvatar(
+            radius: 45,
+            backgroundColor: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image.asset(
+                widget.event.iconImage,
+                fit: BoxFit.contain,
+                width: 75,
+                height: 75,
+              ),
             ),
+          ),
+        ),
+      ),
+    ],
+  ),
+),
+
+            
           ],
         );
       },
