@@ -180,7 +180,7 @@ class _FoodPageState extends State<FoodPage> {
 
   Widget _buildTopActionButtons() {
     return Positioned(
-      top: MediaQuery.of(context).size.height * 0.05,
+      top: MediaQuery.of(context).size.height * 0.09,
       right: MediaQuery.of(context).size.width * 0.05,
       child: Row(
         mainAxisSize: MainAxisSize.min,
