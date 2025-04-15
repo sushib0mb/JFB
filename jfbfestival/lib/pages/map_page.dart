@@ -10,9 +10,6 @@ class MapPage extends StatefulWidget {
 class MapPageState extends State<MapPage> {
   bool _isMiniWindowVisible = false;
   String _selectedFilter = '';
-  String _currentMap = 'assets/MapNew.png';
-  final TransformationController _transformationController =
-      TransformationController();
   final Duration _animationDuration = Duration(milliseconds: 300);
 
   final Map<String, String> mapImages = {
@@ -33,10 +30,8 @@ class MapPageState extends State<MapPage> {
     setState(() {
       if (_selectedFilter == filter) {
         _selectedFilter = '';
-        _currentMap = 'assets/MapNew.png';
       } else {
         _selectedFilter = filter;
-        _currentMap = mapImages[filter] ?? 'assets/MapNew.png';
       }
       _isMiniWindowVisible = false;
     });
@@ -49,10 +44,12 @@ class MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-
-    // Filter button should be highlighted if a filter is selected, but not "All"
     final bool isFilterActive =
         _selectedFilter.isNotEmpty && _selectedFilter != 'All';
+
+    final String mapImage =
+        mapImages[_selectedFilter.isNotEmpty ? _selectedFilter : 'All'] ??
+        mapImages['All']!;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -115,7 +112,6 @@ class MapPageState extends State<MapPage> {
             ),
           ),
 
-          // Map Viewer with pinch-to-zoom (InteractiveViewer)
           Center(
             child: Container(
               width: screenSize.width * 0.85,
@@ -134,50 +130,30 @@ class MapPageState extends State<MapPage> {
               padding: EdgeInsets.all(10),
               child: Stack(
                 children: [
-                  // Map base
                   ClipRRect(
                     borderRadius: BorderRadius.circular(20),
-                    child: InteractiveViewer(
-                      transformationController: _transformationController,
-                      minScale: 1.0,
-                      maxScale: 5.0,
-                      child: Image.asset(_currentMap, fit: BoxFit.contain),
+                    child: Image.asset(
+                      mapImage,
+                      fit: BoxFit.contain,
+                      width: double.infinity,
+                      height: double.infinity,
                     ),
                   ),
 
-                  // Only show food vendor markers when 'Food Vendors' filter is selected
-                  if (_selectedFilter == 'Food Vendors') ...[
+                  if (_selectedFilter == 'Food Vendors')
                     Positioned(
-                      top: 30,
-                      right: 145,
-                      child: _buildImageMarker(
-                        'MapButtonA.png',
-                        'A',
-                        width: 68,
-                        height: 68,
+                      bottom: 20,
+                      left: 0,
+                      right: 0,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _buildLetterButton('A', Colors.red),
+                          _buildLetterButton('B', Colors.blue),
+                          _buildLetterButton('C', Colors.green),
+                        ],
                       ),
                     ),
-                    Positioned(
-                      bottom: 382,
-                      left: 26,
-                      child: _buildImageMarker(
-                        'MapButtonB.png',
-                        'B',
-                        width: 50,
-                        height: 50,
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 266,
-                      left: 25,
-                      child: _buildImageMarker(
-                        'MapButtonC.png',
-                        'C',
-                        width: 50,
-                        height: 50,
-                      ),
-                    ),
-                  ],
                 ],
               ),
             ),
@@ -193,48 +169,41 @@ class MapPageState extends State<MapPage> {
                       ? GestureDetector(
                         onTap: _toggleMiniWindow,
                         child: Container(
-                          color: Colors.black.withOpacity(0.6),
+                          color: Colors.black.withOpacity(0.4),
                           child: Center(
                             child: Container(
-                              child: Center(
-                                child: Container(
-                                  width: screenSize.width * 0.9,
-                                  height: screenSize.height * 0.65,
-                                  padding: EdgeInsets.all(24),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(24),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.2),
-                                        blurRadius: 12,
-                                        spreadRadius: 4,
-                                      ),
-                                    ],
+                              width: screenSize.width * 0.9,
+                              height: screenSize.height * 0.8,
+                              padding: EdgeInsets.all(24),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(24),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.2),
+                                    blurRadius: 12,
+                                    spreadRadius: 4,
                                   ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      _buildFilterButton(
-                                        'All',
-                                        screenSize,
-                                      ), // Added "All" button
-                                      _buildFilterButton(
-                                        'Food Vendors',
-                                        screenSize,
-                                      ),
-                                      _buildFilterButton(
-                                        'Information Center',
-                                        screenSize,
-                                      ),
-                                      _buildFilterButton('Toilets', screenSize),
-                                      _buildFilterButton(
-                                        'Trash Station',
-                                        screenSize,
-                                      ),
-                                    ],
+                                ],
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  _buildFilterButton('All', screenSize),
+                                  _buildFilterButton(
+                                    'Food Vendors',
+                                    screenSize,
                                   ),
-                                ),
+                                  _buildFilterButton(
+                                    'Information Center',
+                                    screenSize,
+                                  ),
+                                  _buildFilterButton('Toilets', screenSize),
+                                  _buildFilterButton(
+                                    'Trash Station',
+                                    screenSize,
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -248,18 +217,26 @@ class MapPageState extends State<MapPage> {
     );
   }
 
-  Widget _buildImageMarker(
-    String imageName,
-    String letter, {
-    double width = 40,
-    double height = 40,
-  }) {
+  Widget _buildLetterButton(String letter, Color color) {
     return GestureDetector(
       onTap: () => _onLetterTap(letter),
       child: Container(
-        width: width,
-        height: height,
-        child: Image.asset('assets/$imageName', fit: BoxFit.contain),
+        width: 80,
+        height: 50,
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Center(
+          child: Text(
+            letter,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
       ),
     );
   }
