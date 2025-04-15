@@ -29,106 +29,100 @@ class BoothDetails extends StatelessWidget {
         // Main Content with Logo Overlay
         Stack(
           children: [
-            DraggableScrollableSheet(
-              initialChildSize: 0.8,
-              minChildSize: 0.8,
-              maxChildSize: 0.8,
-              builder: (context, controller) {
-                return Container(
-                  width: 284,
-                  height: 505,
-                  margin: const EdgeInsets.only(left: 57, right: 57),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(25),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.5),
-                        blurRadius: 15,
-                        spreadRadius: 0,
-                      ),
-                    ],
-                  ),
-                  child: Stack(
-                    children: [
-                      // Close button
-                      Positioned(
-                        top: 10,
-                        right: 10,
-                        child: IconButton(
-                          icon: const Icon(Icons.close, size: 20),
-                          onPressed: onClose,
-                        ),
-                      ),
-                      // Food stall image container
-                      Container(
-                        height: 186,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(25),
-                            topRight: Radius.circular(25),
-                          ),
-                          image: DecorationImage(
-                            image: AssetImage(booth.dishImagePath),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        child: Container(
+            Center(
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.7,
+                height: MediaQuery.of(context).size.height * 0.6,
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.85,
+                ),
+                margin: const EdgeInsets.symmetric(horizontal: 24),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(25),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.5),
+                      blurRadius: 15,
+                      spreadRadius: 0,
+                    ),
+                  ],
+                ),
+                child: Stack(
+                  children: [
+                    // Main scrollable content
+                    Column(
+                      children: [
+                        // Top image
+                        Container(
+                          height: 186,
+                          width: double.infinity,
                           decoration: BoxDecoration(
                             borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(25),
                               topRight: Radius.circular(25),
                             ),
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                Colors.black.withOpacity(0.6),
-                                Colors.transparent,
+                            image: DecorationImage(
+                              image: AssetImage(booth.dishImagePath),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(25),
+                                topRight: Radius.circular(25),
+                              ),
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Colors.black.withOpacity(0.6),
+                                  Colors.transparent,
+                                ],
+                              ),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                  booth.name,
+                                  style: const TextStyle(
+                                    fontSize: 25,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.normal,
+                                    shadows: [
+                                      Shadow(
+                                        blurRadius: 5,
+                                        color: Colors.black,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  "Food Booth: ${booth.boothLocation}",
+                                  style: const TextStyle(
+                                    fontSize: 23,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w300,
+                                    shadows: [
+                                      Shadow(
+                                        blurRadius: 5,
+                                        color: Colors.black,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
                               ],
                             ),
                           ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text(
-                                booth.name,
-                                style: const TextStyle(
-                                  fontSize: 25,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.normal,
-                                  shadows: [
-                                    Shadow(blurRadius: 5, color: Colors.black),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                "Food Booth: ${booth.boothLocation}",
-                                style: const TextStyle(
-                                  fontSize: 23,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w300,
-                                  shadows: [
-                                    Shadow(blurRadius: 5, color: Colors.black),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                            ],
-                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 250),
-                        child: SingleChildScrollView(
-                          controller: controller,
-                          child: ConstrainedBox(
-                            constraints: BoxConstraints(
-                              minHeight:
-                                  MediaQuery.of(context).size.height - 250,
-                            ),
+                        // Scrollable content
+                        Expanded(
+                          child: SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
                             child: Column(
                               children: [
                                 _buildSection(
@@ -153,12 +147,27 @@ class BoothDetails extends StatelessWidget {
                             ),
                           ),
                         ),
+                      ],
+                    ),
+
+                    // Close button floating on top
+                    Positioned(
+                      top: 10,
+                      right: 10,
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.close,
+                          size: 20,
+                          color: Colors.white,
+                        ),
+                        onPressed: onClose,
                       ),
-                    ],
-                  ),
-                );
-              },
+                    ),
+                  ],
+                ),
+              ),
             ),
+
             Positioned(
               top: MediaQuery.of(context).size.height / 6.8,
               left: MediaQuery.of(context).size.width / 2 - 75,

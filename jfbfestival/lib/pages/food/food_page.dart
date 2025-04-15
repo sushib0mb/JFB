@@ -523,7 +523,6 @@ class _FoodPageState extends State<FoodPage> {
       context: context,
       barrierDismissible: true,
       barrierLabel: 'FilterPopup',
-      barrierColor: Colors.black.withOpacity(0.6),
       transitionDuration: const Duration(milliseconds: 400), // Fade-in duration
       pageBuilder: (context, anim1, anim2) => const SizedBox.shrink(),
       transitionBuilder: (context, anim1, _, __) {
@@ -541,7 +540,6 @@ class _FoodPageState extends State<FoodPage> {
                   opacity: curved.value,
                   child: GestureDetector(
                     onTap: () => Navigator.of(context).pop(),
-                    child: Container(color: Colors.black.withOpacity(0.6)),
                   ),
                 ),
 

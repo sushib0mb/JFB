@@ -84,7 +84,7 @@ class _TimetablePageState extends State<TimetablePage> {
 
     _scrollController.animateTo(
       offset,
-      duration: Duration(milliseconds: 500),
+      duration: Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
   }
@@ -801,7 +801,7 @@ class _EventDetailViewState extends State<EventDetailView>
     // Animation controller setup
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 300),
     );
     _cardOffsetAnimation = Tween<double>(
       begin: 1000,
@@ -856,8 +856,8 @@ class _EventDetailViewState extends State<EventDetailView>
               offset: Offset(0, _cardOffsetAnimation.value),
               child: Center(
                 child: Container(
-                  width: 300,
-                  height: 500,
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  height: MediaQuery.of(context).size.height * 0.6,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
