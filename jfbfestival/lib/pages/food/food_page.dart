@@ -224,8 +224,8 @@ class _FoodPageState extends State<FoodPage> {
       child: Material(
         color: Colors.transparent,
         child: Container(
-          width: 50,
-          height: 50,
+          width: 40,
+          height: 40,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(25),
@@ -242,65 +242,67 @@ class _FoodPageState extends State<FoodPage> {
             child:
                 iconAsset != null
                     ? Image.asset(iconAsset, fit: BoxFit.contain)
-                    : Icon(icon, size: 24),
+                    : Icon(icon, size: 18),
           ),
         ),
       ),
     );
   }
+Widget _buildSearchBar() {
+  if (!_isSearching) return SizedBox.shrink(); // Hide if not searching
 
-  Widget _buildSearchBar() {
-    return Positioned(
-      top: MediaQuery.of(context).padding.top + 80, // Just below status bar
-      left: 16,
-      right: 16,
-      child: Material(
-        elevation: 4,
-        borderRadius: BorderRadius.circular(30),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(30),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 10,
-                spreadRadius: 1,
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              const SizedBox(width: 16),
-              Expanded(
-                child: TextField(
-                  controller: _searchController,
-                  focusNode: _searchFocusNode,
-                  decoration: InputDecoration(
-                    hintText: 'Search food booths...',
-                    border: InputBorder.none,
-                    suffixIcon:
-                        _searchController.text.isNotEmpty
-                            ? IconButton(
-                              icon: Icon(Icons.clear, color: Colors.grey),
-                              onPressed: () {
-                                setState(() {
-                                  _searchController.clear();
-                                });
-                              },
-                            )
-                            : null,
-                  ),
-                  style: TextStyle(fontSize: 16),
+  return Positioned(
+    top: MediaQuery.of(context).padding.top + 80,
+    left: 16,
+    right: 16,
+    child: Material(
+      elevation: 4,
+      borderRadius: BorderRadius.circular(30),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(30),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
+              spreadRadius: 1,
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            const SizedBox(width: 16),
+            Expanded(
+              child: TextField(
+                controller: _searchController,
+                focusNode: _searchFocusNode,
+                autofocus: true,
+                decoration: const InputDecoration(
+                  hintText: 'Search food booths...',
+                  border: InputBorder.none,
                 ),
+                onChanged: (_) => setState(() {}),
+                style: const TextStyle(fontSize: 16),
               ),
-              // Removed the close (X) button completely
-            ],
-          ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.close, color: Colors.grey),
+              onPressed: () {
+                setState(() {
+                  _searchController.clear();
+                  _isSearching = false;
+                });
+                _searchFocusNode.unfocus();
+              },
+            ),
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Widget _buildMainContent(double screenWidth, double screenHeight) {
     double maxWidth = screenWidth > 1200 ? 1300 : screenWidth * 0.95;
