@@ -104,6 +104,7 @@ class _TimetablePageState extends State<TimetablePage> {
         selectedDay == 1 ? day1ScheduleData : day2ScheduleData;
 
     return Scaffold(
+      backgroundColor: Colors.white,
       extendBodyBehindAppBar: true,
       appBar:
           widget.selectedEvent != null
@@ -142,25 +143,22 @@ class _TimetablePageState extends State<TimetablePage> {
                   width: dayButtonWidth,
                   height: dayButtonHeight,
                   decoration: ShapeDecoration(
-                    gradient: LinearGradient(
-                      colors:
-                          selectedDay == 1
-                              ? [
-                                const Color.fromARGB(255, 255, 131, 135),
-                                const Color.fromARGB(128, 176, 113, 116),
-                                const Color.fromARGB(0, 96, 96, 96),
-                              ]
-                              : [
-                                const Color.fromARGB(128, 131, 131, 131),
-                                const Color.fromARGB(64, 114, 114, 114),
-                                const Color.fromARGB(0, 96, 96, 96),
-                              ],
-                    ),
+                    color:
+                        selectedDay == 1
+                            ? const Color.fromARGB(38, 191, 29, 35)
+                            : const Color.fromARGB(175, 224, 224, 224),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(100),
+                      side:
+                          selectedDay == 1
+                              ? const BorderSide(
+                                color: Color.fromARGB(255, 191, 29, 35),
+                                width: 2.0,
+                              )
+                              : BorderSide.none,
                     ),
                   ),
-                  alignment: Alignment(-0.4, 0),
+                  alignment: Alignment(-0.3, 0),
                   child: const Text(
                     'Day 1',
                     textAlign: TextAlign.center,
@@ -186,22 +184,19 @@ class _TimetablePageState extends State<TimetablePage> {
                   width: dayButtonWidth,
                   height: dayButtonHeight,
                   decoration: ShapeDecoration(
-                    gradient: LinearGradient(
-                      colors:
-                          selectedDay == 2
-                              ? [
-                                const Color.fromARGB(49, 96, 96, 96),
-                                const Color.fromARGB(128, 107, 136, 175),
-                                const Color.fromARGB(255, 118, 175, 255),
-                              ]
-                              : [
-                                const Color.fromARGB(0, 96, 96, 96),
-                                const Color.fromARGB(64, 114, 114, 114),
-                                const Color.fromARGB(128, 131, 131, 131),
-                              ],
-                    ),
+                    color:
+                        selectedDay == 1
+                            ? const Color.fromARGB(175, 224, 224, 224)
+                            : const Color.fromARGB(38, 11, 55, 117),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(100),
+                      side:
+                          selectedDay == 2
+                              ? const BorderSide(
+                                color: Color.fromARGB(255, 11, 55, 117),
+                                width: 2.0,
+                              )
+                              : BorderSide.none,
                     ),
                   ),
                   alignment: Alignment(0.55, 0),
@@ -782,7 +777,6 @@ class _PerformanceBoxState extends State<PerformanceBox>
   }
 }
 
-/// イベント詳細ポップアップ
 class EventDetailView extends StatefulWidget {
   final EventItem event;
   final VoidCallback onClose;
@@ -847,17 +841,17 @@ class _EventDetailViewState extends State<EventDetailView>
           // Ensure stack fills the screen
           fit: StackFit.expand,
           children: [
-            // Background overlay - using Positioned.fill to ensure complete coverage
+            // Background overlay with full screen coverage
             Positioned.fill(
               child: Opacity(
-                opacity: _opacityAnimation.value * 0.5,
+                opacity: _opacityAnimation.value * 0.6, // Set the opacity here
                 child: GestureDetector(
                   onTap: _close,
-                  child: Container(color: Colors.black),
+                  child: Container(color: const Color.fromARGB(255, 0, 0, 0)),
                 ),
               ),
             ),
-            // Event detail card
+            // Event detail card animation
             Transform.translate(
               offset: Offset(0, _cardOffsetAnimation.value),
               child: Center(
@@ -961,7 +955,7 @@ class _EventDetailViewState extends State<EventDetailView>
                                       color:
                                           widget.event.stage == "Stage 1"
                                               ? const Color.fromARGB(
-                                                77,
+                                                120,
                                                 191,
                                                 29,
                                                 25,
@@ -976,7 +970,7 @@ class _EventDetailViewState extends State<EventDetailView>
                                       boxShadow: [
                                         BoxShadow(
                                           color: Colors.black.withOpacity(0.3),
-                                          blurRadius: 25,
+                                          blurRadius: 20,
                                         ),
                                       ],
                                     ),
@@ -1009,7 +1003,7 @@ class _EventDetailViewState extends State<EventDetailView>
                                       borderRadius: BorderRadius.circular(20),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.black.withOpacity(0.3),
+                                          color: Colors.black.withOpacity(0.2),
                                           blurRadius: 10,
                                         ),
                                       ],
@@ -1054,7 +1048,7 @@ class _EventDetailViewState extends State<EventDetailView>
                                         widget.event.description,
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 14,
                                           fontWeight: FontWeight.w400,
                                           color:
                                               Colors

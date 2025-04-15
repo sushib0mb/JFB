@@ -13,20 +13,22 @@ class PaymentFilterRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final payments = ["Cash", "Venmo", "Zelle", "Credit Card"];
-    
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: payments.map((method) {
-        final isSelected = selectedPayments.contains(method);
-        return _PaymentFilterItem(
-          method: method,
-          isSelected: isSelected,
-          onTap: () => onPaymentSelected(method, !isSelected),
-        );
-      }).toList(),
+      children:
+          payments.map((method) {
+            final isSelected = selectedPayments.contains(method);
+            return _PaymentFilterItem(
+              method: method,
+              isSelected: isSelected,
+              onTap: () => onPaymentSelected(method, !isSelected),
+            );
+          }).toList(),
     );
   }
 }
+
 class _PaymentFilterItem extends StatelessWidget {
   final String method;
   final bool isSelected;
@@ -73,7 +75,9 @@ class _PaymentFilterItem extends StatelessWidget {
           SizedBox(
             height: 44, // bump this up a bit more
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 4.0), // 👈 add a bit of bottom padding
+              padding: const EdgeInsets.only(
+                bottom: 4.0,
+              ), // 👈 add a bit of bottom padding
               child: Text(
                 method == "Credit Card" ? "Credit\nCard" : method,
                 textAlign: TextAlign.center,
@@ -81,6 +85,7 @@ class _PaymentFilterItem extends StatelessWidget {
                   fontSize: 16,
                   color: isSelected ? Colors.black : Colors.grey[400],
                   fontWeight: FontWeight.normal,
+                  height: 1,
                 ),
               ),
             ),

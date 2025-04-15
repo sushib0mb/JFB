@@ -184,11 +184,7 @@ class MapPageState extends State<MapPage> {
           ),
 
           // Fullscreen expanding mini window
-          Positioned(
-            top: _isMiniWindowVisible ? -20 : 10, // Lifted up more by -20
-            left: _isMiniWindowVisible ? 0 : screenSize.width * 0.75,
-            right: _isMiniWindowVisible ? 0 : screenSize.width * 0.75,
-            bottom: 40, // Keep the bottom unchanged
+          Positioned.fill(
             child: AnimatedOpacity(
               duration: _animationDuration,
               opacity: _isMiniWindowVisible ? 1 : 0,
@@ -197,46 +193,48 @@ class MapPageState extends State<MapPage> {
                       ? GestureDetector(
                         onTap: _toggleMiniWindow,
                         child: Container(
-                          color: Colors.black.withOpacity(0.4),
+                          color: Colors.black.withOpacity(0.6),
                           child: Center(
                             child: Container(
-                              width: screenSize.width * 0.9,
-                              height:
-                                  screenSize.height *
-                                  0.8, // Adjust the height as needed
-                              padding: EdgeInsets.all(24),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(24),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.2),
-                                    blurRadius: 12,
-                                    spreadRadius: 4,
+                              child: Center(
+                                child: Container(
+                                  width: screenSize.width * 0.9,
+                                  height: screenSize.height * 0.65,
+                                  padding: EdgeInsets.all(24),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(24),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.2),
+                                        blurRadius: 12,
+                                        spreadRadius: 4,
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  _buildFilterButton(
-                                    'All',
-                                    screenSize,
-                                  ), // Added "All" button
-                                  _buildFilterButton(
-                                    'Food Vendors',
-                                    screenSize,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      _buildFilterButton(
+                                        'All',
+                                        screenSize,
+                                      ), // Added "All" button
+                                      _buildFilterButton(
+                                        'Food Vendors',
+                                        screenSize,
+                                      ),
+                                      _buildFilterButton(
+                                        'Information Center',
+                                        screenSize,
+                                      ),
+                                      _buildFilterButton('Toilets', screenSize),
+                                      _buildFilterButton(
+                                        'Trash Station',
+                                        screenSize,
+                                      ),
+                                    ],
                                   ),
-                                  _buildFilterButton(
-                                    'Information Center',
-                                    screenSize,
-                                  ),
-                                  _buildFilterButton('Toilets', screenSize),
-                                  _buildFilterButton(
-                                    'Trash Station',
-                                    screenSize,
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
                           ),

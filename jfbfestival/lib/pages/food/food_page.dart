@@ -519,106 +519,141 @@ class _FoodPageState extends State<FoodPage> {
   }
 
   void _showFilterPopup() {
-    showModalBottomSheet(
+    showGeneralDialog(
       context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (BuildContext context) {
-        return DraggableScrollableSheet(
-          initialChildSize: 0.9,
-          maxChildSize: 1,
-          minChildSize: 0.4,
-          builder: (_, controller) {
-            return StatefulBuilder(
-              builder: (context, setModalState) {
-                return Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(20),
-                    ),
-                    boxShadow: [
-                      BoxShadow(color: Colors.black26, blurRadius: 10),
-                    ],
+      barrierDismissible: true,
+      barrierLabel: 'FilterPopup',
+      barrierColor: Colors.black.withOpacity(0.6),
+      transitionDuration: const Duration(milliseconds: 400), // Fade-in duration
+      pageBuilder: (context, anim1, anim2) => const SizedBox.shrink(),
+      transitionBuilder: (context, anim1, _, __) {
+        final curved = CurvedAnimation(parent: anim1, curve: Curves.easeOut);
+
+        return AnimatedBuilder(
+          animation: curved,
+          builder: (context, child) {
+            return Stack(
+              fit: StackFit.expand,
+              children: [
+                // Background Fade-In and Fade-Out
+                AnimatedOpacity(
+                  duration: const Duration(milliseconds: 400),
+                  opacity: curved.value,
+                  child: GestureDetector(
+                    onTap: () => Navigator.of(context).pop(),
+                    child: Container(color: Colors.black.withOpacity(0.6)),
                   ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 10,
-                  ),
+                ),
+
+                AnimatedOpacity(
+                  duration: const Duration(milliseconds: 400),
+                  opacity: curved.value,
                   child: Center(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 600),
-                      child: Column(
-                        children: [
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: IconButton(
-                              icon: const Icon(Icons.close),
-                              onPressed: () => Navigator.of(context).pop(),
-                            ),
-                          ),
-                          Expanded(
-                            child: ListView(
-                              controller: controller,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: Container(
+                        constraints: BoxConstraints(
+                          maxWidth: MediaQuery.of(context).size.width * 0.85,
+                          maxHeight: MediaQuery.of(context).size.height * 0.8,
+                        ),
+                        margin: const EdgeInsets.symmetric(horizontal: 24),
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(color: Colors.black26, blurRadius: 10),
+                          ],
+                        ),
+                        child: StatefulBuilder(
+                          builder: (context, setModalState) {
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
-                                Center(child: _buildSectionTitle("Payment")),
-                                Center(
-                                  child: PaymentFilterRow(
-                                    selectedPayments: selectedPayments,
-                                    onPaymentSelected: (method, isSelected) {
-                                      setModalState(() {
-                                        if (isSelected) {
-                                          selectedPayments.add(method);
-                                        } else {
-                                          selectedPayments.remove(method);
-                                        }
-                                      });
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(height: 35),
-                                Center(child: _buildSectionTitle("Veganism")),
-                                Center(
-                                  child: VeganFilterOption(
-                                    isVegan: veganOnly ?? false,
-                                    onChanged: (value) {
-                                      setModalState(() => veganOnly = value);
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(height: 15),
-                                Center(child: _buildSectionTitle("Allergens")),
-                                Center(
-                                  child: AllergyFilterGrid(
-                                    selectedAllergens: selectedAllergens,
-                                    onAllergenSelected: (allergen, isSelected) {
-                                      setModalState(() {
-                                        if (isSelected) {
-                                          selectedAllergens.add(allergen);
-                                        } else {
-                                          selectedAllergens.remove(allergen);
-                                        }
-                                      });
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(height: 20),
-                                Center(
-                                  child: _buildApplyButton(
-                                    onApply: _applyFilters,
-                                    closeModal:
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: IconButton(
+                                    icon: const Icon(Icons.close),
+                                    onPressed:
                                         () => Navigator.of(context).pop(),
                                   ),
                                 ),
+                                Expanded(
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      children: [
+                                        Center(
+                                          child: _buildSectionTitle("Payment"),
+                                        ),
+                                        PaymentFilterRow(
+                                          selectedPayments: selectedPayments,
+                                          onPaymentSelected: (
+                                            method,
+                                            isSelected,
+                                          ) {
+                                            setModalState(() {
+                                              isSelected
+                                                  ? selectedPayments.add(method)
+                                                  : selectedPayments.remove(
+                                                    method,
+                                                  );
+                                            });
+                                          },
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Center(
+                                          child: _buildSectionTitle("Vegan"),
+                                        ),
+                                        VeganFilterOption(
+                                          isVegan: veganOnly ?? false,
+                                          onChanged: (value) {
+                                            setModalState(
+                                              () => veganOnly = value,
+                                            );
+                                          },
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Center(
+                                          child: _buildSectionTitle(
+                                            "Allergens",
+                                          ),
+                                        ),
+                                        AllergyFilterGrid(
+                                          selectedAllergens: selectedAllergens,
+                                          onAllergenSelected: (
+                                            allergen,
+                                            isSelected,
+                                          ) {
+                                            setModalState(() {
+                                              isSelected
+                                                  ? selectedAllergens.add(
+                                                    allergen,
+                                                  )
+                                                  : selectedAllergens.remove(
+                                                    allergen,
+                                                  );
+                                            });
+                                          },
+                                        ),
+                                        const SizedBox(height: 20),
+                                        _buildApplyButton(
+                                          onApply: _applyFilters,
+                                          closeModal:
+                                              () => Navigator.of(context).pop(),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ],
-                            ),
-                          ),
-                        ],
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ),
-                );
-              },
+                ),
+              ],
             );
           },
         );

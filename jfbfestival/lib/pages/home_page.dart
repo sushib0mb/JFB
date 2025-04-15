@@ -87,7 +87,7 @@ class _HomePageState extends State<HomePage> {
           child: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                begin: Alignment.bottomLeft,
+                begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
                   const Color.fromRGBO(10, 56, 117, 0.15),
@@ -665,8 +665,7 @@ class _HomePageState extends State<HomePage> {
                         style: TextStyle(
                           color: Colors.pinkAccent,
                           fontWeight: FontWeight.bold,
-                          fontSize:
-                              screenWidth * 0.045 + 2, // Slightly increased
+                          fontSize: screenWidth * 0.045 + 2,
                         ),
                       ),
                     ],

@@ -40,7 +40,8 @@ final List<ScheduleItem> day1ScheduleData = [
         duration: 15,
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Band performance.png",
-        description: "Taka Ochi band will perform Japanese songs, I think",
+        description:
+            "We are One Week Wonder from Japan, a group of BU and Berklee students gathered to deliver some Japanese rock to Boston. Our band is inspired by the Japanese underground Rock culture, which is loved in Japan but rarely heard in the US, so I hope you guys will love them!",
         eventDetailImage: "assets/timetableBackgrounds/oneweekwonder.JPG",
       ),
       EventItem(
