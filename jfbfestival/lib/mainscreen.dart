@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Fredoka'),
-      home: const VideoSplashScreen(),
+      home: const MainScreen(),
     );
   }
 }
