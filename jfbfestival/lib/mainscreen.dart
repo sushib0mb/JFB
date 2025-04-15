@@ -10,7 +10,7 @@ import 'package:jfbfestival/SplashScreen/video_splash_screen.dart';
 import 'package:flutter/services.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); 
+  WidgetsFlutterBinding.ensureInitialized();
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -28,7 +28,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Fredoka'),
-      home: const VideoSplashScreen(),
+      // home: const VideoSplashScreen(),
+      home: MainScreen(),
     );
   }
 }
