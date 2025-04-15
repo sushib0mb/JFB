@@ -576,6 +576,7 @@ class _FoodPageState extends State<FoodPage> {
                                         () => Navigator.of(context).pop(),
                                   ),
                                 ),
+                                const SizedBox(height: 20),
                                 Expanded(
                                   child: SingleChildScrollView(
                                     child: Column(
@@ -727,68 +728,67 @@ class _FoodPageState extends State<FoodPage> {
       ),
     );
   }
+void _applyFilters() {
+  setState(() {
+    safeBooths = [];
+    unsafeBoothsWithAllergens = [];
+    filteredBooths = [];
 
-  void _applyFilters() {
-    setState(() {
-      safeBooths = [];
-      unsafeBoothsWithAllergens = [];
-      filteredBooths = [];
+    final searchQuery = _searchController.text.toLowerCase();
 
-      final searchQuery = _searchController.text.toLowerCase();
+    for (var booth in foodBooths) {
+      // Search filter
+      if (searchQuery.isNotEmpty) {
+        final matchesName = booth.name.toLowerCase().contains(searchQuery);
+        final matchesLocation =
+            booth.boothLocation.toLowerCase().contains(searchQuery);
+        final matchesGenre = booth.genre.toLowerCase().contains(searchQuery);
+        final matchesDish = booth.dishes.any(
+          (dish) =>
+              dish.name.toLowerCase().contains(searchQuery) ||
+              dish.description.toLowerCase().contains(searchQuery),
+        );
 
-      for (var booth in foodBooths) {
-        // Search filter
-        if (searchQuery.isNotEmpty) {
-          final matchesName = booth.name.toLowerCase().contains(searchQuery);
-          final matchesLocation = booth.boothLocation.toLowerCase().contains(
-            searchQuery,
-          );
-          final matchesGenre = booth.genre.toLowerCase().contains(searchQuery);
-          final matchesDish = booth.dishes.any(
-            (dish) =>
-                dish.name.toLowerCase().contains(searchQuery) ||
-                dish.description.toLowerCase().contains(searchQuery),
-          );
-
-          if (!matchesName &&
-              !matchesLocation &&
-              !matchesGenre &&
-              !matchesDish) {
-            continue;
-          }
-        }
-
-        // Payments filter
-        if (selectedPayments.isNotEmpty &&
-            !booth.payments.any((p) => selectedPayments.contains(p))) {
+        if (!matchesName &&
+            !matchesLocation &&
+            !matchesGenre &&
+            !matchesDish) {
           continue;
         }
+      }
 
-        // Vegan filter
-        if (veganOnly == true && !booth.isVegan) continue;
+      // Payments filter
+      if (selectedPayments.isNotEmpty &&
+          !booth.payments.any((p) => selectedPayments.contains(p))) {
+        continue;
+      }
 
-        // Allergen filtering
-        if (selectedAllergens.isNotEmpty) {
-          final hasAllergenDish = booth.dishes.any(
-            (dish) => dish.allergens.any((a) => selectedAllergens.contains(a)),
-          );
+      // Vegan filter
+      if (veganOnly == true && !booth.isVegan) continue;
 
-          if (hasAllergenDish) {
-            unsafeBoothsWithAllergens.add(booth);
-          } else {
-            safeBooths.add(booth);
-          }
+      // Allergen filtering
+      if (selectedAllergens.isNotEmpty) {
+        final hasAllergenDish = booth.dishes.any(
+          (dish) =>
+              dish.allergens.any((a) => selectedAllergens.contains(a)),
+        );
+
+        if (hasAllergenDish) {
+          unsafeBoothsWithAllergens.add(booth);
         } else {
-          // No allergen filter, so treat all booths as safe
           safeBooths.add(booth);
         }
+      } else {
+        // We'll add all filtered booths as safe *after* the loop
+        filteredBooths.add(booth);
       }
+    }
 
-      // If no allergen filter applied, treat all as "safe"
-      if (selectedAllergens.isEmpty) {
-        unsafeBoothsWithAllergens.clear();
-        filteredBooths = [...safeBooths];
-      }
-    });
-  }
+    // If allergen filter is applied, show only safe booths
+    if (selectedAllergens.isNotEmpty) {
+      filteredBooths = [...safeBooths];
+    }
+  });
+}
+
 }
