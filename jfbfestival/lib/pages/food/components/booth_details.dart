@@ -134,7 +134,7 @@ class BoothDetails extends StatelessWidget {
                                   "Vegan Options",
                                   _buildVeganism(booth.isVegan),
                                 ),
-                                const SizedBox(height: 40),
+                                const SizedBox(height: 2),
                                 _buildSection(
                                   "Dishes",
                                   _buildDishesSection(
@@ -250,27 +250,23 @@ class BoothDetails extends StatelessWidget {
               )
               .toList(),
     );
-  }
-
-  Widget _buildPaymentOptions(List<String> payments) {
-    return Column(
+  }Widget _buildPaymentOptions(List<String> payments) {
+  return Center(
+    child: Wrap(
+      alignment: WrapAlignment.center,
+      spacing: 40, // horizontal space between items
+      runSpacing: 16, // vertical space if wrapping
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _buildPaymentItem(
-              "Venmo",
-              "assets/payments/venmo.png",
-              payments.contains("Venmo"),
-            ),
-            _buildPaymentItem(
-              "Zelle",
-              "assets/payments/zelle.png",
-              payments.contains("Zelle"),
-            ),
-          ],
+        _buildPaymentItem(
+          "Venmo",
+          "assets/payments/venmo.png",
+          payments.contains("Venmo"),
         ),
-        const SizedBox(height: 16),
+        _buildPaymentItem(
+          "Zelle",
+          "assets/payments/zelle.png",
+          payments.contains("Zelle"),
+        ),
         _buildPaymentItem(
           "Cash",
           "assets/payments/cash.png",
@@ -282,47 +278,52 @@ class BoothDetails extends StatelessWidget {
           payments.contains("Credit Card"),
         ),
       ],
-    );
-  }
+    ),
+  );
+}
 
-  Widget _buildPaymentItem(String label, String assetPath, bool isAccepted) {
-    return Column(
-      children: [
-        Container(
-          width: 60,
-          height: 60,
-          decoration: BoxDecoration(
-            color: isAccepted ? Colors.white : Colors.grey[500],
-            shape: BoxShape.circle,
-            boxShadow:
-                isAccepted
-                    ? [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 6,
-                        offset: Offset(0, 3),
-                      ),
-                    ]
-                    : [],
-          ),
-          child: ClipOval(
-            child: FadeInImage(
-              placeholder: AssetImage(
-                'assets/payments/loading.png',
-              ), // your own loading spinner or blank image
-              image: AssetImage(assetPath),
-              fit: BoxFit.contain,
-              imageErrorBuilder:
-                  (context, error, stackTrace) =>
-                      Icon(Icons.error, color: Colors.red),
+
+
+Widget _buildPaymentItem(String label, String assetPath, bool isAccepted) {
+  return Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.25),
+              blurRadius: 10,
+              spreadRadius: 0,
             ),
+          ],
+        ),
+        child: Center(
+          child: Image.asset(
+            assetPath,
+            width: 30,
+            height: 30,
+            color: isAccepted ? null : Colors.grey.withOpacity(0.5),
+            colorBlendMode: BlendMode.modulate,
           ),
         ),
-        const SizedBox(height: 8),
-        Text(label, style: TextStyle(fontSize: 12)),
-      ],
-    );
-  }
+      ),
+      const SizedBox(height: 8),
+      Text(
+        label,
+        style: TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.normal,
+          color: isAccepted ? Colors.black : Colors.grey[400],
+        ),
+      ),
+    ],
+  );
+}
 
   Widget _buildVeganism(bool isVegan) {
     return Center(
@@ -357,7 +358,7 @@ class BoothDetails extends StatelessWidget {
           Text(
             isVegan ? "Yes" : "None",
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 15,
               fontWeight: FontWeight.normal,
               color: isVegan ? Colors.black : Colors.grey[400],
             ),
