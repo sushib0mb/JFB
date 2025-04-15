@@ -173,7 +173,7 @@ class MapPageState extends State<MapPage> {
                           child: Center(
                             child: Container(
                               width: screenSize.width * 0.9,
-                              height: screenSize.height * 0.8,
+                              height: screenSize.height * 0.65,
                               padding: EdgeInsets.all(24),
                               decoration: BoxDecoration(
                                 color: Colors.white,
