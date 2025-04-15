@@ -816,6 +816,7 @@ class _HomePageState extends State<HomePage> {
           _buildIndividualSponsors(),
           _buildJfbOrganizers(),
           _buildSupportingSponsors(),
+          SizedBox(height: 5),
         ],
       ),
     );
