@@ -6,10 +6,11 @@ import 'package:jfbfestival/pages/home_page.dart';
 import 'package:jfbfestival/pages/map_page.dart';
 import 'package:jfbfestival/pages/timetable_page.dart';
 import 'package:jfbfestival/data/timetableData.dart';
+import 'package:jfbfestival/SplashScreen/video_splash_screen.dart';
 import 'package:flutter/services.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // ← required before locking orientation
+  WidgetsFlutterBinding.ensureInitialized(); 
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Fredoka'),
-      home: const MainScreen(),
+      home: const VideoSplashScreen(),
     );
   }
 }

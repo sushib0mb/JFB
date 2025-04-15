@@ -10,12 +10,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  video_player: ^2.7.0
   motion: ^2.0.1
   provider: ^6.0.0
   flutter_blur: ^0.0.2 
   cupertino_icons: ^1.0.8
   intl: ^0.20.2
   url_launcher: ^6.0.9
+  
 
 dev_dependencies:
   flutter_test:
@@ -51,10 +53,7 @@ flutter:
     - assets/MapNew2.png
     - assets/MapNew3.png
     - assets/MapNew4.png
-    - assets/MapButtonA.png
-    - assets/MapButtonB.png
-    - assets/MapButtonC.png
-    
+    - assets/Intro1.mp4
     
     
     
@@ -75,7 +74,6 @@ flutter:
     - assets/allergens/soy.png
     - assets/allergens/egg.png
     - assets/vegan.png
-    
     # Home page sponsors
     - assets/sponsors/Takeda.jpg
     - assets/sponsors/jal.jpg

@@ -49,7 +49,7 @@ class MapPageState extends State<MapPage> {
 
     final String mapImage =
         mapImages[_selectedFilter.isNotEmpty ? _selectedFilter : 'All'] ??
-        mapImages['All']!;
+            mapImages['All']!;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -68,10 +68,9 @@ class MapPageState extends State<MapPage> {
                 height: 75,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color:
-                      _isMiniWindowVisible || isFilterActive
-                          ? Colors.grey.shade300
-                          : Colors.white,
+                  color: _isMiniWindowVisible || isFilterActive
+                      ? Colors.grey.shade300
+                      : Colors.white,
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.1),
@@ -86,10 +85,9 @@ class MapPageState extends State<MapPage> {
                   child: Image.asset(
                     'assets/Filter.png',
                     fit: BoxFit.contain,
-                    color:
-                        _isMiniWindowVisible || isFilterActive
-                            ? Colors.black
-                            : null,
+                    color: _isMiniWindowVisible || isFilterActive
+                        ? Colors.black
+                        : null,
                   ),
                 ),
               ),
@@ -99,12 +97,13 @@ class MapPageState extends State<MapPage> {
       ),
       body: Stack(
         children: [
+          // Background gradient
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  const Color.fromRGBO(10, 56, 117, 0.15),
-                  const Color.fromRGBO(191, 28, 36, 0.15),
+                  Color.fromRGBO(10, 56, 117, 0.15),
+                  Color.fromRGBO(191, 28, 36, 0.15),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -112,6 +111,7 @@ class MapPageState extends State<MapPage> {
             ),
           ),
 
+          // Centered map container
           Center(
             child: Container(
               width: screenSize.width * 0.85,
@@ -140,6 +140,7 @@ class MapPageState extends State<MapPage> {
                     ),
                   ),
 
+                  // A, B, C buttons when filter is active
                   if (_selectedFilter == 'Food Vendors')
                     Positioned(
                       bottom: 20,
@@ -159,57 +160,47 @@ class MapPageState extends State<MapPage> {
             ),
           ),
 
-          // Fullscreen expanding mini window
+          // Mini window overlay
           Positioned.fill(
             child: AnimatedOpacity(
               duration: _animationDuration,
               opacity: _isMiniWindowVisible ? 1 : 0,
-              child:
-                  _isMiniWindowVisible
-                      ? GestureDetector(
-                        onTap: _toggleMiniWindow,
-                        child: Container(
-                          color: Colors.black.withOpacity(0.4),
-                          child: Center(
-                            child: Container(
-                              width: screenSize.width * 0.9,
-                              height: screenSize.height * 0.65,
-                              padding: EdgeInsets.all(24),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(24),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.2),
-                                    blurRadius: 12,
-                                    spreadRadius: 4,
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  _buildFilterButton('All', screenSize),
-                                  _buildFilterButton(
-                                    'Food Vendors',
-                                    screenSize,
-                                  ),
-                                  _buildFilterButton(
-                                    'Information Center',
-                                    screenSize,
-                                  ),
-                                  _buildFilterButton('Toilets', screenSize),
-                                  _buildFilterButton(
-                                    'Trash Station',
-                                    screenSize,
-                                  ),
-                                ],
-                              ),
+              child: _isMiniWindowVisible
+                  ? GestureDetector(
+                      onTap: _toggleMiniWindow,
+                      child: Container(
+                        color: Colors.black.withOpacity(0.4),
+                        child: Center(
+                          child: Container(
+                            width: screenSize.width * 0.9,
+                            height: screenSize.height * 0.65,
+                            padding: EdgeInsets.all(24),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(24),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  blurRadius: 12,
+                                  spreadRadius: 4,
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                _buildFilterButton('All', screenSize),
+                                _buildFilterButton('Food Vendors', screenSize),
+                                _buildFilterButton('Information Center', screenSize),
+                                _buildFilterButton('Toilets', screenSize),
+                                _buildFilterButton('Trash Station', screenSize),
+                              ],
                             ),
                           ),
                         ),
-                      )
-                      : SizedBox.shrink(),
+                      ),
+                    )
+                  : SizedBox.shrink(),
             ),
           ),
         ],
@@ -226,6 +217,13 @@ class MapPageState extends State<MapPage> {
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              blurRadius: 6,
+              offset: Offset(0, 3),
+            ),
+          ],
         ),
         child: Center(
           child: Text(
