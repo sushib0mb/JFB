@@ -37,8 +37,14 @@ class MyApp extends StatelessWidget {
 class MainScreen extends StatefulWidget {
   final int initialIndex;
   final EventItem? selectedEvent;
+  final String? selectedMapLetter;
 
-  const MainScreen({super.key, this.initialIndex = 0, this.selectedEvent});
+  const MainScreen({
+  super.key,
+  this.initialIndex = 0,
+  this.selectedEvent,
+  this.selectedMapLetter, // <-- add this
+});
 
   @override
   _MainScreenState createState() => _MainScreenState();
@@ -66,14 +72,15 @@ class _MainScreenState extends State<MainScreen> {
       body: Stack(
         children: [
           IndexedStack(
-            index: selectedIndex,
-            children: [
-              HomePage(),
-              FoodPage(),
-              TimetablePage(selectedEvent: widget.selectedEvent),
-              MapPage(),
-            ],
-          ),
+  index: selectedIndex,
+  children: [
+    HomePage(),
+    FoodPage(selectedMapLetter: widget.selectedMapLetter), // pass it here
+    TimetablePage(selectedEvent: widget.selectedEvent),
+    MapPage(),
+  ],
+),
+
 
           SafeArea(child: TopBar(selectedIndex: selectedIndex)),
           Align(

@@ -11,11 +11,13 @@ class FoodBooth {
   final String logoPath;
   final String dishImagePath;
   final bool isVegan;
+  final String mapPageFoodLocation;
   final List<String> payments;
   final List<String> allergens;
   final List<Dish> dishes;
 
   const FoodBooth({
+    required this.mapPageFoodLocation,
     required this.name,
     required this.image,
     required this.description,

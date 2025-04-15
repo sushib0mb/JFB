@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jfbfestival/mainscreen.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -10,6 +11,7 @@ class MapPage extends StatefulWidget {
 class MapPageState extends State<MapPage> {
   bool _isMiniWindowVisible = false;
   String _selectedFilter = '';
+
   final Duration _animationDuration = Duration(milliseconds: 300);
 
   final Map<String, String> mapImages = {
@@ -37,9 +39,19 @@ class MapPageState extends State<MapPage> {
     });
   }
 
-  void _onLetterTap(String letter) {
-    print('Letter $letter tapped');
-  }
+void _onLetterTap(String letter) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => MainScreen(
+        initialIndex: 1, // Go to FoodPage
+        selectedMapLetter: letter,
+      ),
+    ),
+  );
+}
+
+
 
   @override
   Widget build(BuildContext context) {

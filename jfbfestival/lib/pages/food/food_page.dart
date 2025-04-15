@@ -72,7 +72,9 @@ class _AnimatedBoothDetailWrapperState extends State<AnimatedBoothDetailWrapper>
 }
 
 class FoodPage extends StatefulWidget {
-  const FoodPage({super.key});
+  final String? selectedMapLetter;
+
+  const FoodPage({this.selectedMapLetter, Key? key}) : super(key: key);
 
   @override
   State<FoodPage> createState() => _FoodPageState();
@@ -92,11 +94,22 @@ class _FoodPageState extends State<FoodPage> {
   final TextEditingController _searchController = TextEditingController();
   FocusNode _searchFocusNode = FocusNode();
 
-  @override
-  void initState() {
-    super.initState();
-    _searchController.addListener(_onSearchChanged);
+ @override
+void initState() {
+  super.initState();
+  _searchController.addListener(_onSearchChanged);
+
+  // If coming from a map section
+  if (widget.selectedMapLetter != null) {
+    filteredBooths = foodBooths
+        .where((booth) =>
+            booth.mapPageFoodLocation == widget.selectedMapLetter)
+        .toList();
+  } else {
+    filteredBooths = foodBooths;
   }
+}
+
 
   @override
   void dispose() {
@@ -365,6 +378,19 @@ Widget _buildSearchBar() {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+        if (widget.selectedMapLetter != null)
+  Padding(
+    padding: const EdgeInsets.only(bottom: 8.0),
+    child: Text(
+      'Showing booths in section ${widget.selectedMapLetter}',
+      style: const TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+        color: Colors.grey,
+      ),
+    ),
+  ),
+
         Text(
           "All Food Booths",
           style: TextStyle(
