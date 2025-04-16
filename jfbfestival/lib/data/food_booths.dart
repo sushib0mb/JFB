@@ -246,8 +246,8 @@ final List<FoodBooth> foodBooths = [
     genre: "Japanese",
     logoPath: "assets/foodLogo/WakazoIcon.png",
     dishImagePath: "assets/food/wakazo_gyoza.jpg",
-    isVegan: false,
-    payments: ["Cash", "Venmo", "Zelle", "PayPal"],
+    isVegan: true,
+    payments: ["Cash", "Venmo", "PayPal"],
     allergens: ["Wheat", "Soy"],
     dishes: [
       Dish(

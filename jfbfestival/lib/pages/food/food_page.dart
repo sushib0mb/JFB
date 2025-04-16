@@ -88,6 +88,7 @@ class _FoodPageState extends State<FoodPage> {
   List<FoodBooth> safeBooths = [];
   List<FoodBooth> unsafeBoothsWithAllergens = [];
   Set<String> selectedAllergens = {};
+  List<FoodBooth> safeVeganBooths = [], nonVeganBooths = [];
 
   // Search related variables
   bool _isSearching = false;
@@ -344,6 +345,30 @@ class _FoodPageState extends State<FoodPage> {
     );
   }
 
+  String getSafeSectionTitle() {
+    if (veganOnly! && selectedAllergens.isNotEmpty) {
+      return "✅ Vegan & Allergen-Safe Options";
+    } else if (veganOnly!) {
+      return "✅ Vegan Options";
+    } else if (selectedAllergens.isNotEmpty) {
+      return "✅ Allergen-Safe Options";
+    } else {
+      return "✅ All Options";
+    }
+  }
+
+  String getUnsafeSectionTitle() {
+    if (veganOnly! && selectedAllergens.isNotEmpty) {
+      return "⚠️ Contains Allergens Or Not Vegan";
+    } else if (veganOnly!) {
+      return "⚠️ Not Vegan";
+    } else if (selectedAllergens.isNotEmpty) {
+      return "⚠️ May Contain Allergens";
+    } else {
+      return "⚠️ Other Booths";
+    }
+  }
+
   Widget _buildAllBoothsSection(double screenWidth) {
     final bool showSplitSections =
         safeBooths.isNotEmpty || unsafeBoothsWithAllergens.isNotEmpty;
@@ -376,7 +401,7 @@ class _FoodPageState extends State<FoodPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.02),
         if (widget.selectedMapLetter != null)
           Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
@@ -390,47 +415,32 @@ class _FoodPageState extends State<FoodPage> {
             ),
           ),
 
-        Text(
-          "All Food Booths",
-          style: TextStyle(
-            fontSize: screenWidth > 600 ? 26 : 22,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 1.2,
-            color: const Color(0xFF2B2B2B),
-            shadows: [
-              Shadow(
-                color: Colors.black.withOpacity(0.05),
-                offset: const Offset(0, 1.5),
-                blurRadius: 2,
-              ),
-            ],
-          ),
-          textAlign: TextAlign.center,
-        ),
         const SizedBox(height: 20),
+
         if (showSplitSections && safeBooths.isNotEmpty) ...[
           Text(
-            "✅ Safe Options",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            getSafeSectionTitle(),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
-          const SizedBox(height: 10), // Added spacing after title
+          const SizedBox(height: 30),
           _buildBoothGrid(safeBooths, screenWidth),
         ],
         if (showSplitSections && unsafeBoothsWithAllergens.isNotEmpty) ...[
-          const SizedBox(height: 30), // Space between safe and unsafe sections
+          const SizedBox(height: 30),
           Text(
-            "⚠️ May Contain Allergens",
-            style: TextStyle(
+            getUnsafeSectionTitle(),
+            style: const TextStyle(
               color: Colors.red,
               fontWeight: FontWeight.bold,
               fontSize: 20,
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 30),
           _buildBoothGrid(unsafeBoothsWithAllergens, screenWidth, faded: true),
-        ] else ...[
+        ] else if (!showSplitSections) ...[
           _buildBoothGrid(filteredBooths, screenWidth),
         ],
+        const SizedBox(height: 80),
       ],
     );
   }
@@ -440,89 +450,88 @@ class _FoodPageState extends State<FoodPage> {
     double screenWidth, {
     bool faded = false,
   }) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: screenWidth > 600 ? 2 : 1,
-        crossAxisSpacing: 2,
-        mainAxisSpacing: 2,
-        childAspectRatio: 1.3,
+    return Center(
+      child: Wrap(
+        spacing: 12,
+        runSpacing:
+            MediaQuery.of(context).size.height *
+            0.035, // Spacing between food booths
+        alignment: WrapAlignment.center,
+        children:
+            booths.map((booth) {
+              return GestureDetector(
+                onTap: () => _showBoothDetails(context, booth),
+                child: Opacity(
+                  opacity: faded ? 0.5 : 1.0,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 16,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(30),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.asset(
+                            booth.logoPath,
+                            width: 80,
+                            height: 80,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          booth.name,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          'Food Booth: ${booth.boothLocation}',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 10),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 6,
+                            horizontal: 20,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            booth.genre,
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
       ),
-      itemCount: booths.length,
-      itemBuilder: (context, index) {
-        final booth = booths[index];
-        return GestureDetector(
-          onTap: () => _showBoothDetails(context, booth),
-          child: Center(
-            child: Opacity(
-              opacity: faded ? 0.5 : 1.0,
-              child: Container(
-                width: 320,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 16,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(30),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Image.asset(
-                        booth.logoPath,
-                        width: 80,
-                        height: 80,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      booth.name,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      'Food Booth: ${booth.boothLocation}',
-                      style: const TextStyle(fontSize: 16, color: Colors.grey),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 10),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 6,
-                        horizontal: 20,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.15),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        booth.genre,
-                        style: const TextStyle(fontSize: 14),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
-      },
     );
   }
 
@@ -582,7 +591,7 @@ class _FoodPageState extends State<FoodPage> {
                           maxHeight: MediaQuery.of(context).size.height * 0.75,
                         ),
                         margin: const EdgeInsets.symmetric(horizontal: 24),
-                        padding: const EdgeInsets.all(7.5),
+                        padding: const EdgeInsets.all(5),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
@@ -764,6 +773,8 @@ class _FoodPageState extends State<FoodPage> {
     setState(() {
       safeBooths = [];
       unsafeBoothsWithAllergens = [];
+      safeVeganBooths = [];
+      nonVeganBooths = [];
       filteredBooths = [];
 
       final searchQuery = _searchController.text.toLowerCase();
@@ -796,29 +807,57 @@ class _FoodPageState extends State<FoodPage> {
           continue;
         }
 
-        // Vegan filter
-        if (veganOnly == true && !booth.isVegan) continue;
+        final hasVeganDish = booth.dishes.any((dish) => dish.isVegan);
 
-        // Allergen filtering
+        bool allDishesContainAllergens = booth.dishes.every(
+          (dish) => dish.allergens.any((a) => selectedAllergens.contains(a)),
+        );
+
+        bool hasSafeDish = booth.dishes.any(
+          (dish) => !dish.allergens.any((a) => selectedAllergens.contains(a)),
+        );
+
+        // Combo logic: both vegan & allergen filters selected
+        if (selectedAllergens.isNotEmpty && veganOnly == true) {
+          if (hasVeganDish && hasSafeDish) {
+            safeBooths.add(booth);
+          } else {
+            unsafeBoothsWithAllergens.add(booth);
+          }
+          continue;
+        }
+
+        // Allergen filter only
         if (selectedAllergens.isNotEmpty) {
-          final hasAllergenDish = booth.dishes.any(
-            (dish) => dish.allergens.any((a) => selectedAllergens.contains(a)),
-          );
-
-          if (hasAllergenDish) {
+          if (allDishesContainAllergens) {
             unsafeBoothsWithAllergens.add(booth);
           } else {
             safeBooths.add(booth);
           }
-        } else {
-          // We'll add all filtered booths as safe *after* the loop
-          filteredBooths.add(booth);
+          continue;
         }
+
+        // Vegan filter only
+        if (veganOnly == true) {
+          if (hasVeganDish) {
+            safeVeganBooths.add(booth);
+          } else {
+            nonVeganBooths.add(booth);
+          }
+          continue;
+        }
+
+        // No allergen or vegan filters
+        filteredBooths.add(booth);
       }
 
-      // If allergen filter is applied, show only safe booths
-      if (selectedAllergens.isNotEmpty) {
+      // Final display list
+      if (selectedAllergens.isNotEmpty && veganOnly == true) {
         filteredBooths = [...safeBooths];
+      } else if (selectedAllergens.isNotEmpty) {
+        filteredBooths = [...safeBooths];
+      } else if (veganOnly == true) {
+        filteredBooths = [...safeVeganBooths];
       }
     });
   }
