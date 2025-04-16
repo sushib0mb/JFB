@@ -94,22 +94,24 @@ class _FoodPageState extends State<FoodPage> {
   final TextEditingController _searchController = TextEditingController();
   FocusNode _searchFocusNode = FocusNode();
 
- @override
-void initState() {
-  super.initState();
-  _searchController.addListener(_onSearchChanged);
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(_onSearchChanged);
 
-  // If coming from a map section
-  if (widget.selectedMapLetter != null) {
-    filteredBooths = foodBooths
-        .where((booth) =>
-            booth.mapPageFoodLocation == widget.selectedMapLetter)
-        .toList();
-  } else {
-    filteredBooths = foodBooths;
+    // If coming from a map section
+    if (widget.selectedMapLetter != null) {
+      filteredBooths =
+          foodBooths
+              .where(
+                (booth) =>
+                    booth.mapPageFoodLocation == widget.selectedMapLetter,
+              )
+              .toList();
+    } else {
+      filteredBooths = foodBooths;
+    }
   }
-}
-
 
   @override
   void dispose() {
@@ -261,61 +263,61 @@ void initState() {
       ),
     );
   }
-Widget _buildSearchBar() {
-  if (!_isSearching) return SizedBox.shrink(); // Hide if not searching
 
-  return Positioned(
-    top: MediaQuery.of(context).padding.top + 80,
-    left: 16,
-    right: 16,
-    child: Material(
-      elevation: 4,
-      borderRadius: BorderRadius.circular(30),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(30),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              spreadRadius: 1,
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            const SizedBox(width: 16),
-            Expanded(
-              child: TextField(
-                controller: _searchController,
-                focusNode: _searchFocusNode,
-                autofocus: true,
-                decoration: const InputDecoration(
-                  hintText: 'Search food booths...',
-                  border: InputBorder.none,
-                ),
-                onChanged: (_) => setState(() {}),
-                style: const TextStyle(fontSize: 16),
+  Widget _buildSearchBar() {
+    if (!_isSearching) return SizedBox.shrink(); // Hide if not searching
+
+    return Positioned(
+      top: MediaQuery.of(context).padding.top + 80,
+      left: 16,
+      right: 16,
+      child: Material(
+        elevation: 4,
+        borderRadius: BorderRadius.circular(30),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(30),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 10,
+                spreadRadius: 1,
               ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.close, color: Colors.grey),
-              onPressed: () {
-                setState(() {
-                  _searchController.clear();
-                  _isSearching = false;
-                });
-                _searchFocusNode.unfocus();
-              },
-            ),
-          ],
+            ],
+          ),
+          child: Row(
+            children: [
+              const SizedBox(width: 16),
+              Expanded(
+                child: TextField(
+                  controller: _searchController,
+                  focusNode: _searchFocusNode,
+                  autofocus: true,
+                  decoration: const InputDecoration(
+                    hintText: 'Search food booths...',
+                    border: InputBorder.none,
+                  ),
+                  onChanged: (_) => setState(() {}),
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.close, color: Colors.grey),
+                onPressed: () {
+                  setState(() {
+                    _searchController.clear();
+                    _isSearching = false;
+                  });
+                  _searchFocusNode.unfocus();
+                },
+              ),
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
   Widget _buildMainContent(double screenWidth, double screenHeight) {
     double maxWidth = screenWidth > 1200 ? 1300 : screenWidth * 0.95;
@@ -331,11 +333,6 @@ Widget _buildSearchBar() {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 _buildAllBoothsSection(screenWidth),
-                Container(
-                  height: 1.5,
-                  color: Colors.grey.shade300,
-                  margin: const EdgeInsets.symmetric(vertical: 12),
-                ),
                 SizedBox(height: screenHeight * 0.05),
               ],
             ),
@@ -379,17 +376,17 @@ Widget _buildSearchBar() {
       children: [
         SizedBox(height: MediaQuery.of(context).size.height * 0.05),
         if (widget.selectedMapLetter != null)
-  Padding(
-    padding: const EdgeInsets.only(bottom: 8.0),
-    child: Text(
-      'Showing booths in section ${widget.selectedMapLetter}',
-      style: const TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.w500,
-        color: Colors.grey,
-      ),
-    ),
-  ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Text(
+              'Showing booths in section ${widget.selectedMapLetter}',
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.grey,
+              ),
+            ),
+          ),
 
         Text(
           "All Food Booths",
