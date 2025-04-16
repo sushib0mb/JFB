@@ -126,152 +126,158 @@ class _TimetablePageState extends State<TimetablePage> {
                 ),
               )
               : null,
-      body: Padding(
-        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-        child: Stack(
-          children: [
-            Positioned(
-              left: MediaQuery.of(context).size.width * 0.06,
-              top: MediaQuery.of(context).size.height * 0.002,
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    selectedDay = 1;
-                  });
-                },
-                child: Container(
-                  width: dayButtonWidth,
-                  height: dayButtonHeight,
-                  decoration: ShapeDecoration(
-                    color:
-                        selectedDay == 1
-                            ? const Color.fromARGB(38, 191, 29, 35)
-                            : const Color.fromARGB(175, 224, 224, 224),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(100),
-                      side:
-                          selectedDay == 1
-                              ? const BorderSide(
-                                color: Color.fromARGB(255, 191, 29, 35),
-                                width: 2.0,
-                              )
-                              : BorderSide.none,
-                    ),
-                  ),
-                  alignment: Alignment(-0.3, 0),
-                  child: const Text(
-                    'Day 1',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 40,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              right: MediaQuery.of(context).size.width * 0.06,
-              top: MediaQuery.of(context).size.height * 0.002,
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    selectedDay = 2;
-                  });
-                },
-                child: Container(
-                  width: dayButtonWidth,
-                  height: dayButtonHeight,
-                  decoration: ShapeDecoration(
-                    color:
-                        selectedDay == 1
-                            ? const Color.fromARGB(175, 224, 224, 224)
-                            : const Color.fromARGB(38, 11, 55, 117),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(100),
-                      side:
-                          selectedDay == 2
-                              ? const BorderSide(
-                                color: Color.fromARGB(255, 11, 55, 117),
-                                width: 2.0,
-                              )
-                              : BorderSide.none,
-                    ),
-                  ),
-                  alignment: Alignment(0.4, 0),
-                  child: const Text(
-                    'Day 2',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 40,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Column(
+      body: Stack(
+        children: [
+          // Main content with padding
+          Padding(
+            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+            child: Stack(
               children: [
-                SizedBox(
-                  height:
-                      topPadding + MediaQuery.of(context).size.height * 0.015,
-                ),
-                Expanded(
-                  child: Container(
-                    margin: const EdgeInsets.all(25),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                      gradient: LinearGradient(
-                        colors: [
-                          const Color.fromRGBO(10, 56, 117, 0.15),
-                          const Color.fromRGBO(191, 28, 36, 0.15),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+                Positioned(
+                  left: MediaQuery.of(context).size.width * 0.06,
+                  top: MediaQuery.of(context).size.height * 0.002,
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedDay = 1;
+                      });
+                    },
+                    child: Container(
+                      width: dayButtonWidth,
+                      height: dayButtonHeight,
+                      decoration: ShapeDecoration(
+                        color:
+                            selectedDay == 1
+                                ? const Color.fromARGB(38, 191, 29, 35)
+                                : const Color.fromARGB(175, 224, 224, 224),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(100),
+                          side:
+                              selectedDay == 1
+                                  ? const BorderSide(
+                                    color: Color.fromARGB(255, 191, 29, 35),
+                                    width: 2.0,
+                                  )
+                                  : BorderSide.none,
+                        ),
+                      ),
+                      alignment: Alignment(-0.3, 0),
+                      child: const Text(
+                        'Day 1',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 40,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
                     ),
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: MediaQuery.of(context).size.width * 0.1,
-                          ),
-                          child: _buildStageHeader(),
+                  ),
+                ),
+                Positioned(
+                  right: MediaQuery.of(context).size.width * 0.06,
+                  top: MediaQuery.of(context).size.height * 0.002,
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedDay = 2;
+                      });
+                    },
+                    child: Container(
+                      width: dayButtonWidth,
+                      height: dayButtonHeight,
+                      decoration: ShapeDecoration(
+                        color:
+                            selectedDay == 1
+                                ? const Color.fromARGB(175, 224, 224, 224)
+                                : const Color.fromARGB(38, 11, 55, 117),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(100),
+                          side:
+                              selectedDay == 2
+                                  ? const BorderSide(
+                                    color: Color.fromARGB(255, 11, 55, 117),
+                                    width: 2.0,
+                                  )
+                                  : BorderSide.none,
                         ),
-                        Expanded(
-                          child: SingleChildScrollView(
-                            controller: _scrollController,
-                            child: ScheduleList(
-                              scheduleItems: currentSchedule,
-                              onEventTap: (event) {
-                                setState(() {
-                                  selectedEvent = event;
-                                  isShowingDetail = true;
-                                });
-                              },
-                            ),
-                          ),
+                      ),
+                      alignment: Alignment(0.4, 0),
+                      child: const Text(
+                        'Day 2',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 40,
+                          fontWeight: FontWeight.w400,
                         ),
-                      ],
+                      ),
                     ),
                   ),
+                ),
+                Column(
+                  children: [
+                    SizedBox(
+                      height:
+                          topPadding +
+                          MediaQuery.of(context).size.height * 0.015,
+                    ),
+                    Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.all(25),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25),
+                          gradient: LinearGradient(
+                            colors: [
+                              const Color.fromRGBO(10, 56, 117, 0.15),
+                              const Color.fromRGBO(191, 28, 36, 0.15),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(
+                                left: MediaQuery.of(context).size.width * 0.1,
+                              ),
+                              child: _buildStageHeader(),
+                            ),
+                            Expanded(
+                              child: SingleChildScrollView(
+                                controller: _scrollController,
+                                child: ScheduleList(
+                                  scheduleItems: currentSchedule,
+                                  onEventTap: (event) {
+                                    setState(() {
+                                      selectedEvent = event;
+                                      isShowingDetail = true;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-            if (isShowingDetail && selectedEvent != null)
-              EventDetailView(
-                event: selectedEvent!,
-                onClose: () {
-                  setState(() {
-                    isShowingDetail = false;
-                    selectedEvent = null;
-                  });
-                },
-              ),
-          ],
-        ),
+          ),
+          if (isShowingDetail && selectedEvent != null)
+            EventDetailView(
+              event: selectedEvent!,
+              onClose: () {
+                setState(() {
+                  isShowingDetail = false;
+                  selectedEvent = null;
+                });
+              },
+            ),
+        ],
       ),
     );
   }
