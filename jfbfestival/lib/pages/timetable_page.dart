@@ -720,7 +720,7 @@ class _PerformanceBoxState extends State<PerformanceBox>
                     )
                     : widget.eventItem.duration == 10
                     ? Row(
-                      // Layout for duration < 10
+                      // Layout for duration = 10
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Container(
@@ -783,8 +783,8 @@ class _PerformanceBoxState extends State<PerformanceBox>
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                          width: 30,
-                          height: 30,
+                          width: 40,
+                          height: 40,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: Colors.white,
@@ -795,21 +795,18 @@ class _PerformanceBoxState extends State<PerformanceBox>
                               ),
                             ],
                           ),
-                          child:
-                              widget.eventItem.iconImage.isNotEmpty
-                                  ? Image.asset(
-                                    widget.eventItem.iconImage,
-                                    fit: BoxFit.cover,
-                                  )
-                                  : Icon(Icons.event, size: 20),
+                          child: Image.asset(
+                            widget.eventItem.iconImage,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                         SizedBox(height: eventHeight * 0.05),
                         Text(
-                          widget.eventItem.title.length > 17
-                              ? "${widget.eventItem.title.substring(0, 17)}..."
-                              : widget.eventItem.title,
+                          // widget.eventItem.title.length > 20
+                          //     ? "${widget.eventItem.title.substring(0, 20)}..."
+                          widget.eventItem.title,
                           style: TextStyle(
-                            fontSize: responsiveFontSize * 10,
+                            fontSize: responsiveFontSize * 12,
                             fontWeight: FontWeight.w500,
                             height: 0.8,
                           ),
@@ -820,7 +817,7 @@ class _PerformanceBoxState extends State<PerformanceBox>
                         Text(
                           widget.eventItem.time,
                           style: TextStyle(
-                            fontSize: responsiveFontSize * 8,
+                            fontSize: responsiveFontSize * 10,
                             fontWeight: FontWeight.w500,
                             color: Colors.grey,
                             height: 1.1,

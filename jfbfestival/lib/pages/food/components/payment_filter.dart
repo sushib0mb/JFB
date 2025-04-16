@@ -73,7 +73,7 @@ class _PaymentFilterItem extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           SizedBox(
-            height: 44, // bump this up a bit more
+            height: 40, // bump this up a bit more
             child: Padding(
               padding: const EdgeInsets.only(
                 bottom: 4.0,

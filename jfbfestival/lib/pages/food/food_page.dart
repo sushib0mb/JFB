@@ -577,7 +577,7 @@ class _FoodPageState extends State<FoodPage> {
                       child: Container(
                         constraints: BoxConstraints(
                           maxWidth: MediaQuery.of(context).size.width * 0.85,
-                          maxHeight: MediaQuery.of(context).size.height * 0.8,
+                          maxHeight: MediaQuery.of(context).size.height * 0.75,
                         ),
                         margin: const EdgeInsets.symmetric(horizontal: 24),
                         padding: const EdgeInsets.all(20),
@@ -606,9 +606,11 @@ class _FoodPageState extends State<FoodPage> {
                                   child: SingleChildScrollView(
                                     child: Column(
                                       children: [
+                                        SizedBox(height: 5),
                                         Center(
                                           child: _buildSectionTitle("Payment"),
                                         ),
+                                        const SizedBox(height: 8),
                                         PaymentFilterRow(
                                           selectedPayments: selectedPayments,
                                           onPaymentSelected: (
@@ -628,6 +630,7 @@ class _FoodPageState extends State<FoodPage> {
                                         Center(
                                           child: _buildSectionTitle("Vegan"),
                                         ),
+                                        const SizedBox(height: 8),
                                         VeganFilterOption(
                                           isVegan: veganOnly ?? false,
                                           onChanged: (value) {
@@ -636,12 +639,13 @@ class _FoodPageState extends State<FoodPage> {
                                             );
                                           },
                                         ),
-                                        const SizedBox(height: 10),
+                                        const SizedBox(height: 8),
                                         Center(
                                           child: _buildSectionTitle(
                                             "Allergens",
                                           ),
                                         ),
+                                        const SizedBox(height: 10),
                                         AllergyFilterGrid(
                                           selectedAllergens: selectedAllergens,
                                           onAllergenSelected: (
@@ -659,7 +663,7 @@ class _FoodPageState extends State<FoodPage> {
                                             });
                                           },
                                         ),
-                                        const SizedBox(height: 20),
+                                        const SizedBox(height: 10),
                                         _buildApplyButton(
                                           onApply: _applyFilters,
                                           closeModal:
