@@ -33,7 +33,7 @@ class _AnimatedBoothDetailWrapperState extends State<AnimatedBoothDetailWrapper>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 400),
+      duration: const Duration(milliseconds: 300),
       vsync: this,
     );
 
@@ -532,7 +532,7 @@ class _FoodPageState extends State<FoodPage> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       transitionAnimationController: AnimationController(
-        duration: const Duration(milliseconds: 350),
+        duration: const Duration(milliseconds: 300),
         vsync: Navigator.of(context),
       ),
       builder: (context) {
@@ -550,7 +550,7 @@ class _FoodPageState extends State<FoodPage> {
       context: context,
       barrierDismissible: true,
       barrierLabel: 'FilterPopup',
-      transitionDuration: const Duration(milliseconds: 400), // Fade-in duration
+      transitionDuration: const Duration(milliseconds: 300), // Fade-in duration
       pageBuilder: (context, anim1, anim2) => const SizedBox.shrink(),
       transitionBuilder: (context, anim1, _, __) {
         final curved = CurvedAnimation(parent: anim1, curve: Curves.easeOut);
@@ -563,7 +563,7 @@ class _FoodPageState extends State<FoodPage> {
               children: [
                 // Background Fade-In and Fade-Out
                 AnimatedOpacity(
-                  duration: const Duration(milliseconds: 400),
+                  duration: const Duration(milliseconds: 300),
                   opacity: curved.value,
                   child: GestureDetector(
                     onTap: () => Navigator.of(context).pop(),
@@ -571,7 +571,7 @@ class _FoodPageState extends State<FoodPage> {
                 ),
 
                 AnimatedOpacity(
-                  duration: const Duration(milliseconds: 400),
+                  duration: const Duration(milliseconds: 200),
                   opacity: curved.value,
                   child: Center(
                     child: Material(
@@ -582,7 +582,7 @@ class _FoodPageState extends State<FoodPage> {
                           maxHeight: MediaQuery.of(context).size.height * 0.75,
                         ),
                         margin: const EdgeInsets.symmetric(horizontal: 24),
-                        padding: const EdgeInsets.all(20),
+                        padding: const EdgeInsets.all(7.5),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
@@ -608,7 +608,7 @@ class _FoodPageState extends State<FoodPage> {
                                   child: SingleChildScrollView(
                                     child: Column(
                                       children: [
-                                        SizedBox(height: 5),
+                                        // SizedBox(height: 5),
                                         Center(
                                           child: _buildSectionTitle("Payment"),
                                         ),
@@ -665,7 +665,7 @@ class _FoodPageState extends State<FoodPage> {
                                             });
                                           },
                                         ),
-                                        const SizedBox(height: 10),
+                                        const SizedBox(height: 20),
                                         _buildApplyButton(
                                           onApply: _applyFilters,
                                           closeModal:

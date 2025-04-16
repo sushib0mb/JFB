@@ -131,56 +131,51 @@ class MapPageState extends State<MapPage> {
           // Mini window overlay
           Positioned.fill(
             child: AnimatedOpacity(
-              duration: _animationDuration,
+              duration: Duration(milliseconds: 300),
               opacity: _isMiniWindowVisible ? 1 : 0,
-              child:
-                  _isMiniWindowVisible
-                      ? GestureDetector(
-                        onTap: _toggleMiniWindow,
-                        child: Container(
-                          color: Colors.black.withOpacity(0.4),
-                          child: Center(
-                            child: Container(
-                              width: screenSize.width * 0.9,
-                              height: screenSize.height * 0.65,
-                              padding: EdgeInsets.all(24),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(24),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.2),
-                                    blurRadius: 12,
-                                    spreadRadius: 4,
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  _buildFilterButton('All', screenSize),
-                                  _buildFilterButton(
-                                    'Food Vendors',
-                                    screenSize,
-                                  ),
-                                  _buildFilterButton(
-                                    'Information Center',
-                                    screenSize,
-                                  ),
-                                  _buildFilterButton('Toilets', screenSize),
-                                  _buildFilterButton(
-                                    'Trash Station',
-                                    screenSize,
-                                  ),
-                                ],
-                              ),
+              child: IgnorePointer(
+                ignoring: !_isMiniWindowVisible,
+                child: GestureDetector(
+                  onTap: _toggleMiniWindow,
+                  child: Container(
+                    color: Colors.black.withOpacity(0.4),
+                    child: Center(
+                      child: Container(
+                        width: screenSize.width * 0.9,
+                        height: screenSize.height * 0.65,
+                        padding: EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(24),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 12,
+                              spreadRadius: 4,
                             ),
-                          ),
+                          ],
                         ),
-                      )
-                      : SizedBox.shrink(),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            _buildFilterButton('All', screenSize),
+                            _buildFilterButton('Food Vendors', screenSize),
+                            _buildFilterButton(
+                              'Information Center',
+                              screenSize,
+                            ),
+                            _buildFilterButton('Toilets', screenSize),
+                            _buildFilterButton('Trash Station', screenSize),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
+
           Positioned(
             top:
                 MediaQuery.of(context).padding.top +
