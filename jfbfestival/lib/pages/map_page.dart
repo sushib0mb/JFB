@@ -39,19 +39,18 @@ class MapPageState extends State<MapPage> {
     });
   }
 
-void _onLetterTap(String letter) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (_) => MainScreen(
-        initialIndex: 1, // Go to FoodPage
-        selectedMapLetter: letter,
+  void _onLetterTap(String letter) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder:
+            (_) => MainScreen(
+              initialIndex: 1, // Go to FoodPage
+              selectedMapLetter: letter,
+            ),
       ),
-    ),
-  );
-}
-
-
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,52 +60,9 @@ void _onLetterTap(String letter) {
 
     final String mapImage =
         mapImages[_selectedFilter.isNotEmpty ? _selectedFilter : 'All'] ??
-            mapImages['All']!;
+        mapImages['All']!;
 
     return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 20.0, top: 12.0),
-            child: GestureDetector(
-              onTap: _toggleMiniWindow,
-              child: AnimatedContainer(
-                duration: _animationDuration,
-                width: 75,
-                height: 75,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: _isMiniWindowVisible || isFilterActive
-                      ? Colors.grey.shade300
-                      : Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 6,
-                      offset: Offset(0, 2),
-                    ),
-                  ],
-                  border: Border.all(color: Colors.black26),
-                ),
-                padding: EdgeInsets.all(8),
-                child: ClipOval(
-                  child: Image.asset(
-                    'assets/Filter.png',
-                    fit: BoxFit.contain,
-                    color: _isMiniWindowVisible || isFilterActive
-                        ? Colors.black
-                        : null,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
       body: Stack(
         children: [
           // Background gradient
@@ -177,42 +133,91 @@ void _onLetterTap(String letter) {
             child: AnimatedOpacity(
               duration: _animationDuration,
               opacity: _isMiniWindowVisible ? 1 : 0,
-              child: _isMiniWindowVisible
-                  ? GestureDetector(
-                      onTap: _toggleMiniWindow,
-                      child: Container(
-                        color: Colors.black.withOpacity(0.4),
-                        child: Center(
-                          child: Container(
-                            width: screenSize.width * 0.9,
-                            height: screenSize.height * 0.65,
-                            padding: EdgeInsets.all(24),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(24),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 12,
-                                  spreadRadius: 4,
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                _buildFilterButton('All', screenSize),
-                                _buildFilterButton('Food Vendors', screenSize),
-                                _buildFilterButton('Information Center', screenSize),
-                                _buildFilterButton('Toilets', screenSize),
-                                _buildFilterButton('Trash Station', screenSize),
-                              ],
+              child:
+                  _isMiniWindowVisible
+                      ? GestureDetector(
+                        onTap: _toggleMiniWindow,
+                        child: Container(
+                          color: Colors.black.withOpacity(0.4),
+                          child: Center(
+                            child: Container(
+                              width: screenSize.width * 0.9,
+                              height: screenSize.height * 0.65,
+                              padding: EdgeInsets.all(24),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(24),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.2),
+                                    blurRadius: 12,
+                                    spreadRadius: 4,
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  _buildFilterButton('All', screenSize),
+                                  _buildFilterButton(
+                                    'Food Vendors',
+                                    screenSize,
+                                  ),
+                                  _buildFilterButton(
+                                    'Information Center',
+                                    screenSize,
+                                  ),
+                                  _buildFilterButton('Toilets', screenSize),
+                                  _buildFilterButton(
+                                    'Trash Station',
+                                    screenSize,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    )
-                  : SizedBox.shrink(),
+                      )
+                      : SizedBox.shrink(),
+            ),
+          ),
+          Positioned(
+            top:
+                MediaQuery.of(context).padding.top +
+                MediaQuery.of(context).size.height * 0.015,
+            right: MediaQuery.of(context).size.width * 0.05,
+            child: GestureDetector(
+              onTap: _toggleMiniWindow,
+              child: AnimatedContainer(
+                duration: _animationDuration,
+                width: 55,
+                height: 55,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 10,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                  color:
+                      _isMiniWindowVisible || isFilterActive
+                          ? Colors.grey.shade300
+                          : Colors.white,
+                ),
+                padding: EdgeInsets.all(10),
+                child: ClipOval(
+                  child: Image.asset(
+                    'assets/Filter.png',
+                    fit: BoxFit.contain,
+                    color:
+                        _isMiniWindowVisible || isFilterActive
+                            ? Colors.black
+                            : null,
+                  ),
+                ),
+              ),
             ),
           ),
         ],

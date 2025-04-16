@@ -195,7 +195,9 @@ class _FoodPageState extends State<FoodPage> {
 
   Widget _buildTopActionButtons() {
     return Positioned(
-      top: MediaQuery.of(context).size.height * 0.09,
+      top:
+          MediaQuery.of(context).padding.top +
+          MediaQuery.of(context).size.height * 0.015,
       right: MediaQuery.of(context).size.width * 0.05,
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -239,11 +241,11 @@ class _FoodPageState extends State<FoodPage> {
       child: Material(
         color: Colors.transparent,
         child: Container(
-          width: 40,
-          height: 40,
+          width: 55,
+          height: 55,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(25),
+            borderRadius: BorderRadius.circular(40),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.1),
@@ -257,7 +259,7 @@ class _FoodPageState extends State<FoodPage> {
             child:
                 iconAsset != null
                     ? Image.asset(iconAsset, fit: BoxFit.contain)
-                    : Icon(icon, size: 18),
+                    : Icon(icon, size: 30),
           ),
         ),
       ),
