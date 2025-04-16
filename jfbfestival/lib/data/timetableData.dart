@@ -50,7 +50,8 @@ final List<ScheduleItem> day1ScheduleData = [
         duration: 15,
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Dancing performance.png",
-        description: "",
+        description:
+            "The Showa Boston Dance Performance brings the vibrant Soranbushi, a traditional Japanese folk dance, to life with lively movements and rhythmic chanting. This energetic performance celebrates the strength and spirit of Japanese culture.",
         eventDetailImage: "",
       ),
     ],
@@ -75,7 +76,8 @@ final List<ScheduleItem> day1ScheduleData = [
         duration: 30,
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Singing performance.png",
-        description: "",
+        description:
+            "Nodo Jiman is a Japanese vocal performance that highlights the raw emotion and power of traditional singing. Known for its competitive spirit, this performance features singers displaying their vocal prowess through heartfelt renditions of classic Japanese enka songs, celebrating both personal expression and cultural heritage.",
         eventDetailImage: "",
       ),
     ],
@@ -100,7 +102,8 @@ final List<ScheduleItem> day1ScheduleData = [
         duration: 40,
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Band performance.png",
-        description: "",
+        description:
+            "Hiroko Watanabe’s calligraphy performance transforms brushstrokes into a captivating visual art. With each precise movement, they bring beauty and meaning to traditional Japanese writing.",
         eventDetailImage: "",
       ),
     ],
@@ -115,7 +118,8 @@ final List<ScheduleItem> day1ScheduleData = [
         duration: 20,
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Opening ceremony.png",
-        description: "",
+        description:
+            "The Opening Ceremony for Japan Festival Boston 2025 will kick off vibrant performances, cultural displays, and speeches from distinguished guests. This exciting event sets the stage for a weekend celebrating Japanese arts, food, and traditions.",
         eventDetailImage: "",
       ),
     ],
@@ -140,7 +144,8 @@ final List<ScheduleItem> day1ScheduleData = [
         duration: 30,
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Dancing performance.png",
-        description: "",
+        description:
+            "The Kitanodai Gagaku Ensemble performs gagaku, Japan’s ancient court music and dance, blending serene instrumental melodies with graceful movements. Their performance offers a rare and immersive experience of this UNESCO-recognized cultural heritage.",
         eventDetailImage: "",
       ),
     ],
@@ -151,7 +156,8 @@ final List<ScheduleItem> day1ScheduleData = [
         duration: 10,
         stage: "Stage 2",
         iconImage: "assets/timetableIcons/Band performance.png",
-        description: "",
+        description:
+            "The Berklee band will bring Japanese culture to the stage, performing Japanese hit songs. This ensemble offers a vibrant showcase of contemporary Japanese music, blending traditional sounds with modern flair.",
         eventDetailImage: "",
       ),
     ],
@@ -160,12 +166,13 @@ final List<ScheduleItem> day1ScheduleData = [
     time: "1:30 pm",
     stage1Events: [
       EventItem(
-        title: "OKINAWA Ryukyu Kokusai Taiko",
+        title: "Okinawa Ryukyu Kokusai Taiko",
         time: "13:30-14:00",
         duration: 30,
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Dancing performance.png",
-        description: "",
+        description:
+            "Ryukyu Kokusai Taiko is an Okinawan drumming ensemble known for its dynamic fusion of traditional Eisa rhythms, dance, and karate movements. Their powerful performances celebrate Okinawan culture, blending ancient sounds with modern energy.",
         eventDetailImage: "",
       ),
     ],
@@ -176,7 +183,8 @@ final List<ScheduleItem> day1ScheduleData = [
         duration: 40,
         stage: "Stage 2",
         iconImage: "assets/timetableIcons/Anime stage.png",
-        description: "",
+        description:
+            "An Anime Band performs energetic renditions of popular songs from anime series, blending J-Rock, J-Pop, and orchestral music. Their performances bring iconic anime themes to life, offering fans a chance to experience their favorite tunes in a live, dynamic setting.",
         eventDetailImage: "",
       ),
     ],
@@ -190,7 +198,8 @@ final List<ScheduleItem> day1ScheduleData = [
         duration: 30,
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Dancing performance.png",
-        description: "",
+        description:
+            "The Jeiko Taiko Ensemble is a vibrant Japanese drumming group based in New England, known for their high-energy performances that blend traditional taiko rhythms with modern influences. Their performances showcase the power and precision of Japanese drumming, engaging audiences with dynamic rhythms and movements.",
         eventDetailImage: "",
       ),
     ],
@@ -201,7 +210,8 @@ final List<ScheduleItem> day1ScheduleData = [
         duration: 20,
         stage: "Stage 2",
         iconImage: "assets/timetableIcons/Anime stage.png",
-        description: "",
+        description:
+            "The Cosplay Fashion Show features participants showcasing their detailed costumes inspired by anime, manga, and pop culture. Models walk the runway, celebrating the creativity and craftsmanship behind each ensemble in a vibrant and exciting display.",
         eventDetailImage: "",
       ),
     ],
@@ -215,7 +225,8 @@ final List<ScheduleItem> day1ScheduleData = [
         duration: 20,
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Anime stage.png",
-        description: "",
+        description:
+            "The Cosplay Fashion Show features participants showcasing their detailed costumes inspired by anime, manga, and pop culture. Models walk the runway, celebrating the creativity and craftsmanship behind each ensemble in a vibrant and exciting display.",
         eventDetailImage: "",
       ),
     ],
@@ -226,7 +237,8 @@ final List<ScheduleItem> day1ScheduleData = [
         duration: 20,
         stage: "Stage 2",
         iconImage: "assets/timetableIcons/Dancing performance.png",
-        description: "",
+        description:
+            "As the final performance at the Downtown Stage, participants will join together for a parade, walking to Boston Commons while enjoying the music along the way!",
         eventDetailImage: "",
       ),
     ],
@@ -240,7 +252,8 @@ final List<ScheduleItem> day1ScheduleData = [
         duration: 30,
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Dancing performance.png",
-        description: "",
+        description:
+            "Parfait Soleil Dance Performance features a lively display of contemporary and traditional dance, blending fluid movements with vibrant energy. The performance captures the joy and beauty of dance through captivating choreography.",
         eventDetailImage: "",
       ),
     ],
@@ -255,7 +268,8 @@ final List<ScheduleItem> day1ScheduleData = [
         duration: 10,
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Kendo.png",
-        description: "",
+        description:
+            "Yamazaki VS Sugimono is an intense Kendo showcase, where two skilled martial artists face off in a demonstration of precision, speed, and spirit. The clash highlights the discipline and tradition of Japanese swordsmanship.",
         eventDetailImage: "",
       ),
     ],
@@ -270,7 +284,8 @@ final List<ScheduleItem> day1ScheduleData = [
         duration: 10,
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Advertising.png",
-        description: "",
+        description:
+            "Japan Airlines Advertising and Raffle offers an exciting opportunity to learn about the airline’s services while participants can enter to win exclusive prizes. It’s a fun and engaging way to promote travel with Japan Airlines.",
         eventDetailImage: "",
       ),
       EventItem(
@@ -279,7 +294,8 @@ final List<ScheduleItem> day1ScheduleData = [
         duration: 30,
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Dancing performance.png",
-        description: "",
+        description:
+            "Move & Inspire Kids Dance features young dancers showcasing their talent and energy through fun, upbeat performances. The event encourages creativity and movement while inspiring the next generation of performers.",
         eventDetailImage: "",
       ),
     ],
@@ -294,7 +310,8 @@ final List<ScheduleItem> day1ScheduleData = [
         duration: 15,
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Dancing performance.png",
-        description: "",
+        description:
+            "The Showa Boston Dance Performance brings the vibrant Soranbushi, a traditional Japanese folk dance, to life with lively movements and rhythmic chanting. This energetic performance celebrates the strength and spirit of Japanese culture.",
         eventDetailImage: "",
       ),
       EventItem(
@@ -303,7 +320,8 @@ final List<ScheduleItem> day1ScheduleData = [
         duration: 30,
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Dancing performance.png",
-        description: "",
+        description:
+            "The Bon Dance Event invites everyone to join in a traditional Japanese summer dance, celebrating community and honoring ancestors. It's a joyful, participatory experience filled with music, rhythm, and cultural connection.",
         eventDetailImage: "",
       ),
     ],
@@ -322,7 +340,8 @@ final List<ScheduleItem> day2ScheduleData = [
         duration: 5,
         iconImage: "assets/timetableIcons/Opening ceremony.png",
         stage: "Stage 1",
-        description: "",
+        description:
+            "The Opening Ceremony for Japan Festival Boston 2025 will kick off vibrant performances, cultural displays, and speeches from distinguished guests. This exciting event sets the stage for a weekend celebrating Japanese arts, food, and traditions.",
         eventDetailImage: "",
       ),
       EventItem(
@@ -331,7 +350,8 @@ final List<ScheduleItem> day2ScheduleData = [
         duration: 15,
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Dancing performance.png",
-        description: "",
+        description:
+            "The Showa Boston Dance Performance brings the vibrant Soranbushi, a traditional Japanese folk dance, to life with lively movements and rhythmic chanting. This energetic performance celebrates the strength and spirit of Japanese culture.",
         eventDetailImage: "",
       ),
       EventItem(
@@ -340,7 +360,8 @@ final List<ScheduleItem> day2ScheduleData = [
         duration: 35,
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Dancing performance.png",
-        description: "",
+        description:
+            "Minami Toyama presents a captivating mix of Noh, Utai chanting, and Shinobue flute. This performance blends classical Japanese theater, vocal tradition, and melodic flute for a deeply cultural experience.",
         eventDetailImage: "",
       ),
     ],
@@ -350,7 +371,7 @@ final List<ScheduleItem> day2ScheduleData = [
         time: "",
         duration: 35,
         stage: "",
-        iconImage: "360",
+        iconImage: "",
         description: "",
         eventDetailImage: "",
       ),
@@ -365,7 +386,8 @@ final List<ScheduleItem> day2ScheduleData = [
         duration: 30,
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Kendo.png",
-        description: "",
+        description:
+            "The Kendo performance showcases the art of Japanese swordsmanship through precise movements, discipline, and powerful strikes. It offers a glimpse into the spirit and technique of this traditional martial art.",
         eventDetailImage: "",
       ),
     ],
@@ -380,7 +402,8 @@ final List<ScheduleItem> day2ScheduleData = [
         duration: 20,
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Anime stage.png",
-        description: "",
+        description:
+            "The Cosplay Fashion Show features participants showcasing their detailed costumes inspired by anime, manga, and pop culture. Models walk the runway, celebrating the creativity and craftsmanship behind each ensemble in a vibrant and exciting display.",
         eventDetailImage: "",
       ),
     ],
@@ -395,7 +418,8 @@ final List<ScheduleItem> day2ScheduleData = [
         duration: 30,
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Dancing performance.png",
-        description: "",
+        description:
+            "Parfait Soleil Dance Performance features a lively display of contemporary and traditional dance, blending fluid movements with vibrant energy. The performance captures the joy and beauty of dance through captivating choreography.",
         eventDetailImage: "",
       ),
     ],
@@ -410,7 +434,8 @@ final List<ScheduleItem> day2ScheduleData = [
         duration: 40,
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Band performance.png",
-        description: "",
+        description:
+            "Hiroko Watanabe’s calligraphy performance transforms brushstrokes into a captivating visual art. With each precise movement, they bring beauty and meaning to traditional Japanese writing.",
         eventDetailImage: "",
       ),
     ],
@@ -425,7 +450,8 @@ final List<ScheduleItem> day2ScheduleData = [
         duration: 30,
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Anime stage.png",
-        description: "",
+        description:
+            "Cosplay Death Match is a lively competition where cosplayers battle it out with performances and style, all for the chance to be crowned the ultimate winner. Audience energy and creativity take center stage in this fan-favorite showdown.",
         eventDetailImage: "",
       ),
     ],
@@ -440,7 +466,8 @@ final List<ScheduleItem> day2ScheduleData = [
         duration: 30,
         iconImage: "assets/timetableIcons/Band performance.png",
         stage: "Stage 1",
-        description: "",
+        description:
+            "The Jeiko Taiko Ensemble is a vibrant Japanese drumming group based in New England, known for their high-energy performances that blend traditional taiko rhythms with modern influences. Their performances showcase the power and precision of Japanese drumming, engaging audiences with dynamic rhythms and movements.",
         eventDetailImage: "",
       ),
     ],
@@ -455,7 +482,8 @@ final List<ScheduleItem> day2ScheduleData = [
         duration: 30,
         iconImage: "assets/timetableIcons/Dancing performance.png",
         stage: "Stage 1",
-        description: "",
+        description:
+            "Move & Inspire Kids Dance features young dancers showcasing their talent and energy through fun, upbeat performances. The event encourages creativity and movement while inspiring the next generation of performers.",
         eventDetailImage: "",
       ),
     ],
@@ -470,7 +498,8 @@ final List<ScheduleItem> day2ScheduleData = [
         duration: 30,
         iconImage: "assets/timetableIcons/Band performance.png",
         stage: "Stage 1",
-        description: "",
+        description:
+            "Ryukyu Kokusai Taiko is an Okinawan drumming ensemble known for its dynamic fusion of traditional Eisa rhythms, dance, and karate movements. Their powerful performances celebrate Okinawan culture, blending ancient sounds with modern energy.",
         eventDetailImage: "",
       ),
     ],
@@ -485,7 +514,8 @@ final List<ScheduleItem> day2ScheduleData = [
         duration: 10,
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Advertising.png",
-        description: "",
+        description:
+            "Japan Airlines Advertising and Raffle offers an exciting opportunity to learn about the airline’s services while participants can enter to win exclusive prizes. It’s a fun and engaging way to promote travel with Japan Airlines.",
         eventDetailImage: "",
       ),
     ],
@@ -500,7 +530,8 @@ final List<ScheduleItem> day2ScheduleData = [
         duration: 15,
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Dancing performance.png",
-        description: "",
+        description:
+            "The Showa Boston Dance Performance brings the vibrant Soranbushi, a traditional Japanese folk dance, to life with lively movements and rhythmic chanting. This energetic performance celebrates the strength and spirit of Japanese culture.",
         eventDetailImage: "",
       ),
       EventItem(
@@ -509,7 +540,8 @@ final List<ScheduleItem> day2ScheduleData = [
         duration: 30,
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Dancing performance.png",
-        description: "",
+        description:
+            "The Bon Dance Event invites everyone to join in a traditional Japanese summer dance, celebrating community and honoring ancestors. It's a joyful, participatory experience filled with music, rhythm, and cultural connection.",
         eventDetailImage: "",
       ),
     ],
@@ -524,7 +556,8 @@ final List<ScheduleItem> day2ScheduleData = [
         duration: 10,
         stage: "Stage 1",
         iconImage: "assets/timetableIcons/Closing ceremony.png",
-        description: "",
+        description:
+            "The Closing Ceremony marks the end of Japan Festival Boston 2025, wrapping up the weekend with final remarks, gratitude, and celebration. It’s a heartfelt farewell that honors the community, performers, and shared cultural experience.",
         eventDetailImage: "",
       ),
     ],

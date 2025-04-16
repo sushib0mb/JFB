@@ -395,7 +395,7 @@ class ScheduleList extends StatelessWidget {
     }
 
     // Add padding to latest time
-    final latestTime = latestEventEndTime + 40; // Add 30 minutes buffer
+    final latestTime = latestEventEndTime + 35;
     final timelineHeight = (latestTime - baseTime) * pixelsPerMinute;
 
     return Row(
@@ -654,16 +654,16 @@ class _PerformanceBoxState extends State<PerformanceBox>
             ],
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(
+            padding: EdgeInsets.symmetric(
               vertical: 12.0,
-              horizontal: 3.0,
+              horizontal: screenWidth * 0.3 * 0.05,
             ),
             child:
                 widget.eventItem.duration < 10
-                    // If duration less than 10
                     ? Row(
+                      // Layout for duration < 10
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        SizedBox(width: screenWidth * 0.01),
                         Container(
                           width: 30,
                           height: 30,
@@ -685,7 +685,7 @@ class _PerformanceBoxState extends State<PerformanceBox>
                                   )
                                   : Icon(Icons.event, size: 20),
                         ),
-                        SizedBox(width: screenWidth * 0.017),
+                        SizedBox(width: screenWidth * 0.3 * 0.075),
                         Expanded(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -698,21 +698,79 @@ class _PerformanceBoxState extends State<PerformanceBox>
                                 style: TextStyle(
                                   fontSize: responsiveFontSize * 8,
                                   fontWeight: FontWeight.w500,
-                                  height: 0.8,
+                                  height: 0.93,
                                 ),
                                 maxLines: 2,
-                                textAlign: TextAlign.center,
+                                textAlign: TextAlign.left,
                               ),
-                              SizedBox(height: screenHeight * 0.003),
                               Text(
                                 widget.eventItem.time,
                                 style: TextStyle(
                                   fontSize: responsiveFontSize * 6,
                                   fontWeight: FontWeight.w500,
                                   color: Colors.grey,
-                                  height: 1.1,
+                                  height: 0.9,
                                 ),
-                                textAlign: TextAlign.center,
+                                textAlign: TextAlign.right,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
+                    : widget.eventItem.duration == 10
+                    ? Row(
+                      // Layout for duration < 10
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Container(
+                          width: 33,
+                          height: 33,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                blurRadius: 2,
+                              ),
+                            ],
+                          ),
+                          child:
+                              widget.eventItem.iconImage.isNotEmpty
+                                  ? Image.asset(
+                                    widget.eventItem.iconImage,
+                                    fit: BoxFit.cover,
+                                  )
+                                  : Icon(Icons.event, size: 20),
+                        ),
+                        SizedBox(width: screenWidth * 0.3 * 0.054),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.eventItem.title.length > 17
+                                    ? "${widget.eventItem.title.substring(0, 17)}..."
+                                    : widget.eventItem.title,
+                                style: TextStyle(
+                                  fontSize: responsiveFontSize * 9.5,
+                                  fontWeight: FontWeight.w500,
+                                  height: 1.7,
+                                ),
+                                maxLines: 2,
+                                textAlign: TextAlign.left,
+                              ),
+                              Text(
+                                widget.eventItem.time,
+                                style: TextStyle(
+                                  fontSize: responsiveFontSize * 8,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey,
+                                  height: 0.9,
+                                ),
+                                textAlign: TextAlign.right,
                               ),
                             ],
                           ),
@@ -720,6 +778,7 @@ class _PerformanceBoxState extends State<PerformanceBox>
                       ],
                     )
                     : Column(
+                      // Layout for duration > 10
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -1100,20 +1159,20 @@ class _EventDetailViewState extends State<EventDetailView>
 
                   // Floating Icon
                   Positioned(
-                    top: MediaQuery.of(context).size.height * 0.12,
+                    top: MediaQuery.of(context).size.height * 0.15,
                     left: 0,
                     right: 0,
                     child: Center(
                       child: CircleAvatar(
-                        radius: 45,
+                        radius: 50,
                         backgroundColor: Colors.white,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Image.asset(
                             widget.event.iconImage,
                             fit: BoxFit.contain,
-                            width: 75,
-                            height: 75,
+                            width: 100,
+                            height: 100,
                           ),
                         ),
                       ),
