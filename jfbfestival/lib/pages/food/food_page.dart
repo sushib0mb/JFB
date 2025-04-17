@@ -174,6 +174,7 @@ class _FoodPageState extends State<FoodPage> {
 
           // Filter button on top of everything
           _buildTopActionButtons(),
+          if (_isSearching) _buildSearchBar(),
         ],
       ),
     );
