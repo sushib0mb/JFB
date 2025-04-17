@@ -545,23 +545,31 @@ Widget _buildMainContent(double screenWidth, double screenHeight) {
   }
 
   void _showBoothDetails(BuildContext context, FoodBooth booth) {
+    final height = MediaQuery.of(context).size.height;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      transitionAnimationController: AnimationController(
-        duration: const Duration(milliseconds: 300),
-        vsync: Navigator.of(context),
-      ),
-      builder: (context) {
-        return AnimatedBoothDetailWrapper(
-          booth: booth,
-          onClose: () => Navigator.of(context).pop(),
-          selectedAllergens: selectedAllergens.toList(),
+      builder: (ctx) {
+        return Container(
+          // start 25% down from the top
+          margin: EdgeInsets.only(top: height * 0.25),
+          // occupy the bottom 75%
+          height: height * 0.75,
+          child: AnimatedBoothDetailWrapper(
+            booth: booth,
+            onClose: () => Navigator.of(ctx).pop(),
+            selectedAllergens: selectedAllergens.toList(),
+          ),
         );
       },
-    );
+    ).then((_) {
+      _applyFilters();
+      _searchFocusNode.unfocus();
+    });
   }
+
   void _showFilterPopup() {
   if (_isFilterPopupOpen) return; // Prevent re-entry
   _isFilterPopupOpen = true;

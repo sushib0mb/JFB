@@ -84,7 +84,7 @@ class AllergyFilterGrid extends StatelessWidget {
             }, childCount: allergens.length),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
-              childAspectRatio: 1.6,
+              childAspectRatio: 1.3,
             ),
           ),
         ],
