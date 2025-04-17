@@ -122,6 +122,15 @@ flutter:
 
     # Timetable event images
     - assets/timetableBackgrounds/oneweekwonder.JPG
+    - assets/timetableBackgrounds/showaboston.jpg
+    - assets/timetableBackgrounds/oneweekwonder.JPG
+    - assets/timetableBackgrounds/oneweekwonder.JPG
+    - assets/timetableBackgrounds/oneweekwonder.JPG
+    - assets/timetableBackgrounds/oneweekwonder.JPG
+    - assets/timetableBackgrounds/oneweekwonder.JPG
+    - assets/timetableBackgrounds/oneweekwonder.JPG
+    - assets/timetableBackgrounds/oneweekwonder.JPG
+    - assets/timetableBackgrounds/oneweekwonder.JPG
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

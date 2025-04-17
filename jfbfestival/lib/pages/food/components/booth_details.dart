@@ -168,7 +168,7 @@ class BoothDetails extends StatelessWidget {
             ),
 
             Positioned(
-              top: MediaQuery.of(context).size.height / 40,
+              top: MediaQuery.of(context).size.height / 7.5,
               left: MediaQuery.of(context).size.width / 2 - 75,
               child: Container(
                 width: 150,

@@ -6,7 +6,6 @@ import 'package:jfbfestival/pages/food/components/booth_details.dart';
 import 'package:jfbfestival/data/food_booths.dart';
 import 'package:jfbfestival/models/food_booth.dart';
 
-
 class AnimatedBoothDetailWrapper extends StatefulWidget {
   final FoodBooth booth;
   final VoidCallback onClose;
@@ -92,7 +91,6 @@ class _FoodPageState extends State<FoodPage> {
   List<FoodBooth> safeVeganBooths = [], nonVeganBooths = [];
   bool _isFilterPopupOpen = false;
 
-
   // Search related variables
   bool _isSearching = false;
   final TextEditingController _searchController = TextEditingController();
@@ -176,7 +174,7 @@ class _FoodPageState extends State<FoodPage> {
 
           // Filter button on top of everything
           _buildTopActionButtons(),
-           if (_isSearching) _buildSearchBar(),
+          if (_isSearching) _buildSearchBar(),
         ],
       ),
     );
@@ -229,11 +227,10 @@ class _FoodPageState extends State<FoodPage> {
           _buildIconButton(
             iconAsset: 'assets/Filter.png',
             onPressed: () {
-  if (!_isFilterPopupOpen) {
-    _showFilterPopup();
-  }
-}
-
+              if (!_isFilterPopupOpen) {
+                _showFilterPopup();
+              }
+            },
           ),
         ],
       ),
@@ -274,85 +271,84 @@ class _FoodPageState extends State<FoodPage> {
       ),
     );
   }
+
   Widget _buildSearchBar() {
-  if (!_isSearching) return SizedBox.shrink(); // Hide if not searching
+    if (!_isSearching) return SizedBox.shrink(); // Hide if not searching
 
-  return Padding(
-    padding: const EdgeInsets.fromLTRB(50, 170, 50, 0), // Tighter top padding
-    child: Material(
-      elevation: 4,
-      borderRadius: BorderRadius.circular(30),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(30),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              spreadRadius: 1,
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            const SizedBox(width: 16),
-            Expanded(
-              child: TextField(
-                controller: _searchController,
-                focusNode: _searchFocusNode,
-                autofocus: true,
-                decoration: const InputDecoration(
-                  hintText: 'Search food booths...',
-                  border: InputBorder.none,
-                ),
-                onChanged: (_) => setState(() {}),
-                style: const TextStyle(fontSize: 16),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(50, 170, 50, 0), // Tighter top padding
+      child: Material(
+        elevation: 4,
+        borderRadius: BorderRadius.circular(30),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(30),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 10,
+                spreadRadius: 1,
               ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.close, color: Colors.grey),
-              onPressed: () {
-                setState(() {
-                  _searchController.clear();
-                  _isSearching = false;
-                });
-                _searchFocusNode.unfocus();
-              },
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
-}
-
-
-
-Widget _buildMainContent(double screenWidth, double screenHeight) {
-  double maxWidth = screenWidth > 1200 ? 1300 : screenWidth * 0.95;
-  double padding = screenWidth < 600 ? 16 : 24;
-
-  return Center(
-    child: ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: maxWidth),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: padding),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            ],
+          ),
+          child: Row(
             children: [
-              const SizedBox(height: 16),
-
-              _buildAllBoothsSection(screenWidth),
-              SizedBox(height: screenHeight * 0.05),
+              const SizedBox(width: 16),
+              Expanded(
+                child: TextField(
+                  controller: _searchController,
+                  focusNode: _searchFocusNode,
+                  autofocus: true,
+                  decoration: const InputDecoration(
+                    hintText: 'Search food booths...',
+                    border: InputBorder.none,
+                  ),
+                  onChanged: (_) => setState(() {}),
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.close, color: Colors.grey),
+                onPressed: () {
+                  setState(() {
+                    _searchController.clear();
+                    _isSearching = false;
+                  });
+                  _searchFocusNode.unfocus();
+                },
+              ),
             ],
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
+
+  Widget _buildMainContent(double screenWidth, double screenHeight) {
+    double maxWidth = screenWidth > 1200 ? 1300 : screenWidth * 0.95;
+    double padding = screenWidth < 600 ? 16 : 24;
+
+    return Center(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: maxWidth),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: padding),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 16),
+
+                _buildAllBoothsSection(screenWidth),
+                SizedBox(height: screenHeight * 0.05),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   String getSafeSectionTitle() {
     if (veganOnly! && selectedAllergens.isNotEmpty) {
@@ -554,9 +550,7 @@ Widget _buildMainContent(double screenWidth, double screenHeight) {
       builder: (ctx) {
         return Container(
           // start 25% down from the top
-          margin: EdgeInsets.only(top: height * 0.25),
-          // occupy the bottom 75%
-          height: height * 0.75,
+          margin: EdgeInsets.only(top: height * 0.02),
           child: AnimatedBoothDetailWrapper(
             booth: booth,
             onClose: () => Navigator.of(ctx).pop(),
@@ -571,153 +565,192 @@ Widget _buildMainContent(double screenWidth, double screenHeight) {
   }
 
   void _showFilterPopup() {
-  if (_isFilterPopupOpen) return; // Prevent re-entry
-  _isFilterPopupOpen = true;
+    if (_isFilterPopupOpen) return; // Prevent re-entry
+    _isFilterPopupOpen = true;
 
-  // Delay just slightly to allow UI to settle but still appear fast
-  Future.delayed(const Duration(milliseconds: 50), () {
-    if (!mounted) return; // Prevent showing dialog if widget is no longer in the tree
+    // Delay just slightly to allow UI to settle but still appear fast
+    Future.delayed(const Duration(milliseconds: 50), () {
+      if (!mounted)
+        return; // Prevent showing dialog if widget is no longer in the tree
 
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: true,
-      barrierLabel: 'FilterPopup',
-      transitionDuration: const Duration(milliseconds: 200), // Faster appearance
-      pageBuilder: (context, anim1, anim2) => const SizedBox.shrink(),
-      transitionBuilder: (context, anim1, _, __) {
-        final curved = CurvedAnimation(parent: anim1, curve: Curves.easeOut);
+      showGeneralDialog(
+        context: context,
+        barrierDismissible: true,
+        barrierLabel: 'FilterPopup',
+        transitionDuration: const Duration(
+          milliseconds: 200,
+        ), // Faster appearance
+        pageBuilder: (context, anim1, anim2) => const SizedBox.shrink(),
+        transitionBuilder: (context, anim1, _, __) {
+          final curved = CurvedAnimation(parent: anim1, curve: Curves.easeOut);
 
-        return AnimatedBuilder(
-          animation: curved,
-          builder: (context, child) {
-            return Stack(
-              fit: StackFit.expand,
-              children: [
-                AnimatedOpacity(
-                  duration: const Duration(milliseconds: 200),
-                  opacity: curved.value,
-                  child: GestureDetector(
-                    onTap: () {
-                      if (Navigator.of(context).canPop()) {
-                        Navigator.of(context).pop();
-                      }
-                    },
+          return AnimatedBuilder(
+            animation: curved,
+            builder: (context, child) {
+              return Stack(
+                fit: StackFit.expand,
+                children: [
+                  AnimatedOpacity(
+                    duration: const Duration(milliseconds: 200),
+                    opacity: curved.value,
+                    child: GestureDetector(
+                      onTap: () {
+                        if (Navigator.of(context).canPop()) {
+                          Navigator.of(context).pop();
+                        }
+                      },
+                    ),
                   ),
-                ),
-                AnimatedOpacity(
-                  duration: const Duration(milliseconds: 150),
-                  opacity: curved.value,
-                  child: Center(
-                    child: Material(
-                      color: Colors.transparent,
-                      child: Container(
-                        constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width * 0.85,
-                          maxHeight: MediaQuery.of(context).size.height * 0.85, // Increased height
-                        ),
-                        margin: const EdgeInsets.symmetric(horizontal: 24),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(color: Colors.black26, blurRadius: 10),
-                          ],
-                        ),
-                        child: StatefulBuilder(
-                          builder: (context, setModalState) {
-                            return Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Align(
-                                  alignment: Alignment.topRight,
-                                  child: IconButton(
-                                    icon: const Icon(Icons.close),
-                                    onPressed: () {
-                                      if (Navigator.of(context).canPop()) {
-                                        Navigator.of(context).pop();
-                                      }
-                                    },
-                                  ),
-                                ),
-                                Expanded(
-                                  child: SingleChildScrollView(
-                                    padding: const EdgeInsets.only(bottom: 24),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                                      children: [
-                                        Center(child: _buildSectionTitle("Payment")),
-                                        const SizedBox(height: 12),
-                                        PaymentFilterRow(
-                                          selectedPayments: selectedPayments,
-                                          onPaymentSelected: (method, isSelected) {
-                                            setModalState(() {
-                                              isSelected
-                                                ? selectedPayments.add(method)
-                                                : selectedPayments.remove(method);
-                                            });
-                                          },
-                                        ),
-                                        const SizedBox(height: 20),
-                                        Center(child: _buildSectionTitle("Vegan")),
-                                        const SizedBox(height: 12),
-                                        VeganFilterOption(
-                                          isVegan: veganOnly ?? false,
-                                          onChanged: (value) {
-                                            setModalState(() => veganOnly = value);
-                                          },
-                                        ),
-                                        const SizedBox(height: 20),
-                                        Center(child: _buildSectionTitle("Allergens")),
-                                        const SizedBox(height: 12),
-                                        AllergyFilterGrid(
-                                          selectedAllergens: selectedAllergens,
-                                          onAllergenSelected: (allergen, isSelected) {
-                                            setModalState(() {
-                                              isSelected
-                                                ? selectedAllergens.add(allergen)
-                                                : selectedAllergens.remove(allergen);
-                                            });
-                                          },
-                                        ),
-                                        const SizedBox(height: 28),
-                                        _buildApplyButton(
-                                          onApply: _applyFilters,
-                                          closeModal: () {
-                                            if (Navigator.of(context).canPop()) {
-                                              Navigator.of(context).pop();
-                                            }
-                                          },
-                                        ),
-                                      ],
+                  AnimatedOpacity(
+                    duration: const Duration(milliseconds: 150),
+                    opacity: curved.value,
+                    child: Center(
+                      child: Material(
+                        color: Colors.transparent,
+                        child: Container(
+                          constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width * 0.85,
+                            maxHeight:
+                                MediaQuery.of(context).size.height *
+                                0.85, // Increased height
+                          ),
+                          margin: const EdgeInsets.symmetric(horizontal: 24),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 10,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(color: Colors.black26, blurRadius: 10),
+                            ],
+                          ),
+                          child: StatefulBuilder(
+                            builder: (context, setModalState) {
+                              return Column(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Align(
+                                    alignment: Alignment.topRight,
+                                    child: IconButton(
+                                      icon: const Icon(Icons.close),
+                                      onPressed: () {
+                                        if (Navigator.of(context).canPop()) {
+                                          Navigator.of(context).pop();
+                                        }
+                                      },
                                     ),
                                   ),
-                                ),
-                              ],
-                            );
-                          },
+                                  Expanded(
+                                    child: SingleChildScrollView(
+                                      padding: const EdgeInsets.only(
+                                        bottom: 24,
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                        children: [
+                                          Center(
+                                            child: _buildSectionTitle(
+                                              "Payment",
+                                            ),
+                                          ),
+                                          const SizedBox(height: 12),
+                                          PaymentFilterRow(
+                                            selectedPayments: selectedPayments,
+                                            onPaymentSelected: (
+                                              method,
+                                              isSelected,
+                                            ) {
+                                              setModalState(() {
+                                                isSelected
+                                                    ? selectedPayments.add(
+                                                      method,
+                                                    )
+                                                    : selectedPayments.remove(
+                                                      method,
+                                                    );
+                                              });
+                                            },
+                                          ),
+                                          const SizedBox(height: 20),
+                                          Center(
+                                            child: _buildSectionTitle("Vegan"),
+                                          ),
+                                          const SizedBox(height: 12),
+                                          VeganFilterOption(
+                                            isVegan: veganOnly ?? false,
+                                            onChanged: (value) {
+                                              setModalState(
+                                                () => veganOnly = value,
+                                              );
+                                            },
+                                          ),
+                                          const SizedBox(height: 20),
+                                          Center(
+                                            child: _buildSectionTitle(
+                                              "Allergens",
+                                            ),
+                                          ),
+                                          const SizedBox(height: 12),
+                                          AllergyFilterGrid(
+                                            selectedAllergens:
+                                                selectedAllergens,
+                                            onAllergenSelected: (
+                                              allergen,
+                                              isSelected,
+                                            ) {
+                                              setModalState(() {
+                                                isSelected
+                                                    ? selectedAllergens.add(
+                                                      allergen,
+                                                    )
+                                                    : selectedAllergens.remove(
+                                                      allergen,
+                                                    );
+                                              });
+                                            },
+                                          ),
+                                          const SizedBox(height: 28),
+                                          _buildApplyButton(
+                                            onApply: _applyFilters,
+                                            closeModal: () {
+                                              if (Navigator.of(
+                                                context,
+                                              ).canPop()) {
+                                                Navigator.of(context).pop();
+                                              }
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    ).then((_) async {
-      if (mounted) {
-        _applyFilters();
-        await Future.delayed(const Duration(milliseconds: 150));
+                ],
+              );
+            },
+          );
+        },
+      ).then((_) async {
         if (mounted) {
-          setState(() => _isFilterPopupOpen = false);
+          _applyFilters();
+          await Future.delayed(const Duration(milliseconds: 150));
+          if (mounted) {
+            setState(() => _isFilterPopupOpen = false);
+          }
         }
-      }
+      });
     });
-  });
-}
-
+  }
 
   Widget _buildSectionTitle(String title) {
     return Padding(

@@ -52,7 +52,7 @@ final List<ScheduleItem> day1ScheduleData = [
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description:
             "The Showa Boston Dance Performance brings the vibrant Soranbushi, a traditional Japanese folk dance, to life with lively movements and rhythmic chanting. This energetic performance celebrates the strength and spirit of Japanese culture.",
-        eventDetailImage: "",
+        eventDetailImage: "assets/timetableBackgrounds/showaboston.jpg",
       ),
     ],
     stage2Events: [
@@ -312,7 +312,7 @@ final List<ScheduleItem> day1ScheduleData = [
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description:
             "The Showa Boston Dance Performance brings the vibrant Soranbushi, a traditional Japanese folk dance, to life with lively movements and rhythmic chanting. This energetic performance celebrates the strength and spirit of Japanese culture.",
-        eventDetailImage: "",
+        eventDetailImage: "assets/timetableBackgrounds/showaboston.jpg",
       ),
       EventItem(
         title: "Bon Dance Event",
@@ -352,7 +352,7 @@ final List<ScheduleItem> day2ScheduleData = [
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description:
             "The Showa Boston Dance Performance brings the vibrant Soranbushi, a traditional Japanese folk dance, to life with lively movements and rhythmic chanting. This energetic performance celebrates the strength and spirit of Japanese culture.",
-        eventDetailImage: "",
+        eventDetailImage: "assets/timetableBackgrounds/showaboston.jpg",
       ),
       EventItem(
         title: "Minami Toyama Noh, Utai, Shinobue",
@@ -532,7 +532,7 @@ final List<ScheduleItem> day2ScheduleData = [
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description:
             "The Showa Boston Dance Performance brings the vibrant Soranbushi, a traditional Japanese folk dance, to life with lively movements and rhythmic chanting. This energetic performance celebrates the strength and spirit of Japanese culture.",
-        eventDetailImage: "",
+        eventDetailImage: "assets/timetableBackgrounds/showaboston.jpg",
       ),
       EventItem(
         title: "Bon Dance Event",
