@@ -26,7 +26,7 @@ class AllergyFilterGrid extends StatelessWidget {
 
     return SizedBox(
       height:
-          MediaQuery.of(context).size.height * 0.24, // Estimate height per row
+          MediaQuery.of(context).size.height * 0.285, // Estimate height per row
       child: CustomScrollView(
         physics: const NeverScrollableScrollPhysics(),
         slivers: [

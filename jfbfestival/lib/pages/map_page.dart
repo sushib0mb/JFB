@@ -156,8 +156,19 @@ class MapPageState extends State<MapPage> {
                           ],
                         ),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: IconButton(
+                                icon: const Icon(Icons.close),
+                                onPressed: () {
+                                  if (Navigator.of(context).canPop()) {
+                                    Navigator.of(context).pop();
+                                  }
+                                },
+                              ),
+                            ),
                             _buildFilterButton('All', screenSize),
                             _buildFilterButton('Food Vendors', screenSize),
                             _buildFilterButton(

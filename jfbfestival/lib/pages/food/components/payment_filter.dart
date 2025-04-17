@@ -60,6 +60,13 @@ class _PaymentFilterItem extends StatelessWidget {
                   spreadRadius: 0,
                 ),
               ],
+              border: Border.all(
+                color:
+                    isSelected
+                        ? const Color.fromARGB(255, 255, 217, 0)
+                        : Colors.transparent,
+                width: 2,
+              ),
             ),
             child: Center(
               child: Image.asset(

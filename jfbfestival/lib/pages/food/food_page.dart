@@ -91,7 +91,6 @@ class _FoodPageState extends State<FoodPage> {
   List<FoodBooth> safeVeganBooths = [], nonVeganBooths = [];
   bool _isFilterPopupOpen = false;
 
-
   // Search related variables
   bool _isSearching = false;
   final TextEditingController _searchController = TextEditingController();
@@ -227,11 +226,10 @@ class _FoodPageState extends State<FoodPage> {
           _buildIconButton(
             iconAsset: 'assets/Filter.png',
             onPressed: () {
-  if (!_isFilterPopupOpen) {
-    _showFilterPopup();
-  }
-}
-
+              if (!_isFilterPopupOpen) {
+                _showFilterPopup();
+              }
+            },
           ),
         ],
       ),
@@ -272,84 +270,84 @@ class _FoodPageState extends State<FoodPage> {
       ),
     );
   }
-Widget _buildSearchBar() {
-  if (!_isSearching) return const SizedBox.shrink();
 
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-    child: Material(
-      elevation: 4,
-      borderRadius: BorderRadius.circular(30),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(30),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 10,
-              spreadRadius: 1,
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            const SizedBox(width: 16),
-            Expanded(
-              child: TextField(
-                controller: _searchController,
-                focusNode: _searchFocusNode,
-                autofocus: true,
-                decoration: const InputDecoration(
-                  hintText: 'Search food booths...',
-                  border: InputBorder.none,
-                ),
-                onChanged: (_) => setState(() {}),
-                style: const TextStyle(fontSize: 16),
+  Widget _buildSearchBar() {
+    if (!_isSearching) return const SizedBox.shrink();
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Material(
+        elevation: 4,
+        borderRadius: BorderRadius.circular(30),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(30),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 10,
+                spreadRadius: 1,
               ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.close, color: Colors.grey),
-              onPressed: () {
-                setState(() {
-                  _searchController.clear();
-                  _isSearching = false;
-                });
-                _searchFocusNode.unfocus();
-              },
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
-}
-
-Widget _buildMainContent(double screenWidth, double screenHeight) {
-  double maxWidth = screenWidth > 1200 ? 1300 : screenWidth * 0.95;
-  double padding = screenWidth < 600 ? 16 : 24;
-
-  return Center(
-    child: ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: maxWidth),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: padding),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            ],
+          ),
+          child: Row(
             children: [
-              const SizedBox(height: 16),
-              if (_isSearching) _buildSearchBar(),
-              const SizedBox(height: 12),
-              _buildAllBoothsSection(screenWidth),
-              SizedBox(height: screenHeight * 0.05),
+              const SizedBox(width: 16),
+              Expanded(
+                child: TextField(
+                  controller: _searchController,
+                  focusNode: _searchFocusNode,
+                  autofocus: true,
+                  decoration: const InputDecoration(
+                    hintText: 'Search food booths...',
+                    border: InputBorder.none,
+                  ),
+                  onChanged: (_) => setState(() {}),
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.close, color: Colors.grey),
+                onPressed: () {
+                  setState(() {
+                    _searchController.clear();
+                    _isSearching = false;
+                  });
+                  _searchFocusNode.unfocus();
+                },
+              ),
             ],
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
+
+  Widget _buildMainContent(double screenWidth, double screenHeight) {
+    double maxWidth = screenWidth > 1200 ? 1300 : screenWidth * 0.95;
+    double padding = screenWidth < 600 ? 16 : 24;
+
+    return Center(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: maxWidth),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: padding),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                if (_isSearching) _buildSearchBar(),
+                const SizedBox(height: 12),
+                _buildAllBoothsSection(screenWidth),
+                SizedBox(height: screenHeight * 0.05),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   String getSafeSectionTitle() {
     if (veganOnly! && selectedAllergens.isNotEmpty) {
@@ -387,7 +385,7 @@ Widget _buildMainContent(double screenWidth, double screenHeight) {
     if (boothsToShow.isEmpty) {
       return Column(
         children: [
-          const SizedBox(height: 60),
+          const SizedBox(height: 65),
           Icon(Icons.search_off, size: 60, color: Colors.grey[400]),
           const SizedBox(height: 20),
           Text(
@@ -559,19 +557,13 @@ Widget _buildMainContent(double screenWidth, double screenHeight) {
       },
     );
   }
+
   void _showFilterPopup() {
-  if (_isFilterPopupOpen) return; // Prevent re-entry
-  _isFilterPopupOpen = true;
-
-  // Delay just slightly to allow UI to settle but still appear fast
-  Future.delayed(const Duration(milliseconds: 50), () {
-    if (!mounted) return; // Prevent showing dialog if widget is no longer in the tree
-
     showGeneralDialog(
       context: context,
       barrierDismissible: true,
       barrierLabel: 'FilterPopup',
-      transitionDuration: const Duration(milliseconds: 200), // Faster appearance
+      transitionDuration: const Duration(milliseconds: 300), // Fade-in duration
       pageBuilder: (context, anim1, anim2) => const SizedBox.shrink(),
       transitionBuilder: (context, anim1, _, __) {
         final curved = CurvedAnimation(parent: anim1, curve: Curves.easeOut);
@@ -582,19 +574,17 @@ Widget _buildMainContent(double screenWidth, double screenHeight) {
             return Stack(
               fit: StackFit.expand,
               children: [
+                // Background Fade-In and Fade-Out
                 AnimatedOpacity(
-                  duration: const Duration(milliseconds: 200),
+                  duration: const Duration(milliseconds: 300),
                   opacity: curved.value,
                   child: GestureDetector(
-                    onTap: () {
-                      if (Navigator.of(context).canPop()) {
-                        Navigator.of(context).pop();
-                      }
-                    },
+                    onTap: () => Navigator.of(context).pop(),
                   ),
                 ),
+
                 AnimatedOpacity(
-                  duration: const Duration(milliseconds: 150),
+                  duration: const Duration(milliseconds: 200),
                   opacity: curved.value,
                   child: Center(
                     child: Material(
@@ -602,10 +592,10 @@ Widget _buildMainContent(double screenWidth, double screenHeight) {
                       child: Container(
                         constraints: BoxConstraints(
                           maxWidth: MediaQuery.of(context).size.width * 0.85,
-                          maxHeight: MediaQuery.of(context).size.height * 0.85, // Increased height
+                          maxHeight: MediaQuery.of(context).size.height * 0.75,
                         ),
                         margin: const EdgeInsets.symmetric(horizontal: 24),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                        padding: const EdgeInsets.all(5),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
@@ -616,67 +606,83 @@ Widget _buildMainContent(double screenWidth, double screenHeight) {
                         child: StatefulBuilder(
                           builder: (context, setModalState) {
                             return Column(
-                              mainAxisSize: MainAxisSize.max,
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 Align(
                                   alignment: Alignment.topRight,
                                   child: IconButton(
                                     icon: const Icon(Icons.close),
-                                    onPressed: () {
-                                      if (Navigator.of(context).canPop()) {
-                                        Navigator.of(context).pop();
-                                      }
-                                    },
+                                    onPressed:
+                                        () => Navigator.of(context).pop(),
                                   ),
                                 ),
+
                                 Expanded(
                                   child: SingleChildScrollView(
-                                    padding: const EdgeInsets.only(bottom: 24),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
                                       children: [
-                                        Center(child: _buildSectionTitle("Payment")),
-                                        const SizedBox(height: 12),
+                                        // SizedBox(height: 5),
+                                        Center(
+                                          child: _buildSectionTitle("Payment"),
+                                        ),
+                                        const SizedBox(height: 8),
                                         PaymentFilterRow(
                                           selectedPayments: selectedPayments,
-                                          onPaymentSelected: (method, isSelected) {
+                                          onPaymentSelected: (
+                                            method,
+                                            isSelected,
+                                          ) {
                                             setModalState(() {
                                               isSelected
-                                                ? selectedPayments.add(method)
-                                                : selectedPayments.remove(method);
+                                                  ? selectedPayments.add(method)
+                                                  : selectedPayments.remove(
+                                                    method,
+                                                  );
                                             });
                                           },
                                         ),
-                                        const SizedBox(height: 20),
-                                        Center(child: _buildSectionTitle("Vegan")),
-                                        const SizedBox(height: 12),
+                                        const SizedBox(height: 8),
+                                        Center(
+                                          child: _buildSectionTitle("Vegan"),
+                                        ),
+                                        const SizedBox(height: 8),
                                         VeganFilterOption(
                                           isVegan: veganOnly ?? false,
                                           onChanged: (value) {
-                                            setModalState(() => veganOnly = value);
+                                            setModalState(
+                                              () => veganOnly = value,
+                                            );
                                           },
                                         ),
-                                        const SizedBox(height: 20),
-                                        Center(child: _buildSectionTitle("Allergens")),
-                                        const SizedBox(height: 12),
+                                        const SizedBox(height: 8),
+                                        Center(
+                                          child: _buildSectionTitle(
+                                            "Allergens",
+                                          ),
+                                        ),
+                                        const SizedBox(height: 10),
                                         AllergyFilterGrid(
                                           selectedAllergens: selectedAllergens,
-                                          onAllergenSelected: (allergen, isSelected) {
+                                          onAllergenSelected: (
+                                            allergen,
+                                            isSelected,
+                                          ) {
                                             setModalState(() {
                                               isSelected
-                                                ? selectedAllergens.add(allergen)
-                                                : selectedAllergens.remove(allergen);
+                                                  ? selectedAllergens.add(
+                                                    allergen,
+                                                  )
+                                                  : selectedAllergens.remove(
+                                                    allergen,
+                                                  );
                                             });
                                           },
                                         ),
-                                        const SizedBox(height: 28),
+                                        const SizedBox(height: 20),
                                         _buildApplyButton(
                                           onApply: _applyFilters,
-                                          closeModal: () {
-                                            if (Navigator.of(context).canPop()) {
-                                              Navigator.of(context).pop();
-                                            }
-                                          },
+                                          closeModal:
+                                              () => Navigator.of(context).pop(),
                                         ),
                                       ],
                                     ),
@@ -695,18 +701,8 @@ Widget _buildMainContent(double screenWidth, double screenHeight) {
           },
         );
       },
-    ).then((_) async {
-      if (mounted) {
-        _applyFilters();
-        await Future.delayed(const Duration(milliseconds: 150));
-        if (mounted) {
-          setState(() => _isFilterPopupOpen = false);
-        }
-      }
-    });
-  });
-}
-
+    ).then((_) => _applyFilters());
+  }
 
   Widget _buildSectionTitle(String title) {
     return Padding(
@@ -771,7 +767,7 @@ Widget _buildMainContent(double screenWidth, double screenHeight) {
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
-          letterSpacing: 1.2,
+          letterSpacing: 1,
         ),
       ),
     );
