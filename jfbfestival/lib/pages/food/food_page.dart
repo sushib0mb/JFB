@@ -158,7 +158,7 @@ class _FoodPageState extends State<FoodPage> {
                     color: Colors.white,
                   ),
                   child: Padding(
-                    padding: EdgeInsets.only(top: _isSearching ? 70 : 0),
+                    padding: EdgeInsets.only(top: _isSearching ? 10 : 0),
                     child: _buildMainContent(screenWidth, screenHeight),
                   ),
                 ),
@@ -278,7 +278,7 @@ class _FoodPageState extends State<FoodPage> {
   if (!_isSearching) return SizedBox.shrink(); // Hide if not searching
 
   return Padding(
-    padding: const EdgeInsets.fromLTRB(50, 170, 50, 0), // Tighter top padding
+    padding: const EdgeInsets.fromLTRB(30, 170, 30, 0), // Tighter top padding
     child: Material(
       elevation: 4,
       borderRadius: BorderRadius.circular(30),
