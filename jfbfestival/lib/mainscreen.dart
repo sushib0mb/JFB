@@ -1,35 +1,56 @@
+// lib/main.dart
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+
+import 'theme_notifier.dart';
+import 'settings_page.dart';
 import 'package:jfbfestival/pages/food/food_page.dart';
 import 'package:jfbfestival/pages/home_page.dart';
 import 'package:jfbfestival/pages/map_page.dart';
 import 'package:jfbfestival/pages/timetable_page.dart';
 import 'package:jfbfestival/data/timetableData.dart';
 import 'package:jfbfestival/SplashScreen/video_splash_screen.dart';
-import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // lock portrait only
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
 
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ThemeNotifier(),
+      child: const MyApp(),
+    ),
+  );
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(fontFamily: 'Fredoka'),
-      // home: const VideoSplashScreen(),
-      home: MainScreen(),
+    return Consumer<ThemeNotifier>(
+      builder: (context, theme, _) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'JFB Festival',
+        theme: ThemeData(
+          brightness: Brightness.light,
+          fontFamily: 'Fredoka',
+        ),
+        darkTheme: ThemeData(
+          brightness: Brightness.dark,
+          fontFamily: 'Fredoka',
+        ),
+        themeMode: theme.mode,
+        home: const MainScreen(),
+        routes: {
+          SettingsPage.routeName: (_) => const SettingsPage(),
+        },
+      ),
     );
   }
 }
@@ -40,11 +61,11 @@ class MainScreen extends StatefulWidget {
   final String? selectedMapLetter;
 
   const MainScreen({
-  super.key,
-  this.initialIndex = 0,
-  this.selectedEvent,
-  this.selectedMapLetter, // <-- add this
-});
+    super.key,
+    this.initialIndex = 0,
+    this.selectedEvent,
+    this.selectedMapLetter,
+  });
 
   @override
   _MainScreenState createState() => _MainScreenState();
@@ -72,17 +93,19 @@ class _MainScreenState extends State<MainScreen> {
       body: Stack(
         children: [
           IndexedStack(
-  index: selectedIndex,
-  children: [
-    HomePage(),
-    FoodPage(selectedMapLetter: widget.selectedMapLetter), // pass it here
-    TimetablePage(selectedEvent: widget.selectedEvent),
-    MapPage(),
-  ],
-),
+            index: selectedIndex,
+            children: [
+              HomePage(),
+              FoodPage(selectedMapLetter: widget.selectedMapLetter),
+              TimetablePage(selectedEvent: widget.selectedEvent),
+              MapPage(),
+            ],
+          ),
 
+          SafeArea(child: TopBar(onSettings: () {
+            Navigator.pushNamed(context, SettingsPage.routeName);
+          })),
 
-          SafeArea(child: TopBar(selectedIndex: selectedIndex)),
           Align(
             alignment: Alignment.bottomCenter,
             child: BottomBar(
@@ -94,36 +117,35 @@ class _MainScreenState extends State<MainScreen> {
       ),
     );
   }
-}
-
-class TopBar extends StatelessWidget {
-  final int selectedIndex;
-  const TopBar({super.key, required this.selectedIndex});
+}class TopBar extends StatelessWidget {
+  final VoidCallback onSettings;
+  const TopBar({ super.key, required this.onSettings });
 
   @override
   Widget build(BuildContext context) {
     final double logoSize = MediaQuery.of(context).size.height * 0.086;
 
-    return Padding(
+    return Container(
+      width: double.infinity,                        // ← make the Stack full‑width
       padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
       child: Stack(
         alignment: Alignment.topCenter,
         children: [
-          Align(
-            alignment: Alignment.topCenter,
-            child: Container(
-              width: logoSize,
-              height: logoSize,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.transparent, // Background color for the circle
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(1.0),
-                child: ClipOval(
-                  child: Image.asset('assets/JFBLogo.png', fit: BoxFit.cover),
-                ),
-              ),
+          // center logo
+          SizedBox(
+            width: logoSize,
+            height: logoSize,
+            child: ClipOval(
+              child: Image.asset('assets/JFBLogo.png', fit: BoxFit.cover),
+            ),
+          ),
+
+          // settings icon, top‑right
+          Positioned(
+            right: 16,
+            child: IconButton(
+              icon: const Icon(Icons.settings, color: Colors.white),
+              onPressed: onSettings,
             ),
           ),
         ],
@@ -131,6 +153,9 @@ class TopBar extends StatelessWidget {
     );
   }
 }
+
+
+// BottomBar & ImageButton remain unchanged...
 
 class BottomBar extends StatelessWidget {
   final int selectedIndex;
