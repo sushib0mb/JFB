@@ -174,7 +174,6 @@ class _FoodPageState extends State<FoodPage> {
 
           // Filter button on top of everything
           _buildTopActionButtons(),
-          if (_isSearching) _buildSearchBar(),
         ],
       ),
     );
@@ -622,7 +621,6 @@ class _FoodPageState extends State<FoodPage> {
                                   child: SingleChildScrollView(
                                     child: Column(
                                       children: [
-                                        // SizedBox(height: 5),
                                         Center(
                                           child: _buildSectionTitle("Payment"),
                                         ),

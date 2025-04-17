@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '/models/food_booth.dart';
 import '/models/dish.dart';
-import 'dart:ui';
 
 class BoothDetails extends StatelessWidget {
   final FoodBooth booth;
@@ -250,80 +249,80 @@ class BoothDetails extends StatelessWidget {
               )
               .toList(),
     );
-  }Widget _buildPaymentOptions(List<String> payments) {
-  return Center(
-    child: Wrap(
-      alignment: WrapAlignment.center,
-      spacing: 40, // horizontal space between items
-      runSpacing: 16, // vertical space if wrapping
+  }
+
+  Widget _buildPaymentOptions(List<String> payments) {
+    return Center(
+      child: Wrap(
+        alignment: WrapAlignment.center,
+        spacing: 40, // horizontal space between items
+        runSpacing: 16, // vertical space if wrapping
+        children: [
+          _buildPaymentItem(
+            "Venmo",
+            "assets/payments/venmo.png",
+            payments.contains("Venmo"),
+          ),
+          _buildPaymentItem(
+            "Zelle",
+            "assets/payments/zelle.png",
+            payments.contains("Zelle"),
+          ),
+          _buildPaymentItem(
+            "Cash",
+            "assets/payments/cash.png",
+            payments.contains("Cash"),
+          ),
+          _buildPaymentItem(
+            "Credit",
+            "assets/payments/credit_card.png",
+            payments.contains("Credit Card"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPaymentItem(String label, String assetPath, bool isAccepted) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        _buildPaymentItem(
-          "Venmo",
-          "assets/payments/venmo.png",
-          payments.contains("Venmo"),
-        ),
-        _buildPaymentItem(
-          "Zelle",
-          "assets/payments/zelle.png",
-          payments.contains("Zelle"),
-        ),
-        _buildPaymentItem(
-          "Cash",
-          "assets/payments/cash.png",
-          payments.contains("Cash"),
-        ),
-        _buildPaymentItem(
-          "Credit",
-          "assets/payments/credit_card.png",
-          payments.contains("Credit Card"),
-        ),
-      ],
-    ),
-  );
-}
-
-
-
-Widget _buildPaymentItem(String label, String assetPath, bool isAccepted) {
-  return Column(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.25),
-              blurRadius: 10,
-              spreadRadius: 0,
+        Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.25),
+                blurRadius: 10,
+                spreadRadius: 0,
+              ),
+            ],
+          ),
+          child: Center(
+            child: Image.asset(
+              assetPath,
+              width: 30,
+              height: 30,
+              color: isAccepted ? null : Colors.grey.withOpacity(0.5),
+              colorBlendMode: BlendMode.modulate,
             ),
-          ],
-        ),
-        child: Center(
-          child: Image.asset(
-            assetPath,
-            width: 30,
-            height: 30,
-            color: isAccepted ? null : Colors.grey.withOpacity(0.5),
-            colorBlendMode: BlendMode.modulate,
           ),
         ),
-      ),
-      const SizedBox(height: 8),
-      Text(
-        label,
-        style: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.normal,
-          color: isAccepted ? Colors.black : Colors.grey[400],
+        const SizedBox(height: 8),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.normal,
+            color: isAccepted ? Colors.black : Colors.grey[400],
+          ),
         ),
-      ),
-    ],
-  );
-}
+      ],
+    );
+  }
 
   Widget _buildVeganism(bool isVegan) {
     return Center(

@@ -915,7 +915,11 @@ class _EventDetailViewState extends State<EventDetailView>
             ),
             // Event detail card animation
             Transform.translate(
-              offset: Offset(0, _cardOffsetAnimation.value),
+              offset: Offset(
+                0,
+                _cardOffsetAnimation.value +
+                    MediaQuery.of(context).size.height * 0.02,
+              ),
               child: Stack(
                 clipBehavior: Clip.none,
                 children: [
