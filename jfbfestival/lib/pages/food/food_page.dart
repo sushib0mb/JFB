@@ -278,7 +278,7 @@ class _FoodPageState extends State<FoodPage> {
   if (!_isSearching) return SizedBox.shrink(); // Hide if not searching
 
   return Padding(
-    padding: const EdgeInsets.fromLTRB(50, 170, 50, 0), // Tighter top padding
+    padding: const EdgeInsets.fromLTRB(30, 160, 30, 0), // Tighter top padding
     child: Material(
       elevation: 4,
       borderRadius: BorderRadius.circular(30),
@@ -605,10 +605,10 @@ Widget _buildMainContent(double screenWidth, double screenHeight) {
                       child: Container(
                         constraints: BoxConstraints(
                           maxWidth: MediaQuery.of(context).size.width * 0.85,
-                          maxHeight: MediaQuery.of(context).size.height * 0.85, // Increased height
+                          maxHeight: MediaQuery.of(context).size.height * 0.75, // Increased height
                         ),
                         margin: const EdgeInsets.symmetric(horizontal: 24),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                        padding: const EdgeInsets.all(5),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
@@ -619,7 +619,7 @@ Widget _buildMainContent(double screenWidth, double screenHeight) {
                         child: StatefulBuilder(
                           builder: (context, setModalState) {
                             return Column(
-                              mainAxisSize: MainAxisSize.max,
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 Align(
                                   alignment: Alignment.topRight,
@@ -639,7 +639,7 @@ Widget _buildMainContent(double screenWidth, double screenHeight) {
                                       crossAxisAlignment: CrossAxisAlignment.stretch,
                                       children: [
                                         Center(child: _buildSectionTitle("Payment")),
-                                        const SizedBox(height: 12),
+                                        const SizedBox(height: 8),
                                         PaymentFilterRow(
                                           selectedPayments: selectedPayments,
                                           onPaymentSelected: (method, isSelected) {
@@ -650,18 +650,18 @@ Widget _buildMainContent(double screenWidth, double screenHeight) {
                                             });
                                           },
                                         ),
-                                        const SizedBox(height: 20),
+                                        const SizedBox(height: 8),
                                         Center(child: _buildSectionTitle("Vegan")),
-                                        const SizedBox(height: 12),
+                                        const SizedBox(height: 8),
                                         VeganFilterOption(
                                           isVegan: veganOnly ?? false,
                                           onChanged: (value) {
                                             setModalState(() => veganOnly = value);
                                           },
                                         ),
-                                        const SizedBox(height: 20),
+                                        const SizedBox(height: 8),
                                         Center(child: _buildSectionTitle("Allergens")),
-                                        const SizedBox(height: 12),
+                                        const SizedBox(height: 10),
                                         AllergyFilterGrid(
                                           selectedAllergens: selectedAllergens,
                                           onAllergenSelected: (allergen, isSelected) {
@@ -672,7 +672,7 @@ Widget _buildMainContent(double screenWidth, double screenHeight) {
                                             });
                                           },
                                         ),
-                                        const SizedBox(height: 28),
+                                        const SizedBox(height: 20),
                                         _buildApplyButton(
                                           onApply: _applyFilters,
                                           closeModal: () {
