@@ -275,7 +275,7 @@ class _FoodPageState extends State<FoodPage> {
     if (!_isSearching) return const SizedBox.shrink();
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.fromLTRB(30, 160, 30, 0), // Tighter top padding
       child: Material(
         elevation: 4,
         borderRadius: BorderRadius.circular(30),
