@@ -6,6 +6,7 @@ import 'package:jfbfestival/pages/food/components/booth_details.dart';
 import 'package:jfbfestival/data/food_booths.dart';
 import 'package:jfbfestival/models/food_booth.dart';
 
+
 class AnimatedBoothDetailWrapper extends StatefulWidget {
   final FoodBooth booth;
   final VoidCallback onClose;
@@ -175,6 +176,7 @@ class _FoodPageState extends State<FoodPage> {
 
           // Filter button on top of everything
           _buildTopActionButtons(),
+           if (_isSearching) _buildSearchBar(),
         ],
       ),
     );
@@ -272,11 +274,11 @@ class _FoodPageState extends State<FoodPage> {
       ),
     );
   }
-Widget _buildSearchBar() {
-  if (!_isSearching) return const SizedBox.shrink();
+  Widget _buildSearchBar() {
+  if (!_isSearching) return SizedBox.shrink(); // Hide if not searching
 
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    padding: const EdgeInsets.fromLTRB(50, 170, 50, 0), // Tighter top padding
     child: Material(
       elevation: 4,
       borderRadius: BorderRadius.circular(30),
@@ -325,6 +327,8 @@ Widget _buildSearchBar() {
   );
 }
 
+
+
 Widget _buildMainContent(double screenWidth, double screenHeight) {
   double maxWidth = screenWidth > 1200 ? 1300 : screenWidth * 0.95;
   double padding = screenWidth < 600 ? 16 : 24;
@@ -339,8 +343,7 @@ Widget _buildMainContent(double screenWidth, double screenHeight) {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 16),
-              if (_isSearching) _buildSearchBar(),
-              const SizedBox(height: 12),
+
               _buildAllBoothsSection(screenWidth),
               SizedBox(height: screenHeight * 0.05),
             ],
