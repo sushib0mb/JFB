@@ -702,7 +702,7 @@ class _PerformanceBoxState extends State<PerformanceBox>
                                     ? "${widget.eventItem.title.substring(0, 17)}..."
                                     : widget.eventItem.title,
                                 style: TextStyle(
-                                  fontSize: responsiveFontSize * 8,
+                                  fontSize: responsiveFontSize * 7.5,
                                   fontWeight: FontWeight.w500,
                                   height: 0.93,
                                 ),

@@ -9,7 +9,7 @@
             "cwd": "jfbfestival",
             "request": "launch",
             "type": "dart",
-            "program": "lib/mainscreen.dart"
+            "program": "lib/main.dart"
         },
         {
             "name": "jfbfestival (profile mode)",

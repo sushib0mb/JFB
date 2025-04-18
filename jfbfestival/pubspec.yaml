@@ -44,7 +44,7 @@ flutter:
   uses-material-design: true
 
   assets:
-    - .env 
+    - .env
     - assets/food/
     - assets/foodLogo/
     - assets/filter(white).png
@@ -139,11 +139,12 @@ flutter:
     - assets/timetableBackgrounds/Bon Dance Event.jpg
     - assets/timetableBackgrounds/Closing Ceremony.jpg
     - assets/timetableBackgrounds/Cosplay Death Match.png
-    - assets/timetableBackgrounds/oCosplay Fashion Show.png
+    - assets/timetableBackgrounds/Cosplay Fashion Show.png
     - assets/timetableBackgrounds/hiroko.jpg
     - assets/timetableBackgrounds/Japan Airlines Advertising and Raffle.jpg
     - assets/timetableBackgrounds/Jeiko Taiko Ensemble.png
     - assets/timetableBackgrounds/kendo.jpg
+    - assets/timetableBackgrounds/Kitanogai Gagaku Ensemble.jpg
     - assets/timetableBackgrounds/Minami Toyama Noh, Utai, Shinobue.png
     - assets/timetableBackgrounds/Move & Inspire Kids Dance.png
     - assets/timetableBackgrounds/nodojiman.jpg
@@ -154,7 +155,6 @@ flutter:
     - assets/timetableBackgrounds/ryukyu.jpg
     - assets/timetableBackgrounds/showaboston.jpg
     - assets/timetableBackgrounds/Ukulele.jpg
-
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

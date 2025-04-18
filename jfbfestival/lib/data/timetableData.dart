@@ -78,7 +78,7 @@ final List<ScheduleItem> day1ScheduleData = [
         iconImage: "assets/timetableIcons/Singing performance.png",
         description:
             "Nodo Jiman is a Japanese vocal performance that highlights the raw emotion and power of traditional singing. Known for its competitive spirit, this performance features singers displaying their vocal prowess through heartfelt renditions of classic Japanese enka songs, celebrating both personal expression and cultural heritage.",
-        eventDetailImage: "",
+        eventDetailImage: "assets/timetableBackgrounds/nodojiman.jpg",
       ),
     ],
     stage2Events: [
@@ -89,7 +89,7 @@ final List<ScheduleItem> day1ScheduleData = [
         stage: "Stage 2",
         iconImage: "assets/timetableIcons/Band performance.png",
         description: "",
-        eventDetailImage: "",
+        eventDetailImage: "assets/timetableBackgrounds/Ukulele.jpg",
       ),
     ],
   ),
@@ -104,7 +104,7 @@ final List<ScheduleItem> day1ScheduleData = [
         iconImage: "assets/timetableIcons/Band performance.png",
         description:
             "Hiroko Watanabe’s calligraphy performance transforms brushstrokes into a captivating visual art. With each precise movement, they bring beauty and meaning to traditional Japanese writing.",
-        eventDetailImage: "",
+        eventDetailImage: "assets/timetableBackgrounds/hiroko.jpg",
       ),
     ],
     stage2Events: [],
@@ -120,7 +120,7 @@ final List<ScheduleItem> day1ScheduleData = [
         iconImage: "assets/timetableIcons/Opening ceremony.png",
         description:
             "The Opening Ceremony for Japan Festival Boston 2025 will kick off vibrant performances, cultural displays, and speeches from distinguished guests. This exciting event sets the stage for a weekend celebrating Japanese arts, food, and traditions.",
-        eventDetailImage: "",
+        eventDetailImage: "assets/timetableBackgrounds/OpeningCeremony.jpg",
       ),
     ],
     stage2Events: [
@@ -146,7 +146,8 @@ final List<ScheduleItem> day1ScheduleData = [
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description:
             "The Kitanodai Gagaku Ensemble performs gagaku, Japan’s ancient court music and dance, blending serene instrumental melodies with graceful movements. Their performance offers a rare and immersive experience of this UNESCO-recognized cultural heritage.",
-        eventDetailImage: "",
+        eventDetailImage:
+            "assets/timetableBackgrounds/Kitanogai Gagaku Ensemble.jpg",
       ),
     ],
     stage2Events: [
@@ -158,7 +159,7 @@ final List<ScheduleItem> day1ScheduleData = [
         iconImage: "assets/timetableIcons/Band performance.png",
         description:
             "The Berklee band will bring Japanese culture to the stage, performing Japanese hit songs. This ensemble offers a vibrant showcase of contemporary Japanese music, blending traditional sounds with modern flair.",
-        eventDetailImage: "",
+        eventDetailImage: "assets/timetableBackgrounds/Berklee Band.jpg",
       ),
     ],
   ),
@@ -173,7 +174,7 @@ final List<ScheduleItem> day1ScheduleData = [
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description:
             "Ryukyu Kokusai Taiko is an Okinawan drumming ensemble known for its dynamic fusion of traditional Eisa rhythms, dance, and karate movements. Their powerful performances celebrate Okinawan culture, blending ancient sounds with modern energy.",
-        eventDetailImage: "",
+        eventDetailImage: "assets/timetableBackgrounds/ryukyu.jpg",
       ),
     ],
     stage2Events: [
@@ -185,7 +186,7 @@ final List<ScheduleItem> day1ScheduleData = [
         iconImage: "assets/timetableIcons/Anime stage.png",
         description:
             "An Anime Band performs energetic renditions of popular songs from anime series, blending J-Rock, J-Pop, and orchestral music. Their performances bring iconic anime themes to life, offering fans a chance to experience their favorite tunes in a live, dynamic setting.",
-        eventDetailImage: "",
+        eventDetailImage: "assets/timetableBackgrounds/animeband.jpg",
       ),
     ],
   ),
@@ -200,7 +201,8 @@ final List<ScheduleItem> day1ScheduleData = [
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description:
             "The Jeiko Taiko Ensemble is a vibrant Japanese drumming group based in New England, known for their high-energy performances that blend traditional taiko rhythms with modern influences. Their performances showcase the power and precision of Japanese drumming, engaging audiences with dynamic rhythms and movements.",
-        eventDetailImage: "",
+        eventDetailImage:
+            "assets/timetableBackgrounds/Jeiko Taiko Ensemble.png",
       ),
     ],
     stage2Events: [
@@ -212,7 +214,8 @@ final List<ScheduleItem> day1ScheduleData = [
         iconImage: "assets/timetableIcons/Anime stage.png",
         description:
             "The Cosplay Fashion Show features participants showcasing their detailed costumes inspired by anime, manga, and pop culture. Models walk the runway, celebrating the creativity and craftsmanship behind each ensemble in a vibrant and exciting display.",
-        eventDetailImage: "",
+        eventDetailImage:
+            "assets/timetableBackgrounds/Cosplay Fashion Show.png",
       ),
     ],
   ),
@@ -227,7 +230,8 @@ final List<ScheduleItem> day1ScheduleData = [
         iconImage: "assets/timetableIcons/Anime stage.png",
         description:
             "The Cosplay Fashion Show features participants showcasing their detailed costumes inspired by anime, manga, and pop culture. Models walk the runway, celebrating the creativity and craftsmanship behind each ensemble in a vibrant and exciting display.",
-        eventDetailImage: "",
+        eventDetailImage:
+            "assets/timetableBackgrounds/Cosplay Fashion Show.png",
       ),
     ],
     stage2Events: [
@@ -239,7 +243,7 @@ final List<ScheduleItem> day1ScheduleData = [
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description:
             "As the final performance at the Downtown Stage, participants will join together for a parade, walking to Boston Commons while enjoying the music along the way!",
-        eventDetailImage: "",
+        eventDetailImage: "assets/timetableBackgrounds/Parade.jpg",
       ),
     ],
   ),
@@ -254,7 +258,8 @@ final List<ScheduleItem> day1ScheduleData = [
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description:
             "Parfait Soleil Dance Performance features a lively display of contemporary and traditional dance, blending fluid movements with vibrant energy. The performance captures the joy and beauty of dance through captivating choreography.",
-        eventDetailImage: "",
+        eventDetailImage:
+            "assets/timetableBackgrounds/Parfait Soleil Dance Performance.png",
       ),
     ],
     stage2Events: [],
@@ -270,7 +275,7 @@ final List<ScheduleItem> day1ScheduleData = [
         iconImage: "assets/timetableIcons/Kendo.png",
         description:
             "Yamazaki VS Sugimono is an intense Kendo showcase, where two skilled martial artists face off in a demonstration of precision, speed, and spirit. The clash highlights the discipline and tradition of Japanese swordsmanship.",
-        eventDetailImage: "",
+        eventDetailImage: "assets/timetableBackgrounds/kendo.jpg",
       ),
     ],
     stage2Events: [],
@@ -286,7 +291,8 @@ final List<ScheduleItem> day1ScheduleData = [
         iconImage: "assets/timetableIcons/Advertising.png",
         description:
             "Japan Airlines Advertising and Raffle offers an exciting opportunity to learn about the airline’s services while participants can enter to win exclusive prizes. It’s a fun and engaging way to promote travel with Japan Airlines.",
-        eventDetailImage: "",
+        eventDetailImage:
+            "assets/timetableBackgrounds/Japan Airlines Advertising and Raffle.jpg",
       ),
       EventItem(
         title: "Move & Inspire Kids Dance",
@@ -296,7 +302,8 @@ final List<ScheduleItem> day1ScheduleData = [
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description:
             "Move & Inspire Kids Dance features young dancers showcasing their talent and energy through fun, upbeat performances. The event encourages creativity and movement while inspiring the next generation of performers.",
-        eventDetailImage: "",
+        eventDetailImage:
+            "assets/timetableBackgrounds/Move & Inspire Kids Dance.png",
       ),
     ],
     stage2Events: [],
@@ -322,7 +329,7 @@ final List<ScheduleItem> day1ScheduleData = [
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description:
             "The Bon Dance Event invites everyone to join in a traditional Japanese summer dance, celebrating community and honoring ancestors. It's a joyful, participatory experience filled with music, rhythm, and cultural connection.",
-        eventDetailImage: "",
+        eventDetailImage: "assets/timetableBackgrounds/Bon Dance Event.jpg",
       ),
     ],
     stage2Events: [],
@@ -342,7 +349,7 @@ final List<ScheduleItem> day2ScheduleData = [
         stage: "Stage 1",
         description:
             "The Opening Ceremony for Japan Festival Boston 2025 will kick off vibrant performances, cultural displays, and speeches from distinguished guests. This exciting event sets the stage for a weekend celebrating Japanese arts, food, and traditions.",
-        eventDetailImage: "",
+        eventDetailImage: "assets/timetableBackgrounds/OpeningCeremony.jpg",
       ),
       EventItem(
         title: "Showa Boston Dance Performance",
@@ -362,7 +369,8 @@ final List<ScheduleItem> day2ScheduleData = [
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description:
             "Minami Toyama presents a captivating mix of Noh, Utai chanting, and Shinobue flute. This performance blends classical Japanese theater, vocal tradition, and melodic flute for a deeply cultural experience.",
-        eventDetailImage: "",
+        eventDetailImage:
+            "assets/timetableBackgrounds/Minami Toyama Noh, Utai, Shinobue.png",
       ),
     ],
     stage2Events: [
@@ -388,7 +396,7 @@ final List<ScheduleItem> day2ScheduleData = [
         iconImage: "assets/timetableIcons/Kendo.png",
         description:
             "The Kendo performance showcases the art of Japanese swordsmanship through precise movements, discipline, and powerful strikes. It offers a glimpse into the spirit and technique of this traditional martial art.",
-        eventDetailImage: "",
+        eventDetailImage: "assets/timetableBackgrounds/kendo.jpg",
       ),
     ],
     stage2Events: [],
@@ -404,7 +412,8 @@ final List<ScheduleItem> day2ScheduleData = [
         iconImage: "assets/timetableIcons/Anime stage.png",
         description:
             "The Cosplay Fashion Show features participants showcasing their detailed costumes inspired by anime, manga, and pop culture. Models walk the runway, celebrating the creativity and craftsmanship behind each ensemble in a vibrant and exciting display.",
-        eventDetailImage: "",
+        eventDetailImage:
+            "assets/timetableBackgrounds/Cosplay Fashion Show.png",
       ),
     ],
     stage2Events: [],
@@ -420,7 +429,8 @@ final List<ScheduleItem> day2ScheduleData = [
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description:
             "Parfait Soleil Dance Performance features a lively display of contemporary and traditional dance, blending fluid movements with vibrant energy. The performance captures the joy and beauty of dance through captivating choreography.",
-        eventDetailImage: "",
+        eventDetailImage:
+            "assets/timetableBackgrounds/Parfait Soleil Dance Performance.png",
       ),
     ],
     stage2Events: [],
@@ -436,7 +446,7 @@ final List<ScheduleItem> day2ScheduleData = [
         iconImage: "assets/timetableIcons/Band performance.png",
         description:
             "Hiroko Watanabe’s calligraphy performance transforms brushstrokes into a captivating visual art. With each precise movement, they bring beauty and meaning to traditional Japanese writing.",
-        eventDetailImage: "",
+        eventDetailImage: "assets/timetableBackgrounds/hiroko.jpg",
       ),
     ],
     stage2Events: [],
@@ -452,7 +462,7 @@ final List<ScheduleItem> day2ScheduleData = [
         iconImage: "assets/timetableIcons/Anime stage.png",
         description:
             "Cosplay Death Match is a lively competition where cosplayers battle it out with performances and style, all for the chance to be crowned the ultimate winner. Audience energy and creativity take center stage in this fan-favorite showdown.",
-        eventDetailImage: "",
+        eventDetailImage: "assets/timetableBackgrounds/Cosplay Death Match.png",
       ),
     ],
     stage2Events: [],
@@ -468,7 +478,8 @@ final List<ScheduleItem> day2ScheduleData = [
         stage: "Stage 1",
         description:
             "The Jeiko Taiko Ensemble is a vibrant Japanese drumming group based in New England, known for their high-energy performances that blend traditional taiko rhythms with modern influences. Their performances showcase the power and precision of Japanese drumming, engaging audiences with dynamic rhythms and movements.",
-        eventDetailImage: "",
+        eventDetailImage:
+            "assets/timetableBackgrounds/Jeiko Taiko Ensemble.png",
       ),
     ],
     stage2Events: [],
@@ -484,7 +495,8 @@ final List<ScheduleItem> day2ScheduleData = [
         stage: "Stage 1",
         description:
             "Move & Inspire Kids Dance features young dancers showcasing their talent and energy through fun, upbeat performances. The event encourages creativity and movement while inspiring the next generation of performers.",
-        eventDetailImage: "",
+        eventDetailImage:
+            "assets/timetableBackgrounds/Move & Inspire Kids Dance.png",
       ),
     ],
     stage2Events: [],
@@ -500,7 +512,7 @@ final List<ScheduleItem> day2ScheduleData = [
         stage: "Stage 1",
         description:
             "Ryukyu Kokusai Taiko is an Okinawan drumming ensemble known for its dynamic fusion of traditional Eisa rhythms, dance, and karate movements. Their powerful performances celebrate Okinawan culture, blending ancient sounds with modern energy.",
-        eventDetailImage: "",
+        eventDetailImage: "assets/timetableBackgrounds/ryukyu.jpg",
       ),
     ],
     stage2Events: [],
@@ -516,7 +528,8 @@ final List<ScheduleItem> day2ScheduleData = [
         iconImage: "assets/timetableIcons/Advertising.png",
         description:
             "Japan Airlines Advertising and Raffle offers an exciting opportunity to learn about the airline’s services while participants can enter to win exclusive prizes. It’s a fun and engaging way to promote travel with Japan Airlines.",
-        eventDetailImage: "",
+        eventDetailImage:
+            "assets/timetableBackgrounds/Japan Airlines Advertising and Raffle.jpg",
       ),
     ],
     stage2Events: [],
@@ -542,7 +555,7 @@ final List<ScheduleItem> day2ScheduleData = [
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description:
             "The Bon Dance Event invites everyone to join in a traditional Japanese summer dance, celebrating community and honoring ancestors. It's a joyful, participatory experience filled with music, rhythm, and cultural connection.",
-        eventDetailImage: "",
+        eventDetailImage: "assets/timetableBackgrounds/Bon Dance Event.jpg",
       ),
     ],
     stage2Events: [],
@@ -558,7 +571,7 @@ final List<ScheduleItem> day2ScheduleData = [
         iconImage: "assets/timetableIcons/Closing ceremony.png",
         description:
             "The Closing Ceremony marks the end of Japan Festival Boston 2025, wrapping up the weekend with final remarks, gratitude, and celebration. It’s a heartfelt farewell that honors the community, performers, and shared cultural experience.",
-        eventDetailImage: "",
+        eventDetailImage: "assets/timetableBackgrounds/Closing Ceremony.jpg",
       ),
     ],
     stage2Events: [],
