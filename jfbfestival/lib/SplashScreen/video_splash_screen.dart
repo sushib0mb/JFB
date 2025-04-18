@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-import 'package:jfbfestival/main.dart'; // adjust the import if needed
+import 'package:jfbfestival/main.dart'; // Adjust if needed
 
 class VideoSplashScreen extends StatefulWidget {
   const VideoSplashScreen({super.key});
@@ -18,31 +18,37 @@ class _VideoSplashScreenState extends State<VideoSplashScreen> {
 
     _controller = VideoPlayerController.asset('assets/Intro1.mp4')
       ..initialize().then((_) {
-        setState(() {}); // Refresh the UI when initialized
-        _controller.setVolume(0); // Mute if needed for autoplay
+        setState(() {});
+        _controller.setVolume(0);
         _controller.play();
-
-        // Navigate after video finishes
-        _controller.addListener(() {
-  final position = _controller.value.position;
-  final duration = _controller.value.duration;
-
-  // End 0.5 seconds early
-  if (duration.inMilliseconds > 0 &&
-      position.inMilliseconds >= duration.inMilliseconds - 600) {
-    _controller.removeListener(() {}); // prevent repeated calls
-    if (mounted) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const MainScreen()),
-      );
-    }
-  }
-});
+        _controller.addListener(_videoListener);
       });
+  }
+
+  void _videoListener() {
+    final position = _controller.value.position;
+    final duration = _controller.value.duration;
+
+    if (duration.inMilliseconds > 0 &&
+        position.inMilliseconds >= duration.inMilliseconds - 600) {
+      _controller.removeListener(_videoListener);
+      if (mounted) {
+        Navigator.of(context).pushReplacement(
+          PageRouteBuilder(
+            pageBuilder: (_, __, ___) => const MainScreen(),
+            transitionsBuilder: (_, animation, __, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+            transitionDuration: const Duration(milliseconds: 600),
+          ),
+        );
+      }
+    }
   }
 
   @override
   void dispose() {
+    _controller.removeListener(_videoListener);
     _controller.dispose();
     super.dispose();
   }
@@ -51,11 +57,19 @@ class _VideoSplashScreenState extends State<VideoSplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _controller.value.isInitialized
-          ? Center(
-              child: AspectRatio(
-                aspectRatio: _controller.value.aspectRatio,
-                child: VideoPlayer(_controller),
-              ),
+          ? Stack(
+              children: [
+                SizedBox.expand(
+                  child: FittedBox(
+                    fit: BoxFit.cover, // Force fill entire screen
+                    child: SizedBox(
+                      width: _controller.value.size.width,
+                      height: _controller.value.size.height,
+                      child: VideoPlayer(_controller),
+                    ),
+                  ),
+                ),
+              ],
             )
           : const Center(child: CircularProgressIndicator()),
     );

@@ -10,6 +10,7 @@ import 'package:jfbfestival/pages/map_page.dart';
 import 'package:jfbfestival/pages/timetable_page.dart';
 import 'package:jfbfestival/data/timetableData.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:jfbfestival/SplashScreen/video_splash_screen.dart';
 import 'models/feedback_entry.dart';
 import 'models/survey_entry.dart';
 import 'pages/survey/survey_page.dart';
@@ -69,7 +70,8 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Fredoka',
         ),
         themeMode: theme.mode,
-        home: const MainScreen(),
+        home: const VideoSplashScreen(),
+
         routes: {
           SettingsPage.routeName: (_) => const SettingsPage(),
           SurveyPage.routeName: (_) => const SurveyPage(),
