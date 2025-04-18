@@ -41,12 +41,12 @@ class MapPageState extends State<MapPage> {
   }
 
   void _onLetterTap(String letter) {
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (_) => MainScreen(
-          initialIndex: 1, // Go to FoodPage
-          selectedMapLetter: letter,
+          initialIndex: 1, // Navigate to FoodPage
+          selectedMapLetter: letter, // Pass the selected letter
         ),
       ),
     );
@@ -142,8 +142,8 @@ class MapPageState extends State<MapPage> {
                     color: Colors.black.withOpacity(0.4),
                     child: Center(
                       child: Container(
-                        width: screenSize.width * 0.9,
-                        height: screenSize.height * 0.65,
+                        width: screenSize.width * 0.75,  // Adjust width here
+                        height: screenSize.height * 0.65, // Adjust height here
                         padding: EdgeInsets.all(24),
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -156,23 +156,24 @@ class MapPageState extends State<MapPage> {
                             ),
                           ],
                         ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: IconButton(
-                                icon: const Icon(Icons.close),
-                                onPressed: _toggleMiniWindow,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: IconButton(
+                                  icon: const Icon(Icons.close),
+                                  onPressed: _toggleMiniWindow,
+                                ),
                               ),
-                            ),
-                            _buildFilterButton('All', screenSize),
-                            _buildFilterButton('Food Vendors', screenSize),
-                            _buildFilterButton(
-                                'Information Center', screenSize),
-                            _buildFilterButton('Toilets', screenSize),
-                            _buildFilterButton('Trash Station', screenSize),
-                          ],
+                              _buildFilterButton('All', screenSize),
+                              _buildFilterButton('Food Vendors', screenSize),
+                              _buildFilterButton('Information Center', screenSize),
+                              _buildFilterButton('Toilets', screenSize),
+                              _buildFilterButton('Trash Station', screenSize),
+                            ],
+                          ),
                         ),
                       ),
                     ),

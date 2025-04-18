@@ -90,6 +90,7 @@ class _FoodPageState extends State<FoodPage> {
   Set<String> selectedAllergens = {};
   List<FoodBooth> safeVeganBooths = [], nonVeganBooths = [];
   bool _isFilterPopupOpen = false;
+  String? currentMapLetter;
 
   // Search related variables
   bool _isSearching = false;
@@ -100,18 +101,34 @@ class _FoodPageState extends State<FoodPage> {
   void initState() {
     super.initState();
     _searchController.addListener(_onSearchChanged);
+    currentMapLetter = widget.selectedMapLetter;
+    
+    // Filter by map section if coming from map
+    _applyInitialMapFilter();
+  }
 
-    // If coming from a map section
-    if (widget.selectedMapLetter != null) {
-      filteredBooths =
-          foodBooths
-              .where(
-                (booth) =>
-                    booth.mapPageFoodLocation == widget.selectedMapLetter,
-              )
-              .toList();
+  void _applyInitialMapFilter() {
+    if (currentMapLetter != null) {
+      setState(() {
+        filteredBooths = foodBooths
+            .where((booth) => booth.mapPageFoodLocation == currentMapLetter)
+            .toList();
+      });
     } else {
-      filteredBooths = foodBooths;
+      setState(() {
+        filteredBooths = foodBooths;
+      });
+    }
+  }
+
+  @override
+  void didUpdateWidget(FoodPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    
+    // Update if selectedMapLetter changes
+    if (widget.selectedMapLetter != oldWidget.selectedMapLetter) {
+      currentMapLetter = widget.selectedMapLetter;
+      _applyInitialMapFilter();
     }
   }
 

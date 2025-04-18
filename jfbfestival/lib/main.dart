@@ -9,7 +9,6 @@ import 'package:jfbfestival/pages/home_page.dart';
 import 'package:jfbfestival/pages/map_page.dart';
 import 'package:jfbfestival/pages/timetable_page.dart';
 import 'package:jfbfestival/data/timetableData.dart';
-// import 'package:jfbfestival/SplashScreen/video_splash_screen.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'models/feedback_entry.dart';
 import 'models/survey_entry.dart';
@@ -23,28 +22,37 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+<<<<<<< Updated upstream
   await dotenv.load();
+=======
+  await dotenv.load();      
+>>>>>>> Stashed changes
   await Hive.initFlutter();
   Hive.registerAdapter(FeedbackEntryAdapter());
   Hive.registerAdapter(SurveyEntryAdapter());
-
   await Hive.openBox<FeedbackEntry>('feedback');
   await Hive.openBox<SurveyEntry>('survey');
+<<<<<<< Updated upstream
   await Supabase.initialize(
+=======
+  await Supabase.initialize(                            
+>>>>>>> Stashed changes
     url: dotenv.env['SUPABASE_URL']!,
     anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
-
   developer.log(
-    'Supabase client initialized: ${Supabase.instance.client}',
+    'Supabase client initialized: \${Supabase.instance.client}',
     name: '🔥 SupabaseInit',
   );
-  // … the rest of your initialization …
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeNotifier()),
+<<<<<<< Updated upstream
         ChangeNotifierProvider(create: (_) => ReminderProvider()), // 👈
+=======
+        ChangeNotifierProvider(create: (_) => ReminderProvider()),
+>>>>>>> Stashed changes
       ],
       child: const MyApp(),
     ),
@@ -56,6 +64,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeNotifier>(
+<<<<<<< Updated upstream
       builder:
           (context, theme, _) => MaterialApp(
             debugShowCheckedModeBanner: false,
@@ -79,6 +88,28 @@ class MyApp extends StatelessWidget {
               //   AdminDashboardPage.routeName: (_) => const AdminDashboardPage(),
             },
           ),
+=======
+      builder: (context, theme, _) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'JFB Festival',
+        theme: ThemeData(
+          brightness: Brightness.light,
+          fontFamily: 'Fredoka',
+        ),
+        darkTheme: ThemeData(
+          brightness: Brightness.dark,
+          fontFamily: 'Fredoka',
+        ),
+        themeMode: theme.mode,
+        home: const MainScreen(),
+        routes: {
+          SettingsPage.routeName: (_) => const SettingsPage(),
+          SurveyPage.routeName: (_) => const SurveyPage(),
+          if (kDebugMode)
+            SurveyListPage.routeName: (_) => const SurveyListPage(),
+        },
+      ),
+>>>>>>> Stashed changes
     );
   }
 }
@@ -92,7 +123,11 @@ class MainScreen extends StatefulWidget {
     super.key,
     this.initialIndex = 0,
     this.selectedEvent,
+<<<<<<< Updated upstream
     this.selectedMapLetter, // <-- add this
+=======
+    this.selectedMapLetter,
+>>>>>>> Stashed changes
   });
 
   @override
@@ -101,19 +136,25 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   late int selectedIndex;
+<<<<<<< Updated upstream
+=======
+  Key foodPageKey = UniqueKey();
+  String? currentMapLetter;
+>>>>>>> Stashed changes
 
   @override
   void initState() {
     super.initState();
     selectedIndex = widget.initialIndex;
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
+    currentMapLetter = widget.selectedMapLetter;
   }
 
   void _onItemTapped(int index) {
+    // If navigating away from Food page, reset the letter filter
+    if (selectedIndex == 1 && index != 1) {
+      foodPageKey = UniqueKey();
+      currentMapLetter = null;
+    }
     setState(() => selectedIndex = index);
   }
 
@@ -124,21 +165,37 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
       extendBodyBehindAppBar: true,
       body: Stack(
         children: [
+<<<<<<< Updated upstream
           // 1) Your main pages
+=======
+>>>>>>> Stashed changes
           IndexedStack(
             index: selectedIndex,
             children: [
               HomePage(),
+<<<<<<< Updated upstream
               FoodPage(selectedMapLetter: widget.selectedMapLetter),
+=======
+              FoodPage(
+                key: foodPageKey,
+                selectedMapLetter: currentMapLetter,
+              ),
+>>>>>>> Stashed changes
               TimetablePage(selectedEvent: widget.selectedEvent),
               MapPage(),
             ],
           ),
+<<<<<<< Updated upstream
 
           // 2) Logo at top‑center
           SafeArea(child: TopBar(selectedIndex: selectedIndex)),
 
           // 3) Your bottom navigation bar
+=======
+          SafeArea(
+            child: TopBar(selectedIndex: selectedIndex),
+          ),
+>>>>>>> Stashed changes
           Align(
             alignment: Alignment.bottomCenter,
             child: BottomBar(
@@ -151,7 +208,10 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     );
   }
 }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 class TopBar extends StatelessWidget {
   final int selectedIndex;
   const TopBar({super.key, required this.selectedIndex});
@@ -172,7 +232,7 @@ class TopBar extends StatelessWidget {
               height: logoSize,
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.transparent, // Background color for the circle
+                color: Colors.transparent,
               ),
               child: Padding(
                 padding: const EdgeInsets.all(1.0),
@@ -200,29 +260,14 @@ class BottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get the screen width and calculate the width of the bottom bar
     final screenWidth = MediaQuery.of(context).size.width;
-
-    // Define the padding for the left and right sides
-    final sidePadding = screenWidth * 0.03; // Adjust the value as needed
-
-    // Adjust the width of the bottom bar to account for side padding
-    final bottomBarWidth =
-        screenWidth - 2 * sidePadding; // Subtracting padding on both sides
-
-    // Icon size
-    final iconSize = 74.0; // Width and height of each icon
-    final numberOfIcons = 4; // Number of icons in the bottom bar
-
-    // Calculate total width of all icons (icons + space between them)
+    final sidePadding = screenWidth * 0.03;
+    final bottomBarWidth = screenWidth - 2 * sidePadding;
+    final iconSize = 74.0;
+    final numberOfIcons = 4;
     final totalIconsWidth = iconSize * numberOfIcons;
-
-    // Calculate the remaining space in the bottom bar
     final remainingSpace = bottomBarWidth - totalIconsWidth;
-
-    // Calculate dynamic spacing based on the remaining space
-    final dynamicSpacing =
-        remainingSpace / (numberOfIcons + 1); // +1 for the edges
+    final dynamicSpacing = remainingSpace / (numberOfIcons + 1);
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: sidePadding),
@@ -232,7 +277,6 @@ class BottomBar extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 20),
         child: Stack(
           children: [
-            // Semi-transparent background with blur
             Positioned.fill(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(100),
@@ -247,12 +291,10 @@ class BottomBar extends StatelessWidget {
                 ),
               ),
             ),
-            // Navigation buttons
             Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Dynamic spacing for each icon
                   SizedBox(width: dynamicSpacing),
                   ImageButton(
                     index: 0,
@@ -319,7 +361,6 @@ class ImageButton extends StatefulWidget {
 class _ImageButtonState extends State<ImageButton> {
   bool isPressed = false;
 
-  // Handle tap events
   void _onTapDown(TapDownDetails details) {
     setState(() {
       isPressed = true;
@@ -354,10 +395,9 @@ class _ImageButtonState extends State<ImageButton> {
         height: 74,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color:
-              isSelected && !isPressed
-                  ? Colors.white.withOpacity(0.7)
-                  : Colors.transparent,
+          color: isSelected && !isPressed
+              ? Colors.white.withOpacity(0.7)
+              : Colors.transparent,
         ),
         child: Center(
           child: ClipOval(
