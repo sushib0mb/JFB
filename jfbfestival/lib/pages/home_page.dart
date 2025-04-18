@@ -244,13 +244,14 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildLiveTimetable(double screenWidth) {
     // Use test time if provided, otherwise use current Boston time (UTC-4)
-    final now =
-        widget.testTime ?? DateTime.now().toUtc().subtract(Duration(hours: 4));
+
+    final now = widget.testTime ?? DateTime.now(); // Local time
+
     // final now = widget.testTime ?? DateTime.utc(2025, 4, 27, 16, 55);
 
     // Festival dates setup
-    final festivalStart = DateTime(2025, 4, 26, 11); // April 27 at 11:00 AM
-    final festivalEnd = DateTime(2025, 4, 27, 23, 59); // April 28 at 11:59 PM
+    final festivalStart = DateTime(2025, 4, 27, 11); // April 27 at 11:00 AM
+    final festivalEnd = DateTime(2025, 4, 28, 23, 59); // April 28 at 11:59 PM
 
     // Check if we're outside festival dates
     if (now.isBefore(festivalStart) || now.isAfter(festivalEnd)) {
