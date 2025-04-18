@@ -526,7 +526,7 @@ class _FoodPageState extends State<FoodPage> {
                         ),
                         const SizedBox(height: 6),
                         Text(
-                          'Food Booth: ${booth.boothLocation}',
+                          'Food Booth: ${booth.mapPageFoodLocation}',
                           style: const TextStyle(
                             fontSize: 16,
                             color: Colors.grey,

@@ -256,10 +256,22 @@ class _HomePageState extends State<HomePage> {
     if (now.isBefore(festivalStart) || now.isAfter(festivalEnd)) {
       return Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Text(
-          "Live Timetable is only available during the festival days (Apr 26–27).",
-          style: TextStyle(fontSize: 16),
-          textAlign: TextAlign.center,
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(color: Colors.black12, blurRadius: 5, spreadRadius: 2),
+            ],
+          ),
+          child: const Center(
+            child: Text(
+              "Live Timetable is only available during the festival days:\nApr 26 – 27",
+              style: TextStyle(fontSize: 16),
+              textAlign: TextAlign.center,
+            ),
+          ),
         ),
       );
     }
