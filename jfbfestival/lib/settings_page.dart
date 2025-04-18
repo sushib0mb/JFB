@@ -50,16 +50,16 @@ class _SettingsPageState extends State<SettingsPage> {
 
 
           // Calendar sync stub
-          ListTile(
-            leading: const Icon(Icons.calendar_today),
-            title: const Text('Sync with Calendar'),
-            onTap: () {
-              // TODO: implement real calendar sync
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Sync not yet implemented')),
-              );
-            },
-          ),
+          // ListTile(
+          //   leading: const Icon(Icons.calendar_today),
+          //   title: const Text('Sync with Calendar'),
+          //   onTap: () {
+          //     // TODO: implement real calendar sync
+          //     ScaffoldMessenger.of(context).showSnackBar(
+          //       const SnackBar(content: Text('Sync not yet implemented')),
+          //     );
+          //   },
+          // ),
 
           // Share this app
           ListTile(
