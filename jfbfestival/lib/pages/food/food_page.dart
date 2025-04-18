@@ -116,6 +116,17 @@ class _FoodPageState extends State<FoodPage> {
   }
 
   @override
+  void didUpdateWidget(FoodPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // Update if selectedMapLetter changes
+    if (widget.selectedMapLetter != oldWidget.selectedMapLetter) {
+      currentMapLetter = widget.selectedMapLetter;
+      _applyInitialMapFilter();
+    }
+  }
+
+  @override
   void dispose() {
     _searchController.dispose();
     _searchFocusNode.dispose();
@@ -630,7 +641,7 @@ class _FoodPageState extends State<FoodPage> {
                             maxWidth: MediaQuery.of(context).size.width * 0.85,
                             maxHeight:
                                 MediaQuery.of(context).size.height *
-                                0.85, // Increased height
+                                0.78, // Increased height
                           ),
                           margin: const EdgeInsets.symmetric(horizontal: 24),
                           padding: const EdgeInsets.symmetric(
@@ -669,6 +680,7 @@ class _FoodPageState extends State<FoodPage> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.stretch,
                                         children: [
+                                          SizedBox(height: 6),
                                           Center(
                                             child: _buildSectionTitle(
                                               "Payment",
@@ -730,7 +742,13 @@ class _FoodPageState extends State<FoodPage> {
                                               });
                                             },
                                           ),
-                                          const SizedBox(height: 28),
+                                          SizedBox(
+                                            height:
+                                                MediaQuery.of(
+                                                  context,
+                                                ).size.height *
+                                                0.01,
+                                          ),
                                           _buildApplyButton(
                                             onApply: _applyFilters,
                                             closeModal: () {

@@ -1113,8 +1113,12 @@ class _EventDetailViewState extends State<EventDetailView>
                                         CrossAxisAlignment.start,
                                     children: [
                                       Container(
-                                        width: 242,
-                                        height: 200,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                            0.6,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                            0.27,
                                         decoration: ShapeDecoration(
                                           color: const Color.fromARGB(
                                             13,
@@ -1129,13 +1133,16 @@ class _EventDetailViewState extends State<EventDetailView>
                                           ),
                                         ),
                                         child: Center(
-                                          child: Text(
-                                            widget.event.description,
-                                            textAlign: TextAlign.center,
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.black87,
+                                          child: Padding(
+                                            padding: EdgeInsets.all(10),
+                                            child: Text(
+                                              widget.event.description,
+                                              textAlign: TextAlign.center,
+                                              style: const TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.black87,
+                                              ),
                                             ),
                                           ),
                                         ),
