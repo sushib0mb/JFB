@@ -46,6 +46,7 @@ Future<void> logPending(String tag) async {
     } catch (_) {
       tz.setLocalLocation(tz.getLocation('UTC'));
     }
+    
 
     /* 1. Android channel */
     const channel = AndroidNotificationChannel(
@@ -71,10 +72,10 @@ Future<void> logPending(String tag) async {
       const InitializationSettings(android: androidInit, iOS: iosInit),
     );
 
+
     await fln
-        .resolvePlatformSpecificImplementation<
-            IOSFlutterLocalNotificationsPlugin>()
-        ?.requestPermissions(alert: true, badge: true, sound: true);
+    .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
+    ?.requestPermissions(alert: true, badge: true, sound: true);
 
     /* 3. Android 13+ POST_NOTIFICATIONS runtime permission */
     if (Platform.isAndroid &&
@@ -85,29 +86,35 @@ Future<void> logPending(String tag) async {
           ?.requestNotificationsPermission();
     }
   }
-
+Future<void> requestPermissions() async {
+  await fln
+      .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
+      ?.requestPermissions(alert: true, badge: true, sound: true);
+}
   /* ─────────────────── schedule ─────────────────── */
-  Future<void> schedule({
-    required int id,
-    required String title,
-    required DateTime when,
-    Duration leadTime = const Duration(minutes: 10),
-  }) async {
-    final fireTime = tz.TZDateTime.from(when, tz.local).subtract(leadTime);
-    if (fireTime.isBefore(tz.TZDateTime.now(tz.local))) return;
+Future<void> schedule({
+  required int id,
+  required String title,
+  required DateTime when,
+  String body = '',
+  Duration leadTime = const Duration(minutes: 10),
+}) async {
+  final fireTime = tz.TZDateTime.from(when, tz.local).subtract(leadTime);
+  if (fireTime.isBefore(tz.TZDateTime.now(tz.local))) return;
 
-    await fln.zonedSchedule(
-      id,
-      'Upcoming Event',
-      title,
-      fireTime,
-      _notifDetails,   // ← single place colour & foreground flags defined
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      matchDateTimeComponents: DateTimeComponents.dateAndTime,
-    );
-  }
+  await fln.zonedSchedule(
+    id,
+    title,
+    body,
+    fireTime,
+    _notifDetails,
+    uiLocalNotificationDateInterpretation:
+        UILocalNotificationDateInterpretation.absoluteTime,
+    androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+    matchDateTimeComponents: DateTimeComponents.dateAndTime,
+  );
+}
+
 
   /* ─────────────────── cancel helpers ─────────────────── */
   Future<void> cancelAll() => fln.cancelAll();

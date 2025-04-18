@@ -45,7 +45,7 @@ void main() async {
   MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => ThemeNotifier()),
-      // ChangeNotifierProvider(create: (_) => ReminderProvider()),   // 👈
+      ChangeNotifierProvider(create: (_) => ReminderProvider()),   // 👈
     ],
     child: const MyApp(),
   ),
