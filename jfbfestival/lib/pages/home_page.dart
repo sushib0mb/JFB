@@ -225,7 +225,7 @@ Widget build(BuildContext context) {
       return Padding(
         padding: const EdgeInsets.all(16.0),
         child: Text(
-          "Live Timetable is only available during the festival days (Apr 27–28).",
+          "Live Timetable is only available during the festival days (Apr 26–27).",
           style: TextStyle(fontSize: 16),
           textAlign: TextAlign.center,
         ),
