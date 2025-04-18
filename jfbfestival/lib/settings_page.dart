@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'dart:io' show Platform;
 
 import 'theme_notifier.dart';
 import 'pages/survey/survey_list_page.dart';
@@ -65,15 +66,22 @@ class _SettingsPageState extends State<SettingsPage> {
           // ),
 
           // Share this app
-          ListTile(
-            leading: const Icon(Icons.share),
-            title: const Text('Share this App'),
-            onTap: () {
-              Share.share(
-                'Check out the JFB Festival app! Download it now and plan your visit.',
-              );
-            },
-          ),
+    ListTile(
+  leading: const Icon(Icons.share),
+  title: const Text('Share this App'),
+  onTap: () {
+    // you can swap this out for your real URLs
+    final iosUrl = 'https://testflight.apple.com/join/ABC12345';
+    final androidUrl =
+        'https://play.google.com/store/apps/details?id=com.example.jfbfestival';
+
+    final link = Platform.isAndroid ? androidUrl : iosUrl;
+    Share.share(
+      'Check out the JFB Festival app! Download it now and plan your visit:\n$link',
+      subject: 'JFB Festival App',
+    );
+  },
+),
 
           // Report a bug → in‑app feedback form
           // ListTile(
