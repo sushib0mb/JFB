@@ -22,37 +22,29 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-<<<<<<< Updated upstream
-  await dotenv.load();
-=======
   await dotenv.load();      
->>>>>>> Stashed changes
   await Hive.initFlutter();
   Hive.registerAdapter(FeedbackEntryAdapter());
   Hive.registerAdapter(SurveyEntryAdapter());
+
   await Hive.openBox<FeedbackEntry>('feedback');
   await Hive.openBox<SurveyEntry>('survey');
-<<<<<<< Updated upstream
-  await Supabase.initialize(
-=======
+
   await Supabase.initialize(                            
->>>>>>> Stashed changes
     url: dotenv.env['SUPABASE_URL']!,
     anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
+
   developer.log(
-    'Supabase client initialized: \${Supabase.instance.client}',
+    'Supabase client initialized: ${Supabase.instance.client}',
     name: '🔥 SupabaseInit',
   );
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeNotifier()),
-<<<<<<< Updated upstream
-        ChangeNotifierProvider(create: (_) => ReminderProvider()), // 👈
-=======
         ChangeNotifierProvider(create: (_) => ReminderProvider()),
->>>>>>> Stashed changes
       ],
       child: const MyApp(),
     ),
@@ -61,34 +53,10 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeNotifier>(
-<<<<<<< Updated upstream
-      builder:
-          (context, theme, _) => MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'JFB Festival',
-            theme: ThemeData(
-              brightness: Brightness.light,
-              fontFamily: 'Fredoka',
-            ),
-            darkTheme: ThemeData(
-              brightness: Brightness.dark,
-              fontFamily: 'Fredoka',
-            ),
-            themeMode: theme.mode,
-            home: const MainScreen(),
-            routes: {
-              SettingsPage.routeName: (_) => const SettingsPage(),
-              SurveyPage.routeName: (_) => const SurveyPage(),
-              if (kDebugMode) // only in debug builds
-                SurveyListPage.routeName: (_) => const SurveyListPage(),
-              //  if (kDebugMode)
-              //   AdminDashboardPage.routeName: (_) => const AdminDashboardPage(),
-            },
-          ),
-=======
       builder: (context, theme, _) => MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'JFB Festival',
@@ -105,11 +73,12 @@ class MyApp extends StatelessWidget {
         routes: {
           SettingsPage.routeName: (_) => const SettingsPage(),
           SurveyPage.routeName: (_) => const SurveyPage(),
-          if (kDebugMode)
+          if (kDebugMode) 
             SurveyListPage.routeName: (_) => const SurveyListPage(),
+          // if (kDebugMode)
+          //   AdminDashboardPage.routeName: (_) => const AdminDashboardPage(),
         },
       ),
->>>>>>> Stashed changes
     );
   }
 }
@@ -123,11 +92,7 @@ class MainScreen extends StatefulWidget {
     super.key,
     this.initialIndex = 0,
     this.selectedEvent,
-<<<<<<< Updated upstream
-    this.selectedMapLetter, // <-- add this
-=======
     this.selectedMapLetter,
->>>>>>> Stashed changes
   });
 
   @override
@@ -136,27 +101,31 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   late int selectedIndex;
-<<<<<<< Updated upstream
-=======
-  Key foodPageKey = UniqueKey();
-  String? currentMapLetter;
->>>>>>> Stashed changes
 
   @override
   void initState() {
     super.initState();
     selectedIndex = widget.initialIndex;
-    currentMapLetter = widget.selectedMapLetter;
   }
 
   void _onItemTapped(int index) {
-    // If navigating away from Food page, reset the letter filter
-    if (selectedIndex == 1 && index != 1) {
-      foodPageKey = UniqueKey();
-      currentMapLetter = null;
+  setState(() {
+    selectedIndex = index;
+    // Clear the selectedMapLetter if navigating away from food page
+    if (selectedIndex != 1 && widget.selectedMapLetter != null) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => MainScreen(
+            initialIndex: index,
+            selectedEvent: widget.selectedEvent,
+            selectedMapLetter: null, // Reset the filter
+          ),
+        ),
+      );
     }
-    setState(() => selectedIndex = index);
-  }
+  });
+}
 
   @override
   Widget build(BuildContext context) {
@@ -165,37 +134,23 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
       extendBodyBehindAppBar: true,
       body: Stack(
         children: [
-<<<<<<< Updated upstream
           // 1) Your main pages
-=======
->>>>>>> Stashed changes
           IndexedStack(
             index: selectedIndex,
             children: [
               HomePage(),
-<<<<<<< Updated upstream
               FoodPage(selectedMapLetter: widget.selectedMapLetter),
-=======
-              FoodPage(
-                key: foodPageKey,
-                selectedMapLetter: currentMapLetter,
-              ),
->>>>>>> Stashed changes
               TimetablePage(selectedEvent: widget.selectedEvent),
               MapPage(),
             ],
           ),
-<<<<<<< Updated upstream
 
-          // 2) Logo at top‑center
-          SafeArea(child: TopBar(selectedIndex: selectedIndex)),
-
-          // 3) Your bottom navigation bar
-=======
+          // 2) Logo at top-center
           SafeArea(
             child: TopBar(selectedIndex: selectedIndex),
           ),
->>>>>>> Stashed changes
+
+          // 3) Your bottom navigation bar
           Align(
             alignment: Alignment.bottomCenter,
             child: BottomBar(
@@ -208,10 +163,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     );
   }
 }
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
 class TopBar extends StatelessWidget {
   final int selectedIndex;
   const TopBar({super.key, required this.selectedIndex});
@@ -232,7 +184,7 @@ class TopBar extends StatelessWidget {
               height: logoSize,
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.transparent,
+                color: Colors.transparent, // Background color for the circle
               ),
               child: Padding(
                 padding: const EdgeInsets.all(1.0),
@@ -261,8 +213,9 @@ class BottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final sidePadding = screenWidth * 0.03;
-    final bottomBarWidth = screenWidth - 2 * sidePadding;
+    final sidePadding = screenWidth * 0.03; // Adjust the value as needed
+    final bottomBarWidth = screenWidth - 2 * sidePadding; // Subtract padding
+
     final iconSize = 74.0;
     final numberOfIcons = 4;
     final totalIconsWidth = iconSize * numberOfIcons;
@@ -277,6 +230,7 @@ class BottomBar extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 20),
         child: Stack(
           children: [
+            // Semi-transparent background with blur
             Positioned.fill(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(100),
@@ -291,6 +245,7 @@ class BottomBar extends StatelessWidget {
                 ),
               ),
             ),
+            // Navigation buttons
             Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -361,6 +316,7 @@ class ImageButton extends StatefulWidget {
 class _ImageButtonState extends State<ImageButton> {
   bool isPressed = false;
 
+  // Handle tap events
   void _onTapDown(TapDownDetails details) {
     setState(() {
       isPressed = true;
@@ -395,9 +351,10 @@ class _ImageButtonState extends State<ImageButton> {
         height: 74,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: isSelected && !isPressed
-              ? Colors.white.withOpacity(0.7)
-              : Colors.transparent,
+          color:
+              isSelected && !isPressed
+                  ? Colors.white.withOpacity(0.7)
+                  : Colors.transparent,
         ),
         child: Center(
           child: ClipOval(

@@ -120,18 +120,16 @@ class _FoodPageState extends State<FoodPage> {
       });
     }
   }
-
   @override
   void didUpdateWidget(FoodPage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    
-    // Update if selectedMapLetter changes
-    if (widget.selectedMapLetter != oldWidget.selectedMapLetter) {
-      currentMapLetter = widget.selectedMapLetter;
-      _applyInitialMapFilter();
-    }
+  
+  // Update if selectedMapLetter changes
+  if (widget.selectedMapLetter != oldWidget.selectedMapLetter) {
+    currentMapLetter = widget.selectedMapLetter;
+    _applyInitialMapFilter();
   }
-
+}
   @override
   void dispose() {
     _searchController.dispose();

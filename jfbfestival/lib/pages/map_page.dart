@@ -41,16 +41,16 @@ class MapPageState extends State<MapPage> {
   }
 
   void _onLetterTap(String letter) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (_) => MainScreen(
-          initialIndex: 1, // Navigate to FoodPage
-          selectedMapLetter: letter, // Pass the selected letter
-        ),
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(
+      builder: (_) => MainScreen(
+        initialIndex: 1, // Navigate to FoodPage
+        selectedMapLetter: letter, // Pass the selected letter
       ),
-    );
-  }
+    ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {
