@@ -152,6 +152,7 @@ class _FoodPageState extends State<FoodPage> {
     final topPadding = MediaQuery.of(context).size.height * 0.082;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
