@@ -162,11 +162,7 @@ class MapPageState extends State<MapPage> {
                               alignment: Alignment.topRight,
                               child: IconButton(
                                 icon: const Icon(Icons.close),
-                                onPressed: () {
-                                  if (Navigator.of(context).canPop()) {
-                                    Navigator.of(context).pop();
-                                  }
-                                },
+                                onPressed: _toggleMiniWindow,
                               ),
                             ),
                             _buildFilterButton('All', screenSize),

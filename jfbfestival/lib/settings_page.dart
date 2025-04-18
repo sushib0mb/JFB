@@ -20,7 +20,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-
   @override
   Widget build(BuildContext context) {
     final theme = context.watch<ThemeNotifier>();
@@ -84,29 +83,28 @@ class _SettingsPageState extends State<SettingsPage> {
           //     Navigator.pushNamed(context, FeedbackPage.routeName);
           //   },
           // ),
-//           ListTile(
-//   leading: const Icon(Icons.pending_actions),
-//   title: const Text('Pending Feedback'),
-//   onTap: () =>
-//       Navigator.pushNamed(context, FeedbackListPage.routeName),
-// ),
-ListTile(
-  leading: const Icon(Icons.poll),
-  title: const Text('Fill Out Survey'),
-  onTap: () => Navigator.pushNamed(context, SurveyPage.routeName),
-),
-ListTile(
-  leading: const Icon(Icons.list),
-  title: const Text('View All Surveys'),
-  onTap: () => Navigator.pushNamed(context, SurveyListPage.routeName),
-),
-// if (kDebugMode)
-//   ListTile(
-//     leading: Icon(Icons.admin_panel_settings),
-//     title: Text('Admin Dashboard'),
-//     onTap: () => Navigator.pushNamed(context, AdminDashboardPage.routeName),
-//   ),
-
+          //           ListTile(
+          //   leading: const Icon(Icons.pending_actions),
+          //   title: const Text('Pending Feedback'),
+          //   onTap: () =>
+          //       Navigator.pushNamed(context, FeedbackListPage.routeName),
+          // ),
+          ListTile(
+            leading: const Icon(Icons.poll),
+            title: const Text('Fill Out Survey'),
+            onTap: () => Navigator.pushNamed(context, SurveyPage.routeName),
+          ),
+          ListTile(
+            leading: const Icon(Icons.list),
+            title: const Text('View All Surveys'),
+            onTap: () => Navigator.pushNamed(context, SurveyListPage.routeName),
+          ),
+          // if (kDebugMode)
+          //   ListTile(
+          //     leading: Icon(Icons.admin_panel_settings),
+          //     title: Text('Admin Dashboard'),
+          //     onTap: () => Navigator.pushNamed(context, AdminDashboardPage.routeName),
+          //   ),
 
           // About & Version
           AboutListTile(
