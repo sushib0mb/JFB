@@ -555,7 +555,7 @@ final List<FoodBooth> foodBooths = [
         description:
             "Twenty layers of thin handmade crepes with light pastry cream",
         price: 9.50,
-        allergens: ["Egg", "Wheat", "Milk"],
+        allergens: ["Egg", "Wheat", "Milk", "Treenut"],
         imagePath: "assets/food/signature_mille_crepes.jpg",
         isVegan: true,
       ),

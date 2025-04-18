@@ -749,10 +749,6 @@ class _HomePageState extends State<HomePage> {
             "https://www.facebook.com/JapanFestivalBoston",
           ),
           _buildIcon(
-            "assets/youtube.png",
-            "https://www.youtube.com/@japanfestivalboston",
-          ),
-          _buildIcon(
             "assets/website.png",
             "https://www.japanfestivalboston.org",
           ),
