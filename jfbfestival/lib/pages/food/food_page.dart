@@ -5,7 +5,6 @@ import 'package:jfbfestival/pages/food/components/allergy_filter.dart';
 import 'package:jfbfestival/pages/food/components/booth_details.dart';
 import 'package:jfbfestival/data/food_booths.dart';
 import 'package:jfbfestival/models/food_booth.dart';
-import 'package:jfbfestival/settings_page.dart';
 
 class AnimatedBoothDetailWrapper extends StatefulWidget {
   final FoodBooth booth;
@@ -137,9 +136,7 @@ class _FoodPageState extends State<FoodPage> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
-
         children: [
-          
           // Background first
           _buildBackgroundGradient(),
 
@@ -157,7 +154,10 @@ class _FoodPageState extends State<FoodPage> {
                   margin: const EdgeInsets.all(25),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
-                    color: Theme.of(context).colorScheme.surface,  // ← themed card color
+                    color:
+                        Theme.of(
+                          context,
+                        ).colorScheme.surface, // ← themed card color
                   ),
                   child: Padding(
                     padding: EdgeInsets.only(top: _isSearching ? 10 : 0),
@@ -254,7 +254,7 @@ class _FoodPageState extends State<FoodPage> {
           width: 55,
           height: 55,
           decoration: BoxDecoration(
-             color: Theme.of(context).colorScheme.surface,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(40),
             boxShadow: [
               BoxShadow(
@@ -391,23 +391,25 @@ class _FoodPageState extends State<FoodPage> {
       return Column(
         children: [
           const SizedBox(height: 60),
-           Icon(Icons.search_off, size: 60, color: Theme.of(context).disabledColor),
+          Icon(
+            Icons.search_off,
+            size: 60,
+            color: Theme.of(context).disabledColor,
+          ),
           const SizedBox(height: 20),
-         Text(
-                "No food booths found",
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge!
-                    .copyWith(color: Theme.of(context).disabledColor),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                "Try different search terms or filters",
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium!
-                    .copyWith(color: Theme.of(context).disabledColor),
-              ),
+          Text(
+            "No food booths found",
+            style: Theme.of(context).textTheme.titleLarge!.copyWith(
+              color: Theme.of(context).disabledColor,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            "Try different search terms or filters",
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              color: Theme.of(context).disabledColor,
+            ),
+          ),
           const SizedBox(height: 40),
         ],
       );
@@ -813,8 +815,7 @@ class _FoodPageState extends State<FoodPage> {
         elevation: 10,
       ).copyWith(
         shadowColor: MaterialStateProperty.all(
-         Theme.of(context).colorScheme.primaryContainer.withOpacity(0.5),
-
+          Theme.of(context).colorScheme.primaryContainer.withOpacity(0.5),
         ),
       ),
       onPressed: () {

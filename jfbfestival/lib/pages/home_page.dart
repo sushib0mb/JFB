@@ -195,13 +195,40 @@ class _HomePageState extends State<HomePage> {
 
                   // 2) Settings button in top‑right
                   Positioned(
-                    top: MediaQuery.of(context).padding.top + 8,
-                    right: 16,
-                    child: IconButton(
-                      icon: const Icon(Icons.settings, color: Colors.white),
-                      onPressed: () {
+                    top:
+                        MediaQuery.of(context).padding.top +
+                        MediaQuery.of(context).size.height * 0.015,
+                    right: 15,
+                    child: GestureDetector(
+                      onTap: () {
                         Navigator.pushNamed(context, SettingsPage.routeName);
                       },
+                      child: Material(
+                        color: Colors.transparent,
+                        child: Container(
+                          width: 55,
+                          height: 55,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.surface,
+                            borderRadius: BorderRadius.circular(40),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 10,
+                                spreadRadius: 1,
+                              ),
+                            ],
+                          ),
+                          child: const Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: Icon(
+                              Icons.settings,
+                              size: 30,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ],
