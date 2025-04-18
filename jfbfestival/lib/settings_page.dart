@@ -7,9 +7,9 @@ import 'package:share_plus/share_plus.dart';
 import 'theme_notifier.dart';
 import 'pages/survey/survey_list_page.dart';
 import 'pages/survey/survey_page.dart';
-import 'admin_dashboard.dart';
 import 'package:flutter/foundation.dart';
-// import 'providers/reminder_provider.dart';
+import 'providers/reminder_provider.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class SettingsPage extends StatefulWidget {
   static const routeName = '/settings';
@@ -23,7 +23,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final theme = context.watch<ThemeNotifier>();
-    // final reminderProv = context.watch<ReminderProvider>();
+    final reminderProv = context.watch<ReminderProvider>();
 
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
@@ -39,12 +39,18 @@ class _SettingsPageState extends State<SettingsPage> {
           // ),
 
           // Event reminders
-          //  SwitchListTile(
-          //     title: const Text('Event Reminders'),
-          //     subtitle: Text(reminderProv.enabled ? 'On' : 'Off'),
-          //     value: reminderProv.enabled,
-          //     onChanged: (_) => reminderProv.toggle(),
-          //   ),
+     SwitchListTile(
+  title: const Text('Event Reminders'),
+  subtitle: Text(reminderProv.enabled ? 'On' : 'Off'),
+  value: reminderProv.enabled,
+  onChanged: (_) async {
+    await reminderProv.toggle();
+  },
+),
+
+
+        
+
 
           // Calendar sync stub
           // ListTile(
