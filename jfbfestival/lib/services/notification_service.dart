@@ -6,6 +6,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart'      as tz;
+import 'dart:io' show Platform;
 
 class NotificationService {
   /// public so you can call pendingNotificationRequests() in debug
@@ -78,13 +79,12 @@ Future<void> logPending(String tag) async {
     ?.requestPermissions(alert: true, badge: true, sound: true);
 
     /* 3. Android 13+ POST_NOTIFICATIONS runtime permission */
-    if (Platform.isAndroid &&
-        defaultTargetPlatform == TargetPlatform.android) {
-      await fln
-          .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()
-          ?.requestNotificationsPermission();
-    }
+ if (Platform.isAndroid) {
+  await fln
+      .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
+      ?.requestNotificationsPermission();
+}
   }
 Future<void> requestPermissions() async {
   await fln
