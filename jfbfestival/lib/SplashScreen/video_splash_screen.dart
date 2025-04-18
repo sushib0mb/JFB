@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-import 'package:jfbfestival/mainscreen.dart'; // adjust the import if needed
+import 'package:jfbfestival/main.dart'; // adjust the import if needed
 
 class VideoSplashScreen extends StatefulWidget {
   const VideoSplashScreen({super.key});

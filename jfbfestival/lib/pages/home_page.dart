@@ -3,8 +3,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:jfbfestival/mainscreen.dart';
+import 'package:jfbfestival/main.dart';
 import '/data/timetableData.dart';
+import 'package:jfbfestival/settings_page.dart';
+
 
 class CurrentAndUpcomingEvents {
   final List<EventItem> currentStage1Events;
@@ -75,126 +77,137 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
+ @override
+Widget build(BuildContext context) {
+  final screenHeight = MediaQuery.of(context).size.height;
+  final screenWidth  = MediaQuery.of(context).size.width;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Container(
-          color: const Color(0xFFFFF5F5),
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  const Color.fromRGBO(10, 56, 117, 0.15),
-                  const Color.fromRGBO(191, 28, 36, 0.15),
-                ],
-              ),
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      return Container(
+        color: const Color(0xFFFFF5F5),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                const Color.fromRGBO(10, 56, 117, 0.15),
+                const Color.fromRGBO(191, 28, 36, 0.15),
+              ],
             ),
-            child: Scaffold(
-              backgroundColor: Colors.transparent,
-              body: Stack(
-                children: [
-                  SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Stack(
-                          children: [
-                            SizedBox(
-                              width: double.infinity,
-                              height: screenHeight * 0.6,
-                              child: Stack(
-                                children: [
-                                  PageView.builder(
-                                    controller: _pageController,
-                                    itemCount: backgroundImages.length,
-                                    onPageChanged: (index) {
-                                      setState(() {
-                                        _currentPage = index;
-                                      });
-                                    },
-                                    itemBuilder: (context, index) {
-                                      final isLadyInKimono =
-                                          backgroundImages[index] ==
-                                          "assets/JFB-27.jpg";
+          ),
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Stack(
+              children: [
+                // 1) Your existing scrollable content
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Stack(
+                        children: [
+                          SizedBox(
+                            width: double.infinity,
+                            height: screenHeight * 0.6,
+                            child: Stack(
+                              children: [
+                                PageView.builder(
+                                  controller: _pageController,
+                                  itemCount: backgroundImages.length,
+                                  onPageChanged: (index) {
+                                    setState(() {
+                                      _currentPage = index;
+                                    });
+                                  },
+                                  itemBuilder: (context, index) {
+                                    final isLadyInKimono =
+                                        backgroundImages[index] ==
+                                        "assets/JFB-27.jpg";
 
-                                      Widget image = Image.asset(
-                                        backgroundImages[index],
-                                        fit: BoxFit.cover,
-                                        width: double.infinity,
-                                        height: screenHeight * 0.6,
-                                        alignment:
-                                            isLadyInKimono
-                                                ? Alignment.topCenter
-                                                : Alignment.center,
+                                    Widget image = Image.asset(
+                                      backgroundImages[index],
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                      height: screenHeight * 0.6,
+                                      alignment: isLadyInKimono
+                                          ? Alignment.topCenter
+                                          : Alignment.center,
+                                    );
+
+                                    if (isLadyInKimono) {
+                                      image = Transform.scale(
+                                        scale: 1.1,
+                                        child: Align(
+                                          alignment: Alignment.topCenter,
+                                          child: image,
+                                        ),
                                       );
+                                    }
 
-                                      if (isLadyInKimono) {
-                                        image = Transform.scale(
-                                          scale: 1.1, // zoom in a bit
-                                          child: Align(
-                                            alignment: Alignment.topCenter,
-                                            child: image,
-                                          ),
-                                        );
-                                      }
-
-                                      return image;
-                                    },
-                                  ),
-                                  Positioned(
-                                    bottom: 10,
-                                    left: 0,
-                                    right: 0,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: List.generate(
-                                        backgroundImages.length,
-                                        (index) => AnimatedContainer(
-                                          duration: Duration(milliseconds: 300),
-                                          margin: EdgeInsets.symmetric(
-                                            horizontal: 4,
-                                          ),
-                                          width: _currentPage == index ? 10 : 6,
-                                          height:
-                                              _currentPage == index ? 10 : 6,
-                                          decoration: BoxDecoration(
-                                            color:
-                                                _currentPage == index
-                                                    ? Colors.white
-                                                    : Colors.white70,
-                                            shape: BoxShape.circle,
-                                          ),
+                                    return image;
+                                  },
+                                ),
+                                Positioned(
+                                  bottom: 10,
+                                  left: 0,
+                                  right: 0,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: List.generate(
+                                      backgroundImages.length,
+                                      (index) => AnimatedContainer(
+                                        duration: const Duration(milliseconds: 300),
+                                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                                        width: _currentPage == index ? 10 : 6,
+                                        height: _currentPage == index ? 10 : 6,
+                                        decoration: BoxDecoration(
+                                          color: _currentPage == index
+                                              ? Colors.white
+                                              : Colors.white70,
+                                          shape: BoxShape.circle,
                                         ),
                                       ),
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        SizedBox(height: screenHeight * 0.02),
-                        _buildLiveTimetable(screenWidth),
-                        _buildSocialMediaIcons(screenWidth),
-                        _buildSponsorsSection(screenWidth),
-                        SizedBox(height: 125),
-                      ],
-                    ),
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(height: screenHeight * 0.02),
+                      _buildLiveTimetable(screenWidth),
+                      _buildSocialMediaIcons(screenWidth),
+                      _buildSponsorsSection(screenWidth),
+                      SizedBox(height: 125),
+                    ],
                   ),
-                ],
-              ),
+                ),
+
+                // 2) Settings button in top‑right
+                Positioned(
+                  top: MediaQuery.of(context).padding.top + 8,
+                  right: 16,
+                  child: IconButton(
+                    icon: const Icon(Icons.settings, color: Colors.white),
+                    onPressed: () {
+                      Navigator.pushNamed(
+                        context,
+                        SettingsPage.routeName,
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
-        );
-      },
-    );
-  }
+        ),
+      );
+    },
+  );
+}
 
   // Helper class to organize events
 

@@ -1,9 +1,7 @@
-// lib/main.dart
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-
+import 'dart:developer' as developer;
 import 'theme_notifier.dart';
 import 'settings_page.dart';
 import 'package:jfbfestival/pages/food/food_page.dart';
@@ -11,23 +9,48 @@ import 'package:jfbfestival/pages/home_page.dart';
 import 'package:jfbfestival/pages/map_page.dart';
 import 'package:jfbfestival/pages/timetable_page.dart';
 import 'package:jfbfestival/data/timetableData.dart';
-import 'package:jfbfestival/SplashScreen/video_splash_screen.dart';
+// import 'package:jfbfestival/SplashScreen/video_splash_screen.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'models/feedback_entry.dart';
+import 'models/survey_entry.dart';
+import 'pages/survey/survey_page.dart';
+import 'pages/survey/survey_list_page.dart';
+import 'admin_dashboard.dart';
+import 'package:flutter/foundation.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'providers/reminder_provider.dart';
+
+const _supabaseUrl     = 'https://ayampwouvdgykifbudmn.supabase.co';
+const _supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF5YW1wd291dmRneWtpZmJ1ZG1uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ5MzQ1NTgsImV4cCI6MjA2MDUxMDU1OH0.1lEVKn4I5Glw20R23WdK1jYiYzFW_5CjdlhBlYY3njg';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // lock portrait only
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+   await Hive.initFlutter();
+  Hive.registerAdapter(FeedbackEntryAdapter());
+  Hive.registerAdapter(SurveyEntryAdapter());
 
-  runApp(
-    ChangeNotifierProvider(
-      create: (_) => ThemeNotifier(),
-      child: const MyApp(),
-    ),
+  await Hive.openBox<FeedbackEntry>('feedback');
+  await Hive.openBox<SurveyEntry>('survey');
+    await Supabase.initialize(
+    url: _supabaseUrl,
+    anonKey: _supabaseAnonKey,
   );
+
+  developer.log(
+    'Supabase client initialized: ${Supabase.instance.client}',
+    name: '🔥 SupabaseInit',
+  );
+  // … the rest of your initialization …
+  runApp(
+  MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => ThemeNotifier()),
+      // ChangeNotifierProvider(create: (_) => ReminderProvider()),   // 👈
+    ],
+    child: const MyApp(),
+  ),
+);
 }
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -47,9 +70,15 @@ class MyApp extends StatelessWidget {
         ),
         themeMode: theme.mode,
         home: const MainScreen(),
-        routes: {
-          SettingsPage.routeName: (_) => const SettingsPage(),
-        },
+       routes: {
+         SettingsPage.routeName: (_) => const SettingsPage(),
+    SurveyPage.routeName: (_)   => const SurveyPage(),
+ if (kDebugMode) // only in debug builds
+          SurveyListPage.routeName: (_) => const SurveyListPage(),
+  //  if (kDebugMode)
+  //   AdminDashboardPage.routeName: (_) => const AdminDashboardPage(),
+},
+
       ),
     );
   }
@@ -61,18 +90,18 @@ class MainScreen extends StatefulWidget {
   final String? selectedMapLetter;
 
   const MainScreen({
-    super.key,
-    this.initialIndex = 0,
-    this.selectedEvent,
-    this.selectedMapLetter,
-  });
+  super.key,
+  this.initialIndex = 0,
+  this.selectedEvent,
+  this.selectedMapLetter, // <-- add this
+});
 
   @override
   _MainScreenState createState() => _MainScreenState();
 }
-
-class _MainScreenState extends State<MainScreen> {
+class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   late int selectedIndex;
+
 
   @override
   void initState() {
@@ -80,72 +109,81 @@ class _MainScreenState extends State<MainScreen> {
     selectedIndex = widget.initialIndex;
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      selectedIndex = index;
-    });
-  }
-
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          IndexedStack(
-            index: selectedIndex,
-            children: [
-              HomePage(),
-              FoodPage(selectedMapLetter: widget.selectedMapLetter),
-              TimetablePage(selectedEvent: widget.selectedEvent),
-              MapPage(),
-            ],
-          ),
-
-          SafeArea(child: TopBar(onSettings: () {
-            Navigator.pushNamed(context, SettingsPage.routeName);
-          })),
-
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: BottomBar(
-              selectedIndex: selectedIndex,
-              onItemTapped: _onItemTapped,
-            ),
-          ),
-        ],
-      ),
-    );
+  void dispose() {
+    super.dispose();
   }
-}class TopBar extends StatelessWidget {
-  final VoidCallback onSettings;
-  const TopBar({ super.key, required this.onSettings });
+
+  void _onItemTapped(int index) {
+    setState(() => selectedIndex = index);
+  }
+
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: Colors.black,
+    extendBodyBehindAppBar: true,
+    body: Stack(
+      children: [
+        // 1) Your main pages
+        IndexedStack(
+          index: selectedIndex,
+          children: [
+            HomePage(),
+            FoodPage(selectedMapLetter: widget.selectedMapLetter),
+            TimetablePage(selectedEvent: widget.selectedEvent),
+            MapPage(),
+          ],
+        ),
+
+        // 2) Logo at top‑center
+        SafeArea(
+          child: TopBar(selectedIndex: selectedIndex),
+        ),
+
+        // 3) Your bottom navigation bar
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: BottomBar(
+            selectedIndex: selectedIndex,
+            onItemTapped: _onItemTapped,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+}
+
+
+class TopBar extends StatelessWidget {
+  final int selectedIndex;
+  const TopBar({super.key, required this.selectedIndex});
 
   @override
   Widget build(BuildContext context) {
     final double logoSize = MediaQuery.of(context).size.height * 0.086;
 
-    return Container(
-      width: double.infinity,                        // ← make the Stack full‑width
+    return Padding(
       padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
       child: Stack(
         alignment: Alignment.topCenter,
         children: [
-          // center logo
-          SizedBox(
-            width: logoSize,
-            height: logoSize,
-            child: ClipOval(
-              child: Image.asset('assets/JFBLogo.png', fit: BoxFit.cover),
-            ),
-          ),
-
-          // settings icon, top‑right
-          Positioned(
-            right: 16,
-            child: IconButton(
-              icon: const Icon(Icons.settings, color: Colors.white),
-              onPressed: onSettings,
+          Align(
+            alignment: Alignment.topCenter,
+            child: Container(
+              width: logoSize,
+              height: logoSize,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.transparent, // Background color for the circle
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(1.0),
+                child: ClipOval(
+                  child: Image.asset('assets/JFBLogo.png', fit: BoxFit.cover),
+                ),
+              ),
             ),
           ),
         ],
@@ -153,9 +191,6 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 }
-
-
-// BottomBar & ImageButton remain unchanged...
 
 class BottomBar extends StatelessWidget {
   final int selectedIndex;

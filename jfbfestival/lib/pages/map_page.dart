@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jfbfestival/mainscreen.dart';
+import 'package:jfbfestival/main.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
