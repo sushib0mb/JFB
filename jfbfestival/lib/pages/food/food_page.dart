@@ -808,14 +808,14 @@ class _FoodPageState extends State<FoodPage> {
   }) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: Colors.red,
         foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 40),
         elevation: 10,
       ).copyWith(
         shadowColor: MaterialStateProperty.all(
-          Theme.of(context).colorScheme.primaryContainer.withOpacity(0.5),
+          Colors.redAccent.withOpacity(0.5),
         ),
       ),
       onPressed: () {
