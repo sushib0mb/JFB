@@ -277,10 +277,16 @@ class _FoodPageState extends State<FoodPage> {
   }
 
   Widget _buildSearchBar() {
+    var topPadding = MediaQuery.of(context).size.height * 0.13;
     if (!_isSearching) return SizedBox.shrink(); // Hide if not searching
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(30, 170, 30, 0), // Tighter top padding
+      padding: EdgeInsets.fromLTRB(
+        30,
+        topPadding,
+        30,
+        0,
+      ), // Tighter top padding
       child: Material(
         elevation: 4,
         borderRadius: BorderRadius.circular(30),
