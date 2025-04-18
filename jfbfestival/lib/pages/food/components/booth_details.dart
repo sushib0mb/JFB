@@ -517,14 +517,6 @@ class _DishCardState extends State<DishCard> {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        Text(
-                          "\$${widget.dish.price.toStringAsFixed(2)}",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
                       ],
                     ),
                   ),
