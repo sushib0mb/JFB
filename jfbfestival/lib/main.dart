@@ -84,18 +84,19 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 class MainScreen extends StatefulWidget {
   final int initialIndex;
   final EventItem? selectedEvent;
   final String? selectedMapLetter;
-  final int? selectedDay;        // ← new
+  final int? selectedDay; // ← new
 
   const MainScreen({
     Key? key,
     this.initialIndex = 0,
     this.selectedEvent,
     this.selectedMapLetter,
-    this.selectedDay,            // ← accept it here
+    this.selectedDay, // ← accept it here
   }) : super(key: key);
 
   @override
@@ -110,7 +111,7 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     _currentIndex = widget.initialIndex;
-    _dayForTimetable = widget.selectedDay ?? 1;  // default to Day 1
+    _dayForTimetable = widget.selectedDay ?? 1; // default to Day 1
   }
 
   void _onItemTapped(int index) {
@@ -122,12 +123,13 @@ class _MainScreenState extends State<MainScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (_) => MainScreen(
-              initialIndex: index,
-              selectedEvent: widget.selectedEvent,
-              selectedMapLetter: null,
-              selectedDay: _dayForTimetable,
-            ),
+            builder:
+                (_) => MainScreen(
+                  initialIndex: index,
+                  selectedEvent: widget.selectedEvent,
+                  selectedMapLetter: null,
+                  selectedDay: _dayForTimetable,
+                ),
           ),
         );
       }
@@ -142,7 +144,7 @@ class _MainScreenState extends State<MainScreen> {
       // Pass both event *and* day into TimetablePage:
       TimetablePage(
         selectedEvent: widget.selectedEvent,
-        selectedDay: _dayForTimetable, 
+        selectedDay: _dayForTimetable,
       ),
       MapPage(),
     ];
@@ -152,10 +154,7 @@ class _MainScreenState extends State<MainScreen> {
       extendBodyBehindAppBar: true,
       body: Stack(
         children: [
-          IndexedStack(
-            index: _currentIndex,
-            children: pages,
-          ),
+          IndexedStack(index: _currentIndex, children: pages),
           SafeArea(child: TopBar(selectedIndex: _currentIndex)),
           Align(
             alignment: Alignment.bottomCenter,
@@ -169,7 +168,6 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 }
-
 
 class TopBar extends StatelessWidget {
   final int selectedIndex;

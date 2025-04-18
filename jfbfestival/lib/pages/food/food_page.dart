@@ -295,7 +295,12 @@ class _FoodPageState extends State<FoodPage> {
   }
 
   Widget _buildSearchBar() {
-    var topPadding = MediaQuery.of(context).size.height * 0.13;
+    final pad = MediaQuery.of(context).size.height * 0.082;
+    var topPadding =
+        MediaQuery.of(context).padding.top +
+        pad +
+        MediaQuery.of(context).size.height * 0.015 +
+        32.5;
     if (!_isSearching) return SizedBox.shrink(); // Hide if not searching
 
     return Padding(
@@ -648,7 +653,7 @@ class _FoodPageState extends State<FoodPage> {
                             maxWidth: MediaQuery.of(context).size.width * 0.85,
                             maxHeight:
                                 MediaQuery.of(context).size.height *
-                                0.78, // Increased height
+                                0.8, // Increased height
                           ),
                           margin: const EdgeInsets.symmetric(horizontal: 24),
                           padding: const EdgeInsets.symmetric(
@@ -687,13 +692,13 @@ class _FoodPageState extends State<FoodPage> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.stretch,
                                         children: [
-                                          SizedBox(height: 6),
+                                          SizedBox(height: 5),
                                           Center(
                                             child: _buildSectionTitle(
                                               "Payment",
                                             ),
                                           ),
-                                          const SizedBox(height: 12),
+                                          const SizedBox(height: 10),
                                           PaymentFilterRow(
                                             selectedPayments: selectedPayments,
                                             onPaymentSelected: (
@@ -711,7 +716,7 @@ class _FoodPageState extends State<FoodPage> {
                                               });
                                             },
                                           ),
-                                          const SizedBox(height: 20),
+                                          const SizedBox(height: 5),
                                           Center(
                                             child: _buildSectionTitle("Vegan"),
                                           ),
@@ -724,13 +729,13 @@ class _FoodPageState extends State<FoodPage> {
                                               );
                                             },
                                           ),
-                                          const SizedBox(height: 20),
+                                          const SizedBox(height: 15),
                                           Center(
                                             child: _buildSectionTitle(
                                               "Allergens",
                                             ),
                                           ),
-                                          const SizedBox(height: 12),
+                                          const SizedBox(height: 5),
                                           AllergyFilterGrid(
                                             selectedAllergens:
                                                 selectedAllergens,
@@ -749,13 +754,13 @@ class _FoodPageState extends State<FoodPage> {
                                               });
                                             },
                                           ),
-                                          SizedBox(
-                                            height:
-                                                MediaQuery.of(
-                                                  context,
-                                                ).size.height *
-                                                0.01,
-                                          ),
+                                          // SizedBox(
+                                          //   height:
+                                          //       MediaQuery.of(
+                                          //         context,
+                                          //       ).size.height *
+                                          //       0.001,
+                                          // ),
                                           _buildApplyButton(
                                             onApply: _applyFilters,
                                             closeModal: () {

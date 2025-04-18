@@ -156,10 +156,9 @@ final List<FoodBooth> foodBooths = [
     ],
   ),
   FoodBooth(
-    name: "AKITA RICE SMOOTHIE",
+    name: "Akita Rice Smoothie",
     image: "assets/akita_smoothie.png",
-    description:
-        "AKITA RICE SMOOTHIE Berry, Amazake",
+    description: "AKITA RICE SMOOTHIE Berry, Amazake",
     allergy: "Contains soy",
     boothLocation: "B",
     mapPageFoodLocation: "B",
@@ -167,7 +166,7 @@ final List<FoodBooth> foodBooths = [
     logoPath: "assets/foodLogo/Akita.png",
     dishImagePath: "assets/food/amazake.jpg",
     isVegan: false,
-    payments: ["Cash","Venmo"],
+    payments: ["Cash", "Venmo"],
     allergens: ["Soy"],
     dishes: [
       Dish(
@@ -199,8 +198,8 @@ final List<FoodBooth> foodBooths = [
     logoPath: "assets/foodLogo/beard_papaIcon.jpg",
     dishImagePath: "assets/food/beard_papa.jpg",
     isVegan: false,
-    payments: ["Cash","Zelle","Credit Card"],
-    allergens: ["Egg","Milk", "Wheat"],
+    payments: ["Cash", "Zelle", "Credit Card"],
+    allergens: ["Egg", "Milk", "Wheat"],
     dishes: [
       Dish(
         name: "Vanilla Cream Puff",
@@ -210,7 +209,7 @@ final List<FoodBooth> foodBooths = [
         imagePath: "assets/food/vanilla_cream_puff.png",
         isVegan: false,
       ),
-      
+
       Dish(
         name: "Milk Tea",
         description: "Classic milk tea with tapioca pearls",
@@ -295,7 +294,7 @@ final List<FoodBooth> foodBooths = [
     ],
   ),
   FoodBooth(
-    name: "JAPAN ONIGIRI Akitaya",
+    name: "Japan Onigiri Akitaya",
     image: "assets/food/18. A) Akitaya.jpg",
     description: "Rice ball (onigiri)",
     allergy: "Contains soy, seaweed",
@@ -335,7 +334,7 @@ final List<FoodBooth> foodBooths = [
     ],
   ),
   FoodBooth(
-    name: "RamenNIKKOU",
+    name: "Ramen Nikkou",
     image: "assets/food/ramen.jpg",
     description: "Kottreri Paitan Ramen",
     allergy: "Contains wheat, soy, sesame",
@@ -770,7 +769,7 @@ final List<FoodBooth> foodBooths = [
   ),
 
   FoodBooth(
-    name: "PAGU",
+    name: "Pagu",
     image: "assets/food/PaguFood.png",
     description: "Japanese rice balls and noodles",
     allergy: "Contains soy, fish, sesame, wheat",
