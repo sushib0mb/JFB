@@ -112,7 +112,7 @@ class MapPageState extends State<MapPage> {
                       _selectedFilter != 'Trash Station')
                     Positioned(
                       // Much lower position (120) for 'All', original position (7) for 'Food Vendors'
-                      bottom: _selectedFilter == 'Food Vendors' ? 7 : 1,
+                      bottom: _selectedFilter == 'Food Vendors' ? 5 : 3,
                       left: 0,
                       right: 0,
                       child: Row(
@@ -229,7 +229,7 @@ class MapPageState extends State<MapPage> {
       onTap: () => _onLetterTap(letter),
       child: Container(
         width: 80,
-        height: 50,
+        height: 35, // Reduced from 50 to 35
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(10),
@@ -246,7 +246,7 @@ class MapPageState extends State<MapPage> {
             letter,
             style: TextStyle(
               color: Colors.white,
-              fontSize: 20,
+              fontSize: 18, // Reduced from 20 to 18 for better proportion
               fontWeight: FontWeight.bold,
             ),
           ),
