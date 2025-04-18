@@ -44,6 +44,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - .env 
     - assets/food/
     - assets/foodLogo/
     - assets/filter(white).png

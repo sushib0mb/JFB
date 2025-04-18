@@ -213,12 +213,12 @@ Widget build(BuildContext context) {
 
   Widget _buildLiveTimetable(double screenWidth) {
     // Use test time if provided, otherwise use current Boston time (UTC-4)
-    // final now = widget.testTime ?? DateTime.now().toUtc().subtract(Duration(hours: 4));
-    final now = widget.testTime ?? DateTime.utc(2025, 4, 27, 16, 55);
+    final now = widget.testTime ?? DateTime.now().toUtc().subtract(Duration(hours: 4));
+    // final now = widget.testTime ?? DateTime.utc(2025, 4, 27, 16, 55);
 
     // Festival dates setup
-    final festivalStart = DateTime(2025, 4, 27, 11); // April 27 at 11:00 AM
-    final festivalEnd = DateTime(2025, 4, 28, 23, 59); // April 28 at 11:59 PM
+    final festivalStart = DateTime(2025, 4, 26, 11); // April 27 at 11:00 AM
+    final festivalEnd = DateTime(2025, 4, 27, 23, 59); // April 28 at 11:59 PM
 
     // Check if we're outside festival dates
     if (now.isBefore(festivalStart) || now.isAfter(festivalEnd)) {
@@ -233,7 +233,7 @@ Widget build(BuildContext context) {
     }
 
     // Determine which day's schedule to use (day 1 or day 2)
-    final bool isDay1 = now.day == 27; // First day is April 27
+    final bool isDay1 = now.day == 26; // First day is April 26
 
     // Make sure schedule data exists before proceeding
     final List<ScheduleItem> scheduleList;
@@ -322,7 +322,7 @@ Widget build(BuildContext context) {
     // Current year and month
     final year = now.year;
     final month = now.month;
-    final day = isDay1 ? 27 : 28; // April 27 or 28, 2025
+    final day = isDay1 ? 26 : 27; // April 27 or 28, 2025
 
     // Process all events to find current and upcoming
     for (final item in scheduleList) {
