@@ -19,22 +19,21 @@ import 'admin_dashboard.dart';
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'providers/reminder_provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-const _supabaseUrl     = 'https://ayampwouvdgykifbudmn.supabase.co';
-const _supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF5YW1wd291dmRneWtpZmJ1ZG1uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ5MzQ1NTgsImV4cCI6MjA2MDUxMDU1OH0.1lEVKn4I5Glw20R23WdK1jYiYzFW_5CjdlhBlYY3njg';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await dotenv.load();      
    await Hive.initFlutter();
   Hive.registerAdapter(FeedbackEntryAdapter());
   Hive.registerAdapter(SurveyEntryAdapter());
 
   await Hive.openBox<FeedbackEntry>('feedback');
   await Hive.openBox<SurveyEntry>('survey');
-    await Supabase.initialize(
-    url: _supabaseUrl,
-    anonKey: _supabaseAnonKey,
+    await Supabase.initialize(                            
+    url:     dotenv.env['SUPABASE_URL']!,
+    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
 
   developer.log(
