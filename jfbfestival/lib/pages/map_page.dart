@@ -10,7 +10,8 @@ class MapPage extends StatefulWidget {
 
 class MapPageState extends State<MapPage> {
   bool _isMiniWindowVisible = false;
-  String _selectedFilter = '';
+  // Default filter set to 'All'
+  String _selectedFilter = 'All';
 
   final Duration _animationDuration = Duration(milliseconds: 300);
 
@@ -31,7 +32,7 @@ class MapPageState extends State<MapPage> {
   void _selectFilter(String filter) {
     setState(() {
       if (_selectedFilter == filter) {
-        _selectedFilter = '';
+        _selectedFilter = 'All'; // Default to 'All' instead of empty string
       } else {
         _selectedFilter = filter;
       }
@@ -43,11 +44,10 @@ class MapPageState extends State<MapPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder:
-            (_) => MainScreen(
-              initialIndex: 1, // Go to FoodPage
-              selectedMapLetter: letter,
-            ),
+        builder: (_) => MainScreen(
+          initialIndex: 1, // Go to FoodPage
+          selectedMapLetter: letter,
+        ),
       ),
     );
   }
@@ -55,12 +55,9 @@ class MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-    final bool isFilterActive =
-        _selectedFilter.isNotEmpty && _selectedFilter != 'All';
+    final bool isFilterActive = _selectedFilter != 'All';
 
-    final String mapImage =
-        mapImages[_selectedFilter.isNotEmpty ? _selectedFilter : 'All'] ??
-        mapImages['All']!;
+    final String mapImage = mapImages[_selectedFilter] ?? mapImages['All']!;
 
     return Scaffold(
       body: Stack(
@@ -108,10 +105,14 @@ class MapPageState extends State<MapPage> {
                     ),
                   ),
 
-                  // A, B, C buttons when filter is active
-                  if (_selectedFilter == 'Food Vendors')
+                  // ABC Buttons - always visible, position based on filter
+                  // Only hide for specific filters that don't need them
+                  if (_selectedFilter != 'Information Center' && 
+                      _selectedFilter != 'Toilets' && 
+                      _selectedFilter != 'Trash Station')
                     Positioned(
-                      bottom: 7,
+                      // Much lower position (120) for 'All', original position (7) for 'Food Vendors'
+                      bottom: _selectedFilter == 'Food Vendors' ? 7 : 1,
                       left: 0,
                       right: 0,
                       child: Row(
@@ -168,9 +169,7 @@ class MapPageState extends State<MapPage> {
                             _buildFilterButton('All', screenSize),
                             _buildFilterButton('Food Vendors', screenSize),
                             _buildFilterButton(
-                              'Information Center',
-                              screenSize,
-                            ),
+                                'Information Center', screenSize),
                             _buildFilterButton('Toilets', screenSize),
                             _buildFilterButton('Trash Station', screenSize),
                           ],
@@ -183,9 +182,9 @@ class MapPageState extends State<MapPage> {
             ),
           ),
 
+          // Filter icon button
           Positioned(
-            top:
-                MediaQuery.of(context).padding.top +
+            top: MediaQuery.of(context).padding.top +
                 MediaQuery.of(context).size.height * 0.015,
             right: MediaQuery.of(context).size.width * 0.05,
             child: GestureDetector(
@@ -203,10 +202,9 @@ class MapPageState extends State<MapPage> {
                       spreadRadius: 1,
                     ),
                   ],
-                  color:
-                      _isMiniWindowVisible || isFilterActive
-                          ? Colors.grey.shade300
-                          : Colors.white,
+                  color: _isMiniWindowVisible || isFilterActive
+                      ? Colors.grey.shade300
+                      : Colors.white,
                 ),
                 padding: EdgeInsets.all(10),
                 child: ClipOval(
@@ -214,9 +212,7 @@ class MapPageState extends State<MapPage> {
                     'assets/Filter.png',
                     fit: BoxFit.contain,
                     color:
-                        _isMiniWindowVisible || isFilterActive
-                            ? Colors.black
-                            : null,
+                        _isMiniWindowVisible || isFilterActive ? Colors.black : null,
                   ),
                 ),
               ),
