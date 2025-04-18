@@ -292,7 +292,7 @@ final List<ScheduleItem> day1ScheduleData = [
         description:
             "Japan Airlines Advertising and Raffle offers an exciting opportunity to learn about the airline’s services while participants can enter to win exclusive prizes. It’s a fun and engaging way to promote travel with Japan Airlines.",
         eventDetailImage:
-            "assets/timetableBackgrounds/Japan Airlines Advertising and Raffle.jpg",
+            "assets/timetableBackgrounds/Japan Airlines.png",
       ),
       EventItem(
         title: "Move & Inspire Kids Dance",
@@ -329,7 +329,7 @@ final List<ScheduleItem> day1ScheduleData = [
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description:
             "The Bon Dance Event invites everyone to join in a traditional Japanese summer dance, celebrating community and honoring ancestors. It's a joyful, participatory experience filled with music, rhythm, and cultural connection.",
-        eventDetailImage: "assets/timetableBackgrounds/Bon Dance Event.jpg",
+        eventDetailImage: "assets/timetableBackgrounds/BonBon.png",
       ),
     ],
     stage2Events: [],
@@ -529,7 +529,7 @@ final List<ScheduleItem> day2ScheduleData = [
         description:
             "Japan Airlines Advertising and Raffle offers an exciting opportunity to learn about the airline’s services while participants can enter to win exclusive prizes. It’s a fun and engaging way to promote travel with Japan Airlines.",
         eventDetailImage:
-            "assets/timetableBackgrounds/Japan Airlines Advertising and Raffle.jpg",
+            "assets/timetableBackgrounds/Japan Airlines.png",
       ),
     ],
     stage2Events: [],
@@ -555,7 +555,7 @@ final List<ScheduleItem> day2ScheduleData = [
         iconImage: "assets/timetableIcons/Dancing performance.png",
         description:
             "The Bon Dance Event invites everyone to join in a traditional Japanese summer dance, celebrating community and honoring ancestors. It's a joyful, participatory experience filled with music, rhythm, and cultural connection.",
-        eventDetailImage: "assets/timetableBackgrounds/Bon Dance Event.jpg",
+        eventDetailImage: "assets/timetableBackgrounds/BonBon.png",
       ),
     ],
     stage2Events: [],
