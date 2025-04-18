@@ -198,7 +198,7 @@ class _HomePageState extends State<HomePage> {
                     top:
                         MediaQuery.of(context).padding.top +
                         MediaQuery.of(context).size.height * 0.015,
-                    right: 15,
+                    right: MediaQuery.of(context).size.width * 0.05,
                     child: GestureDetector(
                       onTap: () {
                         Navigator.pushNamed(context, SettingsPage.routeName);
