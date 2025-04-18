@@ -709,6 +709,10 @@ class _PerformanceBoxState extends State<PerformanceBox>
                                 maxLines: 2,
                                 textAlign: TextAlign.left,
                               ),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.006,
+                              ),
                               Text(
                                 widget.eventItem.time,
                                 style: TextStyle(
@@ -757,16 +761,20 @@ class _PerformanceBoxState extends State<PerformanceBox>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                widget.eventItem.title.length > 17
-                                    ? "${widget.eventItem.title.substring(0, 17)}..."
+                                widget.eventItem.title.length > 25
+                                    ? "${widget.eventItem.title.substring(0, 25)}..."
                                     : widget.eventItem.title,
                                 style: TextStyle(
                                   fontSize: responsiveFontSize * 9.5,
                                   fontWeight: FontWeight.w500,
-                                  height: 1.7,
+                                  height: 1.2,
                                 ),
                                 maxLines: 2,
                                 textAlign: TextAlign.left,
+                              ),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.006,
                               ),
                               Text(
                                 widget.eventItem.time,
@@ -808,18 +816,18 @@ class _PerformanceBoxState extends State<PerformanceBox>
                         ),
                         SizedBox(height: eventHeight * 0.05),
                         Text(
-                          // widget.eventItem.title.length > 20
-                          //     ? "${widget.eventItem.title.substring(0, 20)}..."
-                          widget.eventItem.title,
+                          widget.eventItem.title.length > 27
+                              ? "${widget.eventItem.title.substring(0, 27)}..."
+                              : widget.eventItem.title,
                           style: TextStyle(
                             fontSize: responsiveFontSize * 12,
                             fontWeight: FontWeight.w500,
-                            height: 0.8,
+                            height: 1.1,
                           ),
                           maxLines: 2,
                           textAlign: TextAlign.center,
                         ),
-                        SizedBox(height: screenHeight * 0.003),
+                        SizedBox(height: screenHeight * 0.007),
                         Text(
                           widget.eventItem.time,
                           style: TextStyle(
