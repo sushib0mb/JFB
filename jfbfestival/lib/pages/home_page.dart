@@ -20,10 +20,13 @@ class CurrentAndUpcomingEvents {
     required this.upcomingStage2Events,
   });
 }
-
 class HomePage extends StatefulWidget {
   final DateTime? testTime;
-  const HomePage({Key? key, this.testTime}) : super(key: key);
+  final EventItem? selectedEvent;
+
+  const HomePage({Key? key, this.testTime, this.selectedEvent}) : super(key: key);
+
+
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -607,32 +610,39 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
+bool _isDay1Event(EventItem e) {
+  // returns true if e appears in day1ScheduleData
+  return day1ScheduleData.any((slot) =>
+    ([...?slot.stage1Events, ...?slot.stage2Events]).contains(e)
+  );
+}
 
-  Widget _buildEventCard(EventItem event, bool isCurrent, double screenWidth) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            transitionDuration: const Duration(milliseconds: 400),
-            pageBuilder:
-                (_, __, ___) =>
-                    MainScreen(initialIndex: 2, selectedEvent: event),
-            transitionsBuilder: (_, animation, __, child) {
-              const begin = Offset(1.0, 0.0);
-              const end = Offset.zero;
-              final tween = Tween(
-                begin: begin,
-                end: end,
-              ).chain(CurveTween(curve: Curves.easeInOut));
-              return SlideTransition(
-                position: animation.drive(tween),
-                child: child,
-              );
-            },
+Widget _buildEventCard(EventItem event, bool isCurrent, double screenWidth) {
+  return GestureDetector(
+    onTap: () {
+      final isDay1 = _isDay1Event(event);
+      final dayToOpen = isDay1 ? 1 : 2;
+      Navigator.push(
+        context,
+        PageRouteBuilder(
+          transitionDuration: const Duration(milliseconds: 400),
+          pageBuilder: (_, __, ___) => MainScreen(
+            initialIndex: 2,                // jump to Timetable tab
+            selectedEvent: event,
+            selectedDay: dayToOpen,         // ← pass the day
           ),
-        );
-      },
+          transitionsBuilder: (_, animation, __, child) {
+            return SlideTransition(
+              position: Tween(begin: Offset(1,0), end: Offset.zero)
+                        .chain(CurveTween(curve: Curves.easeInOut))
+                        .animate(animation),
+              child: child,
+            );
+          },
+        ),
+      );
+    },
+
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Stack(

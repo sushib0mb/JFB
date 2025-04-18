@@ -84,51 +84,50 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
 class MainScreen extends StatefulWidget {
   final int initialIndex;
   final EventItem? selectedEvent;
   final String? selectedMapLetter;
+  final int? selectedDay;        // ← new
 
   const MainScreen({
-    super.key,
+    Key? key,
     this.initialIndex = 0,
     this.selectedEvent,
-    this.selectedMapLetter, // <-- add this
-  });
+    this.selectedMapLetter,
+    this.selectedDay,            // ← accept it here
+  }) : super(key: key);
 
   @override
   _MainScreenState createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
-  late int selectedIndex;
+class _MainScreenState extends State<MainScreen> {
+  late int _currentIndex;
+  late int _dayForTimetable;
 
   @override
   void initState() {
     super.initState();
-    selectedIndex = widget.initialIndex;
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
+    _currentIndex = widget.initialIndex;
+    _dayForTimetable = widget.selectedDay ?? 1;  // default to Day 1
   }
 
   void _onItemTapped(int index) {
     setState(() {
-      selectedIndex = index;
-      // Clear the selectedMapLetter if navigating away from food page
-      if (selectedIndex != 1 && widget.selectedMapLetter != null) {
+      _currentIndex = index;
+
+      // If you want to reset your food‑page filter when leaving FoodPage:
+      if (index != 1 && widget.selectedMapLetter != null) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder:
-                (_) => MainScreen(
-                  initialIndex: index,
-                  selectedEvent: widget.selectedEvent,
-                  selectedMapLetter: null, // Reset the filter
-                ),
+            builder: (_) => MainScreen(
+              initialIndex: index,
+              selectedEvent: widget.selectedEvent,
+              selectedMapLetter: null,
+              selectedDay: _dayForTimetable,
+            ),
           ),
         );
       }
@@ -137,30 +136,31 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final pages = <Widget>[
+      HomePage(testTime: DateTime(2025, 4, 27, 14, 00)),
+      FoodPage(selectedMapLetter: widget.selectedMapLetter),
+      // Pass both event *and* day into TimetablePage:
+      TimetablePage(
+        selectedEvent: widget.selectedEvent,
+        selectedDay: _dayForTimetable, 
+      ),
+      MapPage(),
+    ];
+
     return Scaffold(
       backgroundColor: Colors.black,
       extendBodyBehindAppBar: true,
       body: Stack(
         children: [
-          // 1) Your main pages
           IndexedStack(
-            index: selectedIndex,
-            children: [
-              HomePage(),
-              FoodPage(selectedMapLetter: widget.selectedMapLetter),
-              TimetablePage(selectedEvent: widget.selectedEvent),
-              MapPage(),
-            ],
+            index: _currentIndex,
+            children: pages,
           ),
-
-          // 2) Logo at top‑center
-          SafeArea(child: TopBar(selectedIndex: selectedIndex)),
-
-          // 3) Your bottom navigation bar
+          SafeArea(child: TopBar(selectedIndex: _currentIndex)),
           Align(
             alignment: Alignment.bottomCenter,
             child: BottomBar(
-              selectedIndex: selectedIndex,
+              selectedIndex: _currentIndex,
               onItemTapped: _onItemTapped,
             ),
           ),
@@ -169,6 +169,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     );
   }
 }
+
 
 class TopBar extends StatelessWidget {
   final int selectedIndex;

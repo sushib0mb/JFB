@@ -4,8 +4,13 @@ import 'package:jfbfestival/data/timetableData.dart';
 /// メインビュー：タイムテーブル
 class TimetablePage extends StatefulWidget {
   final EventItem? selectedEvent;
+  final int? selectedDay;          // ← NEW
 
-  const TimetablePage({super.key, this.selectedEvent});
+  const TimetablePage({
+    Key? key,
+    this.selectedEvent,
+    this.selectedDay,              // ← NEW
+  }) : super(key: key);
 
   @override
   _TimetablePageState createState() => _TimetablePageState();
@@ -17,19 +22,19 @@ class _TimetablePageState extends State<TimetablePage> {
   EventItem? selectedEvent;
   bool isShowingDetail = false;
   late ScrollController _scrollController;
-
-  @override
+@override
   void initState() {
     super.initState();
+    if (widget.selectedDay != null) {
+      selectedDay = widget.selectedDay!;
+    }
     _scrollController = ScrollController();
-
     if (widget.selectedEvent != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _highlightSelectedEvent(widget.selectedEvent!);
       });
     }
   }
-
   void _highlightSelectedEvent(EventItem selected) {
     final currentSchedule =
         selectedDay == 1 ? day1ScheduleData : day2ScheduleData;
@@ -105,9 +110,9 @@ class _TimetablePageState extends State<TimetablePage> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      extendBodyBehindAppBar: true,
-      appBar:
-          widget.selectedEvent != null
+       extendBodyBehindAppBar: true,
+     
+      appBar: isShowingDetail
               ? AppBar(
                 backgroundColor: Colors.transparent,
                 elevation: 0,
