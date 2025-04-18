@@ -5,6 +5,7 @@ import 'package:jfbfestival/pages/food/components/allergy_filter.dart';
 import 'package:jfbfestival/pages/food/components/booth_details.dart';
 import 'package:jfbfestival/data/food_booths.dart';
 import 'package:jfbfestival/models/food_booth.dart';
+import 'package:jfbfestival/settings_page.dart';
 
 class AnimatedBoothDetailWrapper extends StatefulWidget {
   final FoodBooth booth;
@@ -134,8 +135,11 @@ class _FoodPageState extends State<FoodPage> {
     final topPadding = MediaQuery.of(context).size.height * 0.082;
 
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
+
         children: [
+          
           // Background first
           _buildBackgroundGradient(),
 
@@ -153,7 +157,7 @@ class _FoodPageState extends State<FoodPage> {
                   margin: const EdgeInsets.all(25),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.surface,  // ← themed card color
                   ),
                   child: Padding(
                     padding: EdgeInsets.only(top: _isSearching ? 10 : 0),
@@ -250,7 +254,7 @@ class _FoodPageState extends State<FoodPage> {
           width: 55,
           height: 55,
           decoration: BoxDecoration(
-            color: Colors.white,
+             color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(40),
             boxShadow: [
               BoxShadow(
@@ -282,7 +286,7 @@ class _FoodPageState extends State<FoodPage> {
         borderRadius: BorderRadius.circular(30),
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(30),
             boxShadow: [
               BoxShadow(
@@ -387,17 +391,23 @@ class _FoodPageState extends State<FoodPage> {
       return Column(
         children: [
           const SizedBox(height: 60),
-          Icon(Icons.search_off, size: 60, color: Colors.grey[400]),
+           Icon(Icons.search_off, size: 60, color: Theme.of(context).disabledColor),
           const SizedBox(height: 20),
-          Text(
-            "No food booths found",
-            style: TextStyle(fontSize: 22, color: Colors.grey[600]),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            "Try different search terms or filters",
-            style: TextStyle(fontSize: 16, color: Colors.grey[500]),
-          ),
+         Text(
+                "No food booths found",
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge!
+                    .copyWith(color: Theme.of(context).disabledColor),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                "Try different search terms or filters",
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(color: Theme.of(context).disabledColor),
+              ),
           const SizedBox(height: 40),
         ],
       );
@@ -475,7 +485,7 @@ class _FoodPageState extends State<FoodPage> {
                       vertical: 16,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.surface,
                       borderRadius: BorderRadius.circular(30),
                       boxShadow: [
                         BoxShadow(
@@ -763,7 +773,7 @@ class _FoodPageState extends State<FoodPage> {
               width: 120,
               height: 30,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(25),
                 boxShadow: [
                   BoxShadow(
@@ -796,14 +806,15 @@ class _FoodPageState extends State<FoodPage> {
   }) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.red,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 40),
         elevation: 10,
       ).copyWith(
         shadowColor: MaterialStateProperty.all(
-          Colors.redAccent.withOpacity(0.5),
+         Theme.of(context).colorScheme.primaryContainer.withOpacity(0.5),
+
         ),
       ),
       onPressed: () {

@@ -1,0 +1,1 @@
+{"flutter":{"platforms":{"ios":{"default":{"projectId":"omatsuri-app","appId":"1:338088395804:ios:344d6d385c9aaefca08bd9","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"omatsuri-app","configurations":{"ios":"1:338088395804:ios:344d6d385c9aaefca08bd9"}}}}}}

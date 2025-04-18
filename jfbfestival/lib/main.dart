@@ -1,35 +1,84 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'dart:developer' as developer;
+import 'theme_notifier.dart';
+import 'settings_page.dart';
 import 'package:jfbfestival/pages/food/food_page.dart';
 import 'package:jfbfestival/pages/home_page.dart';
 import 'package:jfbfestival/pages/map_page.dart';
 import 'package:jfbfestival/pages/timetable_page.dart';
 import 'package:jfbfestival/data/timetableData.dart';
-import 'package:jfbfestival/SplashScreen/video_splash_screen.dart';
-import 'package:flutter/services.dart';
+// import 'package:jfbfestival/SplashScreen/video_splash_screen.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'models/feedback_entry.dart';
+import 'models/survey_entry.dart';
+import 'pages/survey/survey_page.dart';
+import 'pages/survey/survey_list_page.dart';
+import 'admin_dashboard.dart';
+import 'package:flutter/foundation.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'providers/reminder_provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load();      
+   await Hive.initFlutter();
+  Hive.registerAdapter(FeedbackEntryAdapter());
+  Hive.registerAdapter(SurveyEntryAdapter());
 
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+  await Hive.openBox<FeedbackEntry>('feedback');
+  await Hive.openBox<SurveyEntry>('survey');
+    await Supabase.initialize(                            
+    url:     dotenv.env['SUPABASE_URL']!,
+    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+  );
 
-  runApp(const MyApp());
+  developer.log(
+    'Supabase client initialized: ${Supabase.instance.client}',
+    name: '🔥 SupabaseInit',
+  );
+  // … the rest of your initialization …
+  runApp(
+  MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => ThemeNotifier()),
+      // ChangeNotifierProvider(create: (_) => ReminderProvider()),   // 👈
+    ],
+    child: const MyApp(),
+  ),
+);
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(fontFamily: 'Fredoka'),
-      // home: const VideoSplashScreen(),
-      home: MainScreen(),
+    return Consumer<ThemeNotifier>(
+      builder: (context, theme, _) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'JFB Festival',
+        theme: ThemeData(
+          brightness: Brightness.light,
+          fontFamily: 'Fredoka',
+        ),
+        darkTheme: ThemeData(
+          brightness: Brightness.dark,
+          fontFamily: 'Fredoka',
+        ),
+        themeMode: theme.mode,
+        home: const MainScreen(),
+       routes: {
+         SettingsPage.routeName: (_) => const SettingsPage(),
+    SurveyPage.routeName: (_)   => const SurveyPage(),
+ if (kDebugMode) // only in debug builds
+          SurveyListPage.routeName: (_) => const SurveyListPage(),
+  //  if (kDebugMode)
+  //   AdminDashboardPage.routeName: (_) => const AdminDashboardPage(),
+},
+
+      ),
     );
   }
 }
@@ -49,9 +98,9 @@ class MainScreen extends StatefulWidget {
   @override
   _MainScreenState createState() => _MainScreenState();
 }
-
-class _MainScreenState extends State<MainScreen> {
+class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   late int selectedIndex;
+
 
   @override
   void initState() {
@@ -59,42 +108,52 @@ class _MainScreenState extends State<MainScreen> {
     selectedIndex = widget.initialIndex;
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      selectedIndex = index;
-    });
-  }
-
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          IndexedStack(
-  index: selectedIndex,
-  children: [
-    HomePage(),
-    FoodPage(selectedMapLetter: widget.selectedMapLetter), // pass it here
-    TimetablePage(selectedEvent: widget.selectedEvent),
-    MapPage(),
-  ],
-),
-
-
-          SafeArea(child: TopBar(selectedIndex: selectedIndex)),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: BottomBar(
-              selectedIndex: selectedIndex,
-              onItemTapped: _onItemTapped,
-            ),
-          ),
-        ],
-      ),
-    );
+  void dispose() {
+    super.dispose();
   }
+
+  void _onItemTapped(int index) {
+    setState(() => selectedIndex = index);
+  }
+
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: Colors.black,
+    extendBodyBehindAppBar: true,
+    body: Stack(
+      children: [
+        // 1) Your main pages
+        IndexedStack(
+          index: selectedIndex,
+          children: [
+            HomePage(),
+            FoodPage(selectedMapLetter: widget.selectedMapLetter),
+            TimetablePage(selectedEvent: widget.selectedEvent),
+            MapPage(),
+          ],
+        ),
+
+        // 2) Logo at top‑center
+        SafeArea(
+          child: TopBar(selectedIndex: selectedIndex),
+        ),
+
+        // 3) Your bottom navigation bar
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: BottomBar(
+            selectedIndex: selectedIndex,
+            onItemTapped: _onItemTapped,
+          ),
+        ),
+      ],
+    ),
+  );
 }
+}
+
 
 class TopBar extends StatelessWidget {
   final int selectedIndex;
