@@ -278,6 +278,11 @@ class BoothDetails extends StatelessWidget {
             "assets/payments/credit_card.png",
             payments.contains("Credit Card"),
           ),
+          _buildPaymentItem(
+            "Paypal",
+            "assets/payments/paypal.png",
+            payments.contains("Paypal"),
+          ),
         ],
       ),
     );
