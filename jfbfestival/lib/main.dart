@@ -19,10 +19,15 @@ import 'models/survey_entry.dart';
 import 'pages/survey/survey_page.dart';
 import 'pages/survey/survey_list_page.dart';
 import 'providers/reminder_provider.dart';
-import 'config/supabase_config.dart'; // ✅ Import global SupabaseClient
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import 'package:flutter/services.dart'; // Make sure this is imported
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Lock orientation to portrait only
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   // Load environment variables
   await dotenv.load();
