@@ -529,7 +529,7 @@ class _FoodPageState extends State<FoodPage> {
                       children: [
                         Container(
                           width: double.infinity,
-                          height: MediaQuery.of(context).size.height * 0.15,
+                          height: MediaQuery.of(context).size.height * 0.2,
                           decoration: BoxDecoration(
                             borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(25),

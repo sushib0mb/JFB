@@ -20,13 +20,13 @@ class CurrentAndUpcomingEvents {
     required this.upcomingStage2Events,
   });
 }
+
 class HomePage extends StatefulWidget {
   final DateTime? testTime;
   final EventItem? selectedEvent;
 
-  const HomePage({Key? key, this.testTime, this.selectedEvent}) : super(key: key);
-
-
+  const HomePage({Key? key, this.testTime, this.selectedEvent})
+    : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -253,8 +253,8 @@ class _HomePageState extends State<HomePage> {
     // final now = widget.testTime ?? DateTime.utc(2025, 4, 27, 16, 55);
 
     // Festival dates setup
-    final festivalStart = DateTime(2025, 4, 27, 11); // April 27 at 11:00 AM
-    final festivalEnd = DateTime(2025, 4, 28, 23, 59); // April 28 at 11:59 PM
+    final festivalStart = DateTime(2025, 4, 26, 11); // April 26 at 11:00 AM
+    final festivalEnd = DateTime(2025, 4, 27, 23, 59); // April 27 at 11:59 PM
 
     // Check if we're outside festival dates
     if (now.isBefore(festivalStart) || now.isAfter(festivalEnd)) {
@@ -610,38 +610,41 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
-bool _isDay1Event(EventItem e) {
-  // returns true if e appears in day1ScheduleData
-  return day1ScheduleData.any((slot) =>
-    ([...?slot.stage1Events, ...?slot.stage2Events]).contains(e)
-  );
-}
 
-Widget _buildEventCard(EventItem event, bool isCurrent, double screenWidth) {
-  return GestureDetector(
-    onTap: () {
-      final isDay1 = _isDay1Event(event);
-      final dayToOpen = isDay1 ? 1 : 2;
-      Navigator.push(
-        context,
-        PageRouteBuilder(
-          transitionDuration: const Duration(milliseconds: 400),
-          pageBuilder: (_, __, ___) => MainScreen(
-            initialIndex: 2,                // jump to Timetable tab
-            selectedEvent: event,
-            selectedDay: dayToOpen,         // ← pass the day
+  bool _isDay1Event(EventItem e) {
+    // returns true if e appears in day1ScheduleData
+    return day1ScheduleData.any(
+      (slot) => ([...?slot.stage1Events, ...?slot.stage2Events]).contains(e),
+    );
+  }
+
+  Widget _buildEventCard(EventItem event, bool isCurrent, double screenWidth) {
+    return GestureDetector(
+      onTap: () {
+        final isDay1 = _isDay1Event(event);
+        final dayToOpen = isDay1 ? 1 : 2;
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            transitionDuration: const Duration(milliseconds: 400),
+            pageBuilder:
+                (_, __, ___) => MainScreen(
+                  initialIndex: 2, // jump to Timetable tab
+                  selectedEvent: event,
+                  selectedDay: dayToOpen, // ← pass the day
+                ),
+            transitionsBuilder: (_, animation, __, child) {
+              return SlideTransition(
+                position: Tween(
+                  begin: Offset(1, 0),
+                  end: Offset.zero,
+                ).chain(CurveTween(curve: Curves.easeInOut)).animate(animation),
+                child: child,
+              );
+            },
           ),
-          transitionsBuilder: (_, animation, __, child) {
-            return SlideTransition(
-              position: Tween(begin: Offset(1,0), end: Offset.zero)
-                        .chain(CurveTween(curve: Curves.easeInOut))
-                        .animate(animation),
-              child: child,
-            );
-          },
-        ),
-      );
-    },
+        );
+      },
 
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
