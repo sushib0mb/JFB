@@ -512,10 +512,7 @@ class _FoodPageState extends State<FoodPage> {
                   opacity: faded ? 0.5 : 1.0,
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.7,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 16,
-                    ),
+                    padding: const EdgeInsets.only(bottom: 20),
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.surface,
                       borderRadius: BorderRadius.circular(30),
@@ -530,13 +527,25 @@ class _FoodPageState extends State<FoodPage> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: Image.asset(
-                            booth.logoPath,
-                            width: 80,
-                            height: 80,
-                            fit: BoxFit.contain,
+                        Container(
+                          width: double.infinity,
+                          height: MediaQuery.of(context).size.height * 0.15,
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(25),
+                              topRight: Radius.circular(25),
+                            ),
+                            image: DecorationImage(
+                              image: AssetImage(booth.dishImagePath),
+                              fit: BoxFit.cover,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 8,
+                                offset: Offset(0, 4),
+                              ),
+                            ],
                           ),
                         ),
                         const SizedBox(height: 12),
@@ -548,7 +557,7 @@ class _FoodPageState extends State<FoodPage> {
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        const SizedBox(height: 6),
+                        const SizedBox(height: 2),
                         Text(
                           'Food Booth: ${booth.boothLocation}',
                           style: const TextStyle(
@@ -557,7 +566,7 @@ class _FoodPageState extends State<FoodPage> {
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 4),
                         Container(
                           padding: const EdgeInsets.symmetric(
                             vertical: 6,

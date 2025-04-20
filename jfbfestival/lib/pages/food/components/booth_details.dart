@@ -82,7 +82,7 @@ class BoothDetails extends StatelessWidget {
                               ),
                             ),
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
                                   booth.name,
@@ -163,34 +163,6 @@ class BoothDetails extends StatelessWidget {
                       ),
                     ),
                   ],
-                ),
-              ),
-            ),
-
-            Positioned(
-              top: MediaQuery.of(context).size.height / 7.5,
-              left: MediaQuery.of(context).size.width / 2 - 75,
-              child: Container(
-                width: 150,
-                height: 100,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(25),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.5),
-                      blurRadius: 10,
-                      spreadRadius: 0,
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: Image.asset(
-                    booth.logoPath,
-                    width: 150, // Adjusted width to match the container size
-                    height: 100, // Adjusted height to match the container size
-                    fit: BoxFit.contain,
-                  ),
                 ),
               ),
             ),
@@ -281,7 +253,7 @@ class BoothDetails extends StatelessWidget {
           _buildPaymentItem(
             "Paypal",
             "assets/payments/paypal.png",
-            payments.contains("Paypal"),
+            payments.contains("PayPal"),
           ),
         ],
       ),

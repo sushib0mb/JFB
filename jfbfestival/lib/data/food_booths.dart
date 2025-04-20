@@ -164,7 +164,7 @@ final List<FoodBooth> foodBooths = [
     mapPageFoodLocation: "B",
     genre: "Japanese",
     logoPath: "assets/foodLogo/Akita.png",
-    dishImagePath: "assets/food/amazake.jpg",
+    dishImagePath: "assets/food/akitaRiceSmoothie.jpg",
     isVegan: false,
     payments: ["Cash", "Venmo"],
     allergens: ["Soy"],
@@ -231,7 +231,7 @@ final List<FoodBooth> foodBooths = [
     logoPath: "assets/foodLogo/WakazoIcon.png",
     dishImagePath: "assets/food/wakazo_gyoza.jpg",
     isVegan: false,
-    payments: ["Cash", "Venmo", "Zelle", "PayPal"],
+    payments: ["Cash", "Venmo", "PayPal"],
     allergens: ["Wheat", "Soy"],
     dishes: [
       Dish(
@@ -304,7 +304,7 @@ final List<FoodBooth> foodBooths = [
     logoPath: "assets/foodLogo/akitayalogo.png",
     dishImagePath: "assets/food/18. A) Akitaya.jpg",
     isVegan: true,
-    payments: ["Cash", "Venmo"],
+    payments: ["Cash", "Venmo", "PayPal"],
     allergens: ["Soy"],
     dishes: [
       Dish(
