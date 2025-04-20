@@ -3,8 +3,11 @@ import 'package:jfbfestival/pages/food/components/payment_filter.dart';
 import 'package:jfbfestival/pages/food/components/vegan_filter.dart';
 import 'package:jfbfestival/pages/food/components/allergy_filter.dart';
 import 'package:jfbfestival/pages/food/components/booth_details.dart';
-import 'package:jfbfestival/data/food_booths.dart';
 import 'package:jfbfestival/models/food_booth.dart';
+import 'package:jfbfestival/services/supabase_service.dart';
+import 'package:logger/logger.dart';
+
+
 
 class AnimatedBoothDetailWrapper extends StatefulWidget {
   final FoodBooth booth;
@@ -73,52 +76,79 @@ class _AnimatedBoothDetailWrapperState extends State<AnimatedBoothDetailWrapper>
 
 class FoodPage extends StatefulWidget {
   final String? selectedMapLetter;
-
   const FoodPage({this.selectedMapLetter, Key? key}) : super(key: key);
 
   @override
-  State<FoodPage> createState() => _FoodPageState();
+  _FoodPageState createState() => _FoodPageState();
 }
 
 class _FoodPageState extends State<FoodPage> {
-  List<FoodBooth> filteredBooths = foodBooths;
+  final _supabaseService = SupabaseService();
+  final _logger = Logger();
+  final _searchController = TextEditingController();
+  final _searchFocusNode = FocusNode();
+
+  List<FoodBooth> allBooths = [];
+  List<FoodBooth> filteredBooths = [];
   Set<String> selectedPayments = {};
-  bool? veganOnly = false;
-  Set<String> excludedAllergens = {};
+  bool veganOnly = false;
+  Set<String> selectedAllergens = {};
   List<FoodBooth> safeBooths = [];
   List<FoodBooth> unsafeBoothsWithAllergens = [];
-  Set<String> selectedAllergens = {};
   List<FoodBooth> safeVeganBooths = [], nonVeganBooths = [];
-  bool _isFilterPopupOpen = false;
   String? currentMapLetter;
-
-  // Search related variables
+  bool loading = true;
   bool _isSearching = false;
-  final TextEditingController _searchController = TextEditingController();
-  FocusNode _searchFocusNode = FocusNode();
+  bool _isFilterPopupOpen = false;
 
   @override
   void initState() {
     super.initState();
     _searchController.addListener(_onSearchChanged);
     currentMapLetter = widget.selectedMapLetter;
-
-    // Filter by map section if coming from map
-    _applyInitialMapFilter();
+    _loadAndFilterBooths();
   }
 
-  void _applyInitialMapFilter() {
-    if (currentMapLetter != null) {
+  void _onSearchChanged() {
+    _applyFilters();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _searchFocusNode.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadAndFilterBooths() async {
+    try {
+      final raw = await _supabaseService.fetchFoodBooths();
+      List<FoodBooth> booths = [];
+      
+      // Safely process each item in the raw data
+      for (var item in raw) {
+        try {
+          if (item is Map<String, dynamic>) {
+            booths.add(FoodBooth.fromJson(item));
+          }
+        } catch (e) {
+          _logger.w("Error parsing booth: $e");
+        }
+      }
+
       setState(() {
-        filteredBooths =
-            foodBooths
-                .where((booth) => booth.mapPageFoodLocation == currentMapLetter)
-                .toList();
+        allBooths = booths;
+        loading = false;
       });
-    } else {
-      setState(() {
-        filteredBooths = foodBooths;
-      });
+
+      _applyFilters();
+    } catch (err, stack) {
+      _logger.e(
+        "Failed to load booths",
+        error: err,
+        stackTrace: stack,
+      );
+      setState(() => loading = false);
     }
   }
 
@@ -129,23 +159,110 @@ class _FoodPageState extends State<FoodPage> {
     // Update if selectedMapLetter changes
     if (widget.selectedMapLetter != oldWidget.selectedMapLetter) {
       currentMapLetter = widget.selectedMapLetter;
-      _applyInitialMapFilter();
+      _applyFilters();
     }
   }
 
-  @override
-  void dispose() {
-    _searchController.dispose();
-    _searchFocusNode.dispose();
-    super.dispose();
-  }
+  void _applyFilters() {
+    setState(() {
+      safeBooths = [];
+      unsafeBoothsWithAllergens = [];
+      safeVeganBooths = [];
+      nonVeganBooths = [];
+      filteredBooths = [];
 
-  void _onSearchChanged() {
-    _applyFilters();
+      final searchQuery = _searchController.text.toLowerCase();
+      final m = currentMapLetter;
+      final wantPayments = selectedPayments;
+      final wantAllergens = selectedAllergens;
+
+      for (var booth in allBooths) {
+        // 1) map-letter
+        if (m != null && booth.mapPageFoodLocation != m) continue;
+
+        // 2) search
+        if (searchQuery.isNotEmpty) {
+          final matchesName = booth.name.toLowerCase().contains(searchQuery);
+          final matchesLocation = booth.boothLocation.toLowerCase().contains(searchQuery);
+          final matchesGenre = booth.genre.toLowerCase().contains(searchQuery);
+          final matchesDish = booth.dishes.any(
+            (dish) =>
+                dish.name.toLowerCase().contains(searchQuery) ||
+                dish.description.toLowerCase().contains(searchQuery),
+          );
+
+          if (!matchesName && !matchesLocation && !matchesGenre && !matchesDish) {
+            continue;
+          }
+        }
+
+        // 3) payments filter
+        if (wantPayments.isNotEmpty &&
+            !booth.payments.any((p) => wantPayments.contains(p))) {
+          continue;
+        }
+
+        final hasVeganDish = booth.dishes.any((dish) => dish.isVegan);
+
+        bool allDishesContainAllergens = booth.dishes.every(
+          (dish) => dish.allergens.any((a) => wantAllergens.contains(a)),
+        );
+
+        bool hasSafeDish = booth.dishes.any(
+          (dish) => !dish.allergens.any((a) => wantAllergens.contains(a)),
+        );
+
+        // Combo: vegan + allergen
+        if (wantAllergens.isNotEmpty && veganOnly == true) {
+          if (hasVeganDish && hasSafeDish) {
+            safeBooths.add(booth);
+          } else {
+            unsafeBoothsWithAllergens.add(booth);
+          }
+          continue;
+        }
+
+        // Allergen only
+        if (wantAllergens.isNotEmpty) {
+          if (allDishesContainAllergens) {
+            unsafeBoothsWithAllergens.add(booth);
+          } else {
+            safeBooths.add(booth);
+          }
+          continue;
+        }
+
+        // Vegan only
+        if (veganOnly == true) {
+          if (hasVeganDish) {
+            safeVeganBooths.add(booth);
+          } else {
+            nonVeganBooths.add(booth);
+          }
+          continue;
+        }
+
+        // No filters
+        filteredBooths.add(booth);
+      }
+
+      // Final list
+      if (wantAllergens.isNotEmpty && veganOnly == true) {
+        filteredBooths = [...safeBooths];
+      } else if (wantAllergens.isNotEmpty) {
+        filteredBooths = [...safeBooths];
+      } else if (veganOnly == true) {
+        filteredBooths = [...safeVeganBooths];
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     final screenSize = MediaQuery.of(context).size;
     final screenWidth = screenSize.width;
     final screenHeight = screenSize.height;
@@ -187,15 +304,7 @@ class _FoodPageState extends State<FoodPage> {
             ],
           ),
 
-          // Main content with top padding when search is active
-          // Padding(
-          //   padding: EdgeInsets.only(top: _isSearching ? 70 : 0),
-          //   child: _buildMainContent(screenWidth, screenHeight),
-          // ),
-
-          // Search bar (fixed position, won't scroll)
-
-          // Filter button on top of everything
+          // Top action buttons
           _buildTopActionButtons(),
           if (_isSearching) _buildSearchBar(),
         ],
@@ -373,7 +482,6 @@ class _FoodPageState extends State<FoodPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 16),
-
                 _buildAllBoothsSection(screenWidth),
                 SizedBox(height: screenHeight * 0.05),
               ],
@@ -385,9 +493,9 @@ class _FoodPageState extends State<FoodPage> {
   }
 
   String getSafeSectionTitle() {
-    if (veganOnly! && selectedAllergens.isNotEmpty) {
+    if (veganOnly && selectedAllergens.isNotEmpty) {
       return "✅ Vegan & Allergen-Safe Options";
-    } else if (veganOnly!) {
+    } else if (veganOnly) {
       return "✅ Vegan Options";
     } else if (selectedAllergens.isNotEmpty) {
       return "✅ Allergen-Safe Options";
@@ -397,9 +505,9 @@ class _FoodPageState extends State<FoodPage> {
   }
 
   String getUnsafeSectionTitle() {
-    if (veganOnly! && selectedAllergens.isNotEmpty) {
+    if (veganOnly && selectedAllergens.isNotEmpty) {
       return "⚠️ Contains Allergens Or Not Vegan";
-    } else if (veganOnly!) {
+    } else if (veganOnly) {
       return "⚠️ Not Vegan";
     } else if (selectedAllergens.isNotEmpty) {
       return "⚠️ May Contain Allergens";
@@ -507,7 +615,7 @@ class _FoodPageState extends State<FoodPage> {
         children:
             booths.map((booth) {
               return GestureDetector(
-                onTap: () => _showBoothDetails(context, booth),
+                onTap: () => _showBoothDetails(booth),
                 child: Opacity(
                   opacity: faded ? 0.5 : 1.0,
                   child: Container(
@@ -591,7 +699,7 @@ class _FoodPageState extends State<FoodPage> {
     );
   }
 
-  void _showBoothDetails(BuildContext context, FoodBooth booth) {
+  void _showBoothDetails(FoodBooth booth) {
     final height = MediaQuery.of(context).size.height;
 
     showModalBottomSheet(
@@ -732,7 +840,7 @@ class _FoodPageState extends State<FoodPage> {
                                           ),
                                           const SizedBox(height: 12),
                                           VeganFilterOption(
-                                            isVegan: veganOnly ?? false,
+                                            isVegan: veganOnly,
                                             onChanged: (value) {
                                               setModalState(
                                                 () => veganOnly = value,
@@ -764,13 +872,6 @@ class _FoodPageState extends State<FoodPage> {
                                               });
                                             },
                                           ),
-                                          // SizedBox(
-                                          //   height:
-                                          //       MediaQuery.of(
-                                          //         context,
-                                          //       ).size.height *
-                                          //       0.001,
-                                          // ),
                                           _buildApplyButton(
                                             onApply: _applyFilters,
                                             closeModal: () {
@@ -847,128 +948,81 @@ class _FoodPageState extends State<FoodPage> {
       ),
     );
   }
-
-  Widget _buildApplyButton({
-    required VoidCallback onApply,
-    required VoidCallback closeModal,
-  }) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.red,
-        foregroundColor: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 40),
-        elevation: 10,
-      ).copyWith(
-        shadowColor: MaterialStateProperty.all(
-          Colors.redAccent.withOpacity(0.5),
-        ),
+Widget _buildApplyButton({
+  required VoidCallback onApply,
+  required VoidCallback closeModal,
+}) {
+  return ElevatedButton(
+    style: ElevatedButton.styleFrom(
+      backgroundColor: Colors.red,
+      foregroundColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 36),
+    ),
+    onPressed: () {
+      onApply();
+      closeModal();
+    },
+    child: const Text(
+      'Apply Filters',
+      style: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
       ),
-      onPressed: () {
-        onApply();
-        closeModal();
-      },
-      child: const Text(
-        "Apply Filters",
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 1.2,
-        ),
-      ),
-    );
-  }
+    ),
+  );
+}
 
-  void _applyFilters() {
+Widget _buildResetButton() {
+  return TextButton(
+    style: TextButton.styleFrom(
+      foregroundColor: Colors.grey,
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+    ),
+    onPressed: () {
+      setState(() {
+        selectedPayments.clear();
+        veganOnly = false;
+        selectedAllergens.clear();
+        _applyFilters();
+      });
+    },
+    child: const Text(
+      'Reset Filters',
+      style: TextStyle(
+        fontSize: 16,
+        decoration: TextDecoration.underline,
+      ),
+    ),
+  );
+}
+
+// Method to clear map filter if applied
+void _clearMapFilter() {
+  if (currentMapLetter != null) {
     setState(() {
-      safeBooths = [];
-      unsafeBoothsWithAllergens = [];
-      safeVeganBooths = [];
-      nonVeganBooths = [];
-      filteredBooths = [];
-
-      final searchQuery = _searchController.text.toLowerCase();
-
-      for (var booth in foodBooths) {
-        // Search filter
-        if (searchQuery.isNotEmpty) {
-          final matchesName = booth.name.toLowerCase().contains(searchQuery);
-          final matchesLocation = booth.boothLocation.toLowerCase().contains(
-            searchQuery,
-          );
-          final matchesGenre = booth.genre.toLowerCase().contains(searchQuery);
-          final matchesDish = booth.dishes.any(
-            (dish) =>
-                dish.name.toLowerCase().contains(searchQuery) ||
-                dish.description.toLowerCase().contains(searchQuery),
-          );
-
-          if (!matchesName &&
-              !matchesLocation &&
-              !matchesGenre &&
-              !matchesDish) {
-            continue;
-          }
-        }
-
-        // Payments filter
-        if (selectedPayments.isNotEmpty &&
-            !booth.payments.any((p) => selectedPayments.contains(p))) {
-          continue;
-        }
-
-        final hasVeganDish = booth.dishes.any((dish) => dish.isVegan);
-
-        bool allDishesContainAllergens = booth.dishes.every(
-          (dish) => dish.allergens.any((a) => selectedAllergens.contains(a)),
-        );
-
-        bool hasSafeDish = booth.dishes.any(
-          (dish) => !dish.allergens.any((a) => selectedAllergens.contains(a)),
-        );
-
-        // Combo logic: both vegan & allergen filters selected
-        if (selectedAllergens.isNotEmpty && veganOnly == true) {
-          if (hasVeganDish && hasSafeDish) {
-            safeBooths.add(booth);
-          } else {
-            unsafeBoothsWithAllergens.add(booth);
-          }
-          continue;
-        }
-
-        // Allergen filter only
-        if (selectedAllergens.isNotEmpty) {
-          if (allDishesContainAllergens) {
-            unsafeBoothsWithAllergens.add(booth);
-          } else {
-            safeBooths.add(booth);
-          }
-          continue;
-        }
-
-        // Vegan filter only
-        if (veganOnly == true) {
-          if (hasVeganDish) {
-            safeVeganBooths.add(booth);
-          } else {
-            nonVeganBooths.add(booth);
-          }
-          continue;
-        }
-
-        // No allergen or vegan filters
-        filteredBooths.add(booth);
-      }
-
-      // Final display list
-      if (selectedAllergens.isNotEmpty && veganOnly == true) {
-        filteredBooths = [...safeBooths];
-      } else if (selectedAllergens.isNotEmpty) {
-        filteredBooths = [...safeBooths];
-      } else if (veganOnly == true) {
-        filteredBooths = [...safeVeganBooths];
-      }
+      currentMapLetter = null;
+      _applyFilters();
     });
   }
+}
+
+// Method to handle when the user wants to search by text
+void _startSearch() {
+  setState(() {
+    _isSearching = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _searchFocusNode.requestFocus();
+    });
+  });
+}
+
+// Method to check if there are any active filters
+bool _hasActiveFilters() {
+  return selectedPayments.isNotEmpty || 
+         veganOnly || 
+         selectedAllergens.isNotEmpty || 
+         currentMapLetter != null ||
+         _searchController.text.isNotEmpty;
+}
 }

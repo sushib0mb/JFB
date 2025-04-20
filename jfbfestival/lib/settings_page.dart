@@ -102,11 +102,11 @@ class _SettingsPageState extends State<SettingsPage> {
             title: const Text('Fill Out Survey'),
             onTap: () => Navigator.pushNamed(context, SurveyPage.routeName),
           ),
-          ListTile(
-            leading: const Icon(Icons.list),
-            title: const Text('View All Surveys'),
-            onTap: () => Navigator.pushNamed(context, SurveyListPage.routeName),
-          ),
+          // ListTile(
+          //   leading: const Icon(Icons.list),
+          //   title: const Text('View All Surveys'),
+          //   onTap: () => Navigator.pushNamed(context, SurveyListPage.routeName),
+          // ),
           // if (kDebugMode)
           //   ListTile(
           //     leading: Icon(Icons.admin_panel_settings),

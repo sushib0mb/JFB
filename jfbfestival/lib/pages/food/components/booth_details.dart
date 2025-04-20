@@ -8,11 +8,11 @@ class BoothDetails extends StatelessWidget {
   final List<String> selectedAllergens;
 
   const BoothDetails({
+    Key? key,
     required this.booth,
     required this.onClose,
     required this.selectedAllergens,
-    super.key,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -171,8 +171,7 @@ class BoothDetails extends StatelessWidget {
       ],
     );
   }
-
-  Widget _buildSection(String title, Widget content) {
+ Widget _buildSection(String title, Widget content) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
       child: Column(
@@ -207,22 +206,20 @@ class BoothDetails extends StatelessWidget {
       ),
     );
   }
-
   Widget _buildDishesSection(
     List<Dish> dishes,
     List<String> selectedAllergens,
   ) {
+    // Now displays the dynamic list from your Supabase table
+    if (dishes.isEmpty) {
+      return const Center(child: Text("No dishes available"));
+    }
     return Column(
-      children:
-          dishes
-              .map(
-                (dish) =>
-                    DishCard(dish: dish, selectedAllergens: selectedAllergens),
-              )
-              .toList(),
+      children: dishes.map((dish) {
+        return DishCard(dish: dish, selectedAllergens: selectedAllergens);
+      }).toList(),
     );
   }
-
   Widget _buildPaymentOptions(List<String> payments) {
     return Center(
       child: Wrap(

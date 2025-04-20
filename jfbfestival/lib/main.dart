@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart'; 
 import 'dart:developer' as developer;
 import 'theme_notifier.dart';
 import 'settings_page.dart';
@@ -36,10 +37,10 @@ void main() async {
     anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
 
-  developer.log(
-    'Supabase client initialized: ${Supabase.instance.client}',
-    name: '🔥 SupabaseInit',
-  );
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   // … the rest of your initialization …
   runApp(
     MultiProvider(
@@ -139,7 +140,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final pages = <Widget>[
-      HomePage(testTime: DateTime(2025, 4, 27, 14, 00)),
+      HomePage(),
       FoodPage(selectedMapLetter: widget.selectedMapLetter),
       // Pass both event *and* day into TimetablePage:
       TimetablePage(
