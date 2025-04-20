@@ -1,29 +1,36 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'dart:developer' as developer;
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter/foundation.dart';
+
 import 'theme_notifier.dart';
 import 'settings_page.dart';
-import 'package:jfbfestival/pages/food/food_page.dart';
-import 'package:jfbfestival/pages/home_page.dart';
-import 'package:jfbfestival/pages/map_page.dart';
-import 'package:jfbfestival/pages/timetable_page.dart';
-import 'package:jfbfestival/data/timetableData.dart';
-import 'package:jfbfestival/SplashScreen/video_splash_screen.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'pages/food/food_page.dart';
+import 'pages/home_page.dart';
+import 'pages/map_page.dart';
+import 'pages/timetable_page.dart';
+import 'data/timetableData.dart';
+import 'SplashScreen/video_splash_screen.dart';
 import 'models/feedback_entry.dart';
 import 'models/survey_entry.dart';
 import 'pages/survey/survey_page.dart';
 import 'pages/survey/survey_list_page.dart';
-import 'admin_dashboard.dart';
-import 'package:flutter/foundation.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'providers/reminder_provider.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'config/supabase_config.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Load environment variables
   await dotenv.load();
+
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+  // Initialize Hive
   await Hive.initFlutter();
   Hive.registerAdapter(FeedbackEntryAdapter());
   Hive.registerAdapter(SurveyEntryAdapter());
@@ -31,21 +38,17 @@ void main() async {
   await Hive.openBox<FeedbackEntry>('feedback');
   await Hive.openBox<SurveyEntry>('survey');
 
-  await Supabase.initialize(
-    url: dotenv.env['SUPABASE_URL']!,
-    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
-  );
-
+  // Supabase is now initialized via supabase_config.dart
   developer.log(
-    'Supabase client initialized: ${Supabase.instance.client}',
+    'Supabase client initialized: $supabase',
     name: '🔥 SupabaseInit',
   );
-  // … the rest of your initialization …
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeNotifier()),
-        ChangeNotifierProvider(create: (_) => ReminderProvider()), // 👈
+        ChangeNotifierProvider(create: (_) => ReminderProvider()),
       ],
       child: const MyApp(),
     ),

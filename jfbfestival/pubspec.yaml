@@ -20,12 +20,14 @@ dependencies:
   share_plus: ^10.1.4   
   hive: ^2.2.3          # core Hive package
   hive_flutter: ^1.1.0
-  supabase_flutter: ^1.0.0
+  supabase: ^1.0.0
   flutter_local_notifications: ^17.1.0   # latest at time of writing
   timezone: ^0.9.4  
   flutter_dotenv: ^5.1.0 
+  shared_preferences: ^2.0.15
 
-  
+# dependency_overrides:
+#   sign_in_with_apple: ^4.0.0
 
 dev_dependencies:
   flutter_test:
