@@ -746,11 +746,10 @@ class _FoodPageState extends State<FoodPage> {
             animation: curved,
             builder: (context, child) {
               return Stack(
-                fit: StackFit.expand,
                 children: [
                   AnimatedOpacity(
                     duration: const Duration(milliseconds: 200),
-                    opacity: curved.value * 0.5, // Semi-transparent backdrop
+                    opacity: curved.value * 0.5,
                     child: GestureDetector(
                       onTap: () {
                         if (Navigator.of(context).canPop()) {
@@ -769,7 +768,8 @@ class _FoodPageState extends State<FoodPage> {
                         child: Container(
                           constraints: BoxConstraints(
                             maxWidth: MediaQuery.of(context).size.width * 0.85,
-                            maxHeight: MediaQuery.of(context).size.height * 0.8,
+                            maxHeight:
+                                MediaQuery.of(context).size.height * 0.785,
                           ),
                           margin: const EdgeInsets.symmetric(horizontal: 24),
                           padding: const EdgeInsets.symmetric(
@@ -814,7 +814,6 @@ class _FoodPageState extends State<FoodPage> {
                                       ),
                                     ],
                                   ),
-                                  const Divider(),
                                   Expanded(
                                     child: SingleChildScrollView(
                                       padding: const EdgeInsets.only(
@@ -848,7 +847,6 @@ class _FoodPageState extends State<FoodPage> {
                                               });
                                             },
                                           ),
-                                          const SizedBox(height: 5),
                                           Center(
                                             child: _buildSectionTitle("Vegan"),
                                           ),
@@ -861,7 +859,7 @@ class _FoodPageState extends State<FoodPage> {
                                               );
                                             },
                                           ),
-                                          const SizedBox(height: 15),
+                                          const SizedBox(height: 10),
                                           Center(
                                             child: _buildSectionTitle(
                                               "Allergens",
@@ -891,7 +889,6 @@ class _FoodPageState extends State<FoodPage> {
                                       ),
                                     ),
                                   ),
-                                  const Divider(),
                                   Padding(
                                     padding: const EdgeInsets.only(
                                       left: 16.0,
@@ -903,7 +900,30 @@ class _FoodPageState extends State<FoodPage> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceAround,
                                       children: [
-                                        TextButton(
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.white,
+                                            foregroundColor: Colors.white,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                            ),
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 18,
+                                              horizontal: 40,
+                                            ),
+                                            elevation: 10,
+                                          ).copyWith(
+                                            shadowColor:
+                                                MaterialStateProperty.all(
+                                                  const Color.fromARGB(
+                                                    255,
+                                                    0,
+                                                    0,
+                                                    0,
+                                                  ).withOpacity(0.5),
+                                                ),
+                                          ),
                                           onPressed: () {
                                             setModalState(() {
                                               selectedPayments.clear();
@@ -911,14 +931,26 @@ class _FoodPageState extends State<FoodPage> {
                                               selectedAllergens.clear();
                                             });
                                           },
-                                          child: const Text("Reset"),
+                                          child: Text(
+                                            "Reset",
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              letterSpacing: 1.2,
+                                            ),
+                                          ),
                                         ),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                            _applyFilters();
+                                        _buildApplyButton(
+                                          addedText: "Apply Filters",
+                                          onApply: _applyFilters,
+                                          closeModal: () {
+                                            if (Navigator.of(
+                                              context,
+                                            ).canPop()) {
+                                              Navigator.of(context).pop();
+                                            }
                                           },
-                                          child: const Text("Apply"),
                                         ),
                                       ],
                                     ),
@@ -945,10 +977,70 @@ class _FoodPageState extends State<FoodPage> {
 
   Widget _buildSectionTitle(String title) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Container(
+              width: 120,
+              height: 30,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surface,
+                borderRadius: BorderRadius.circular(25),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.45),
+                    blurRadius: 5,
+                    spreadRadius: 0,
+                  ),
+                ],
+              ),
+              child: Center(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 2),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildApplyButton({
+    required VoidCallback onApply,
+    required VoidCallback closeModal,
+    required String addedText,
+  }) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.red,
+        foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 40),
+        elevation: 10,
+      ).copyWith(
+        shadowColor: MaterialStateProperty.all(
+          Colors.redAccent.withOpacity(0.5),
+        ),
+      ),
+      onPressed: () {
+        onApply();
+        closeModal();
+      },
       child: Text(
-        title,
-        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        addedText,
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 1.2,
+        ),
       ),
     );
   }

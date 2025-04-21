@@ -99,7 +99,7 @@ class _BoothDetailsState extends State<BoothDetails> {
             }).toList();
         _isLoading = false;
       });
-    } catch (e, stackTrace) {
+    } catch (e) {
       if (mounted) {
         setState(() {
           _errorMessage =
@@ -112,7 +112,6 @@ class _BoothDetailsState extends State<BoothDetails> {
 
   @override
   Widget build(BuildContext context) {
-    // ... (rest of build method remains the same)
     return Stack(
       children: [
         // Blurred Background with clickable area to close
@@ -126,7 +125,7 @@ class _BoothDetailsState extends State<BoothDetails> {
           child: Container(
             width:
                 MediaQuery.of(context).size.width *
-                0.85, // Slightly wider for better content fit
+                0.75, // Slightly wider for better content fit
             height:
                 MediaQuery.of(context).size.height * 0.75, // Slightly taller
             constraints: BoxConstraints(
@@ -350,7 +349,6 @@ class _BoothDetailsState extends State<BoothDetails> {
   }
 
   Widget _buildSection(String title, Widget content) {
-    // ... (rest of _buildSection remains the same)
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch, // Make section stretch
       children: [
@@ -444,44 +442,31 @@ class _BoothDetailsState extends State<BoothDetails> {
   }
 
   Widget _buildPaymentOptions(List<String> payments) {
-    // ... (rest of _buildPaymentOptions remains the same)
-    final acceptedPaymentsLower = payments.map((p) => p.toLowerCase()).toSet();
+    final options = [
+      ["Venmo", "assets/payments/venmo.png"],
+      ["Zelle", "assets/payments/zelle.png"],
+      ["Cash", "assets/payments/cash.png"],
+      ["Credit", "assets/payments/credit_card.png"],
+      ["PayPal", "assets/payments/paypal.png"],
+      ["Apple Pay", "assets/payments/apple_pay.png"],
+    ];
 
     return Center(
-      child: Wrap(
-        alignment: WrapAlignment.center,
-        spacing: 20, // Adjusted spacing
-        runSpacing: 16,
-        children: [
-          _buildPaymentItem(
-            "Venmo",
-            "assets/payments/venmo.png",
-            acceptedPaymentsLower.contains("venmo"),
-          ),
-          _buildPaymentItem(
-            "Zelle",
-            "assets/payments/zelle.png",
-            acceptedPaymentsLower.contains("zelle"),
-          ),
-          _buildPaymentItem(
-            "Cash",
-            "assets/payments/cash.png",
-            acceptedPaymentsLower.contains("cash"),
-          ),
-          _buildPaymentItem(
-            "Credit", // Label for UI
-            "assets/payments/credit_card.png",
-            // Check for common variations
-            acceptedPaymentsLower.contains("credit card") ||
-                acceptedPaymentsLower.contains("credit"),
-          ),
-          _buildPaymentItem(
-            "PayPal", // Label for UI
-            "assets/payments/paypal.png",
-            acceptedPaymentsLower.contains("paypal"),
-          ),
-          // Add more payment types if needed
-        ],
+      child: GridView.count(
+        crossAxisCount: 3,
+        mainAxisSpacing: 16,
+        crossAxisSpacing: 10,
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        children:
+            options.map((option) {
+              return _buildPaymentItem(
+                option[0],
+                option[1],
+                payments.contains(option[0]) ||
+                    (option[0] == "Credit" && payments.contains("Credit Card")),
+              );
+            }).toList(),
       ),
     );
   }
