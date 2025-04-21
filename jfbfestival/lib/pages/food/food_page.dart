@@ -798,9 +798,17 @@ class _FoodPageState extends State<FoodPage> {
                                               borderRadius:
                                                   BorderRadius.circular(30),
                                             ),
-                                            padding: const EdgeInsets.symmetric(
-                                              vertical: 18,
-                                              horizontal: 40,
+                                            padding: EdgeInsets.symmetric(
+                                              vertical:
+                                                  MediaQuery.of(
+                                                    context,
+                                                  ).size.height *
+                                                  0.017,
+                                              horizontal:
+                                                  MediaQuery.of(
+                                                    context,
+                                                  ).size.width *
+                                                  0.06,
                                             ),
                                             elevation: 10,
                                           ).copyWith(
@@ -825,7 +833,7 @@ class _FoodPageState extends State<FoodPage> {
                                             "Reset",
                                             style: TextStyle(
                                               color: Colors.black,
-                                              fontSize: 18,
+                                              fontSize: 15,
                                               fontWeight: FontWeight.bold,
                                               letterSpacing: 1.2,
                                             ),
@@ -913,7 +921,10 @@ class _FoodPageState extends State<FoodPage> {
         backgroundColor: Colors.red,
         foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 40),
+        padding: EdgeInsets.symmetric(
+          vertical: MediaQuery.of(context).size.height * 0.017,
+          horizontal: MediaQuery.of(context).size.width * 0.06,
+        ),
         elevation: 10,
       ).copyWith(
         shadowColor: MaterialStateProperty.all(
@@ -927,7 +938,7 @@ class _FoodPageState extends State<FoodPage> {
       child: Text(
         addedText,
         style: TextStyle(
-          fontSize: 18,
+          fontSize: 15,
           fontWeight: FontWeight.bold,
           letterSpacing: 1.2,
         ),
