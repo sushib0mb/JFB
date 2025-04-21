@@ -25,8 +25,7 @@ class AnimatedBoothDetailWrapper extends StatefulWidget {
       _AnimatedBoothDetailWrapperState();
 }
 
-class _AnimatedBoothDetailWrapperState
-    extends State<AnimatedBoothDetailWrapper>
+class _AnimatedBoothDetailWrapperState extends State<AnimatedBoothDetailWrapper>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
@@ -35,11 +34,18 @@ class _AnimatedBoothDetailWrapperState
   @override
   void initState() {
     super.initState();
-    _controller =
-        AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
-    _fadeAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.05), end: Offset.zero)
-        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    );
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.05),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
     _controller.forward();
   }
 
@@ -51,16 +57,16 @@ class _AnimatedBoothDetailWrapperState
 
   @override
   Widget build(BuildContext context) => FadeTransition(
-        opacity: _fadeAnimation,
-        child: SlideTransition(
-          position: _slideAnimation,
-          child: BoothDetails(
-            booth: widget.booth,
-            onClose: widget.onClose,
-            selectedAllergens: widget.selectedAllergens,
-          ),
-        ),
-      );
+    opacity: _fadeAnimation,
+    child: SlideTransition(
+      position: _slideAnimation,
+      child: BoothDetails(
+        booth: widget.booth,
+        onClose: widget.onClose,
+        selectedAllergens: widget.selectedAllergens,
+      ),
+    ),
+  );
 }
 
 class FoodPage extends StatefulWidget {
@@ -120,21 +126,20 @@ class _FoodPageState extends State<FoodPage> {
     super.dispose();
   }
 
- Future<void> _loadAndFilterBooths() async {
-  try {
-    final booths = await _supabaseService.fetchFoodBooths();
-    setState(() {
-      allBooths = booths;
-      loading = false;
-    });
-    _applyFilters();
-  } catch (err, stack) {
-    // log both error and stacktrace in one message
-    _logger.e("Failed to load booths: $err\n$stack");
-    setState(() => loading = false);
+  Future<void> _loadAndFilterBooths() async {
+    try {
+      final booths = await _supabaseService.fetchFoodBooths();
+      setState(() {
+        allBooths = booths;
+        loading = false;
+      });
+      _applyFilters();
+    } catch (err, stack) {
+      // log both error and stacktrace in one message
+      _logger.e("Failed to load booths: $err\n$stack");
+      setState(() => loading = false);
+    }
   }
-}
-
 
   void _applyFilters() {
     if (!mounted) return;
@@ -147,47 +152,64 @@ class _FoodPageState extends State<FoodPage> {
 
       final query = _searchController.text.toLowerCase();
       // 1) map + search
-      var initial = allBooths.where((b) {
-        if (currentMapLetter != null && b.mapPageFoodLocation != currentMapLetter) {
-          return false;
-        }
-        if (query.isNotEmpty) {
-          final matchName = b.name.toLowerCase().contains(query);
-          final matchLoc = b.boothLocation.toLowerCase().contains(query);
-          final matchGenre = b.genre.toLowerCase().contains(query);
-          final matchDish = b.dishes.any((d) =>
-              d.name.toLowerCase().contains(query) ||
-              d.description.toLowerCase().contains(query));
-          return matchName || matchLoc || matchGenre || matchDish;
-        }
-        return true;
-      }).toList();
+      var initial =
+          allBooths.where((b) {
+            if (currentMapLetter != null &&
+                b.mapPageFoodLocation != currentMapLetter) {
+              return false;
+            }
+            if (query.isNotEmpty) {
+              final matchName = b.name.toLowerCase().contains(query);
+              final matchLoc = b.boothLocation.toLowerCase().contains(query);
+              final matchGenre = b.genre.toLowerCase().contains(query);
+              final matchDish = b.dishes.any(
+                (d) =>
+                    d.name.toLowerCase().contains(query) ||
+                    d.description.toLowerCase().contains(query),
+              );
+              return matchName || matchLoc || matchGenre || matchDish;
+            }
+            return true;
+          }).toList();
 
       // 2) payment
       if (selectedPayments.isNotEmpty) {
-        initial = initial
-            .where((b) => b.payments.any((p) => selectedPayments.contains(p)))
-            .toList();
+        initial =
+            initial
+                .where(
+                  (b) => b.payments.any((p) => selectedPayments.contains(p)),
+                )
+                .toList();
       }
 
       // 3) vegan & allergen split
       for (var b in initial) {
         final hasVegan = b.dishes.any((d) => d.isVegan);
         final hasSafe = b.dishes.any(
-            (d) => !d.allergens.any((a) => selectedAllergens.contains(a)));
+          (d) => !d.allergens.any((a) => selectedAllergens.contains(a)),
+        );
 
         if (veganOnly && selectedAllergens.isNotEmpty) {
           // both filters
-          final vegSafe = b.dishes.any((d) =>
-              d.isVegan && !d.allergens.any((a) => selectedAllergens.contains(a)));
-          if (vegSafe) safeBooths.add(b);
-          else unsafeBoothsWithAllergens.add(b);
+          final vegSafe = b.dishes.any(
+            (d) =>
+                d.isVegan &&
+                !d.allergens.any((a) => selectedAllergens.contains(a)),
+          );
+          if (vegSafe)
+            safeBooths.add(b);
+          else
+            unsafeBoothsWithAllergens.add(b);
         } else if (selectedAllergens.isNotEmpty) {
-          if (hasSafe) safeBooths.add(b);
-          else unsafeBoothsWithAllergens.add(b);
+          if (hasSafe)
+            safeBooths.add(b);
+          else
+            unsafeBoothsWithAllergens.add(b);
         } else if (veganOnly) {
-          if (hasVegan) safeVeganBooths.add(b);
-          else nonVeganBooths.add(b);
+          if (hasVegan)
+            safeVeganBooths.add(b);
+          else
+            nonVeganBooths.add(b);
         } else {
           filteredBooths.add(b);
         }
@@ -216,45 +238,51 @@ class _FoodPageState extends State<FoodPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: Stack(children: [
-        _buildBackgroundGradient(),
-        Column(children: [
-          SizedBox(height: topPad),
-          Expanded(
-            child: Container(
-              margin: const EdgeInsets.all(25),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                borderRadius: BorderRadius.circular(25),
+      body: Stack(
+        children: [
+          _buildBackgroundGradient(),
+          Column(
+            children: [
+              SizedBox(height: topPad),
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.all(25),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.only(top: _isSearching ? 10 : 0),
+                    child: _buildMainContent(w, h),
+                  ),
+                ),
               ),
-              child: Padding(
-                padding: EdgeInsets.only(top: _isSearching ? 10 : 0),
-                child: _buildMainContent(w, h),
-              ),
-            ),
+            ],
           ),
-        ]),
-        _buildTopActionButtons(),
-        if (_isSearching) _buildSearchBar(),
-      ]),
+          _buildTopActionButtons(),
+          if (_isSearching) _buildSearchBar(),
+        ],
+      ),
     );
   }
 
   Widget _buildBackgroundGradient() => Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              const Color(0xFF0B3775).withOpacity(0.15),
-              const Color(0xFFBF1D23).withOpacity(0.15),
-            ],
-          ),
-        ),
-      );
+    decoration: BoxDecoration(
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          const Color(0xFF0B3775).withOpacity(0.15),
+          const Color(0xFFBF1D23).withOpacity(0.15),
+        ],
+      ),
+    ),
+  );
   Widget _buildTopActionButtons() {
     return Positioned(
-      top: MediaQuery.of(context).padding.top + MediaQuery.of(context).size.height * 0.015,
+      top:
+          MediaQuery.of(context).padding.top +
+          MediaQuery.of(context).size.height * 0.015,
       right: MediaQuery.of(context).size.width * 0.05,
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -262,19 +290,20 @@ class _FoodPageState extends State<FoodPage> {
           // Search Button
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
-            child: _isSearching
-                ? const SizedBox.shrink() // Empty when searching
-                : _buildIconButton(
-                    icon: Icons.search,
-                    onPressed: () {
-                      setState(() {
-                        _isSearching = true;
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          _searchFocusNode.requestFocus();
+            child:
+                _isSearching
+                    ? const SizedBox.shrink() // Empty when searching
+                    : _buildIconButton(
+                      icon: Icons.search,
+                      onPressed: () {
+                        setState(() {
+                          _isSearching = true;
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            _searchFocusNode.requestFocus();
+                          });
                         });
-                      });
-                    },
-                  ),
+                      },
+                    ),
           ),
           const SizedBox(width: 10),
           // Filter Button
@@ -286,24 +315,6 @@ class _FoodPageState extends State<FoodPage> {
               }
             },
           ),
-          // Show reset filters button if filters are active
-          if (_hasActiveFilters()) ...[
-            const SizedBox(width: 10),
-            _buildIconButton(
-              icon: Icons.refresh,
-              onPressed: () {
-                setState(() {
-                  selectedPayments.clear();
-                  veganOnly = false;
-                  selectedAllergens.clear();
-                  currentMapLetter = null;
-                  _searchController.clear();
-                  _isSearching = false;
-                  _applyFilters();
-                });
-              },
-            ),
-          ],
         ],
       ),
     );
@@ -334,9 +345,10 @@ class _FoodPageState extends State<FoodPage> {
           ),
           child: Padding(
             padding: const EdgeInsets.all(10.0),
-            child: iconAsset != null
-                ? Image.asset(iconAsset, fit: BoxFit.contain)
-                : Icon(icon, size: 30),
+            child:
+                iconAsset != null
+                    ? Image.asset(iconAsset, fit: BoxFit.contain)
+                    : Icon(icon, size: 30),
           ),
         ),
       ),
@@ -345,7 +357,11 @@ class _FoodPageState extends State<FoodPage> {
 
   Widget _buildSearchBar() {
     final pad = MediaQuery.of(context).size.height * 0.082;
-    var topPadding = MediaQuery.of(context).padding.top + pad + MediaQuery.of(context).size.height * 0.015 + 32.5;
+    var topPadding =
+        MediaQuery.of(context).padding.top +
+        pad +
+        MediaQuery.of(context).size.height * 0.015 +
+        32.5;
 
     return Padding(
       padding: EdgeInsets.fromLTRB(30, topPadding, 30, 0),
@@ -449,16 +465,20 @@ class _FoodPageState extends State<FoodPage> {
   Widget _buildAllBoothsSection(double screenWidth) {
     final bool showSplitSections =
         (selectedAllergens.isNotEmpty || veganOnly) &&
-        (safeBooths.isNotEmpty || safeVeganBooths.isNotEmpty || unsafeBoothsWithAllergens.isNotEmpty || nonVeganBooths.isNotEmpty);
-    
-    final List<FoodBooth> boothsToShow = showSplitSections
-        ? [
-            ...safeBooths,
-            ...safeVeganBooths,
-            ...unsafeBoothsWithAllergens, 
-            ...nonVeganBooths
-          ]
-        : filteredBooths;
+        (safeBooths.isNotEmpty ||
+            safeVeganBooths.isNotEmpty ||
+            unsafeBoothsWithAllergens.isNotEmpty ||
+            nonVeganBooths.isNotEmpty);
+
+    final List<FoodBooth> boothsToShow =
+        showSplitSections
+            ? [
+              ...safeBooths,
+              ...safeVeganBooths,
+              ...unsafeBoothsWithAllergens,
+              ...nonVeganBooths,
+            ]
+            : filteredBooths;
 
     // Show empty state if no results
     if (boothsToShow.isEmpty) {
@@ -508,7 +528,7 @@ class _FoodPageState extends State<FoodPage> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-        
+
         // Show map section indicator if filtering by map
         if (currentMapLetter != null)
           Padding(
@@ -528,7 +548,9 @@ class _FoodPageState extends State<FoodPage> {
         // Show filtered sections based on active filters
         if (showSplitSections) ...[
           // Safe section (vegan and/or allergen-safe)
-          if (veganOnly && selectedAllergens.isNotEmpty && safeBooths.isNotEmpty) ...[
+          if (veganOnly &&
+              selectedAllergens.isNotEmpty &&
+              safeBooths.isNotEmpty) ...[
             Text(
               getSafeSectionTitle(),
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
@@ -550,10 +572,11 @@ class _FoodPageState extends State<FoodPage> {
             const SizedBox(height: 30),
             _buildBoothGrid(safeBooths, screenWidth),
           ],
-          
+
           // Unsafe section
-          if ((veganOnly && nonVeganBooths.isNotEmpty) || 
-              (selectedAllergens.isNotEmpty && unsafeBoothsWithAllergens.isNotEmpty)) ...[
+          if ((veganOnly && nonVeganBooths.isNotEmpty) ||
+              (selectedAllergens.isNotEmpty &&
+                  unsafeBoothsWithAllergens.isNotEmpty)) ...[
             const SizedBox(height: 30),
             Text(
               getUnsafeSectionTitle(),
@@ -565,7 +588,9 @@ class _FoodPageState extends State<FoodPage> {
             ),
             const SizedBox(height: 30),
             _buildBoothGrid(
-              veganOnly && selectedAllergens.isEmpty ? nonVeganBooths : unsafeBoothsWithAllergens,
+              veganOnly && selectedAllergens.isEmpty
+                  ? nonVeganBooths
+                  : unsafeBoothsWithAllergens,
               screenWidth,
               faded: true,
             ),
@@ -574,100 +599,105 @@ class _FoodPageState extends State<FoodPage> {
           // No special filters - show all booths
           _buildBoothGrid(filteredBooths, screenWidth),
         ],
-        
+
         const SizedBox(height: 80),
       ],
     );
   }
 
-  Widget _buildBoothGrid(List<FoodBooth> booths, double screenWidth, {bool faded = false}) {
+  Widget _buildBoothGrid(
+    List<FoodBooth> booths,
+    double screenWidth, {
+    bool faded = false,
+  }) {
     return Center(
       child: Wrap(
         spacing: 12,
         runSpacing: MediaQuery.of(context).size.height * 0.035,
         alignment: WrapAlignment.center,
-        children: booths.map((booth) {
-          return GestureDetector(
-            onTap: () => _showBoothDetails(booth),
-            child: Opacity(
-              opacity: faded ? 0.5 : 1.0,
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.7,
-                padding: const EdgeInsets.only(bottom: 20),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
-                  borderRadius: BorderRadius.circular(30),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
+        children:
+            booths.map((booth) {
+              return GestureDetector(
+                onTap: () => _showBoothDetails(booth),
+                child: Opacity(
+                  opacity: faded ? 0.5 : 1.0,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    padding: const EdgeInsets.only(bottom: 20),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.surface,
+                      borderRadius: BorderRadius.circular(30),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      height: MediaQuery.of(context).size.height * 0.2,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(25),
-                          topRight: Radius.circular(25),
-                        ),
-                        image: DecorationImage(
-                          image: AssetImage(booth.dishImagePath),
-                          fit: BoxFit.cover,
-                        ),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 8,
-                            offset: Offset(0, 4),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          height: MediaQuery.of(context).size.height * 0.2,
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(25),
+                              topRight: Radius.circular(25),
+                            ),
+                            image: DecorationImage(
+                              image: AssetImage(booth.dishImagePath),
+                              fit: BoxFit.cover,
+                            ),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 8,
+                                offset: Offset(0, 4),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          booth.name,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          'Food Booth: ${booth.boothLocation}',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 4),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 6,
+                            horizontal: 20,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            booth.genre,
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 12),
-                    Text(
-                      booth.name,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      'Food Booth: ${booth.boothLocation}',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 4),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 6,
-                        horizontal: 20,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.15),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        booth.genre,
-                        style: const TextStyle(fontSize: 14),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          );
-        }).toList(),
+              );
+            }).toList(),
       ),
     );
   }
@@ -759,13 +789,19 @@ class _FoodPageState extends State<FoodPage> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Padding(
-                                        padding: const EdgeInsets.only(left: 16.0),
+                                        padding: const EdgeInsets.only(
+                                          left: 16.0,
+                                        ),
                                         child: Text(
                                           "Filters",
-                                          style: Theme.of(context).textTheme.titleLarge,
+                                          style:
+                                              Theme.of(
+                                                context,
+                                              ).textTheme.titleLarge,
                                         ),
                                       ),
                                       IconButton(
@@ -781,22 +817,34 @@ class _FoodPageState extends State<FoodPage> {
                                   const Divider(),
                                   Expanded(
                                     child: SingleChildScrollView(
-                                      padding: const EdgeInsets.only(bottom: 24),
+                                      padding: const EdgeInsets.only(
+                                        bottom: 24,
+                                      ),
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
                                         children: [
                                           const SizedBox(height: 5),
                                           Center(
-                                            child: _buildSectionTitle("Payment"),
+                                            child: _buildSectionTitle(
+                                              "Payment",
+                                            ),
                                           ),
                                           const SizedBox(height: 10),
                                           PaymentFilterRow(
                                             selectedPayments: selectedPayments,
-                                            onPaymentSelected: (method, isSelected) {
+                                            onPaymentSelected: (
+                                              method,
+                                              isSelected,
+                                            ) {
                                               setModalState(() {
                                                 isSelected
-                                                    ? selectedPayments.add(method)
-                                                    : selectedPayments.remove(method);
+                                                    ? selectedPayments.add(
+                                                      method,
+                                                    )
+                                                    : selectedPayments.remove(
+                                                      method,
+                                                    );
                                               });
                                             },
                                           ),
@@ -808,26 +856,36 @@ class _FoodPageState extends State<FoodPage> {
                                           VeganFilterOption(
                                             isVegan: veganOnly,
                                             onChanged: (value) {
-                                              setModalState(() => veganOnly = value);
+                                              setModalState(
+                                                () => veganOnly = value,
+                                              );
                                             },
                                           ),
                                           const SizedBox(height: 15),
                                           Center(
-                                            child: _buildSectionTitle("Allergens"),
+                                            child: _buildSectionTitle(
+                                              "Allergens",
+                                            ),
                                           ),
                                           const SizedBox(height: 5),
                                           AllergyFilterGrid(
-                                            selectedAllergens: selectedAllergens,
-                                            onAllergenSelected: (allergen, isSelected) {
-                                              setModalState(() {setModalState(() {
-                                                 isSelected
-                                                    ? selectedAllergens.add(allergen)
-                                                    : selectedAllergens.remove(allergen);
+                                            selectedAllergens:
+                                                selectedAllergens,
+                                            onAllergenSelected: (
+                                              allergen,
+                                              isSelected,
+                                            ) {
+                                              setModalState(() {
+                                                setModalState(() {
+                                                  isSelected
+                                                      ? selectedAllergens.add(
+                                                        allergen,
+                                                      )
+                                                      : selectedAllergens
+                                                          .remove(allergen);
+                                                });
                                               });
-                                              
                                             },
-                                              );
-                                            }
                                           ),
                                         ],
                                       ),
@@ -842,7 +900,8 @@ class _FoodPageState extends State<FoodPage> {
                                       top: 8.0,
                                     ),
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
                                       children: [
                                         TextButton(
                                           onPressed: () {
@@ -889,10 +948,7 @@ class _FoodPageState extends State<FoodPage> {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Text(
         title,
-        style: const TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        ),
+        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
       ),
     );
   }
