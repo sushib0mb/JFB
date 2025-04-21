@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jfbfestival/data/timetableData.dart';
+import 'package:provider/provider.dart';
 
 /// メインビュー：タイムテーブル
 class TimetablePage extends StatefulWidget {
@@ -37,8 +38,15 @@ class _TimetablePageState extends State<TimetablePage> {
   }
 
   void _highlightSelectedEvent(EventItem selected) {
+    final scheduleService = Provider.of<ScheduleDataService>(
+      context,
+      listen: false,
+    );
+
     final currentSchedule =
-        selectedDay == 1 ? day1ScheduleData : day2ScheduleData;
+        selectedDay == 1
+            ? scheduleService.day1ScheduleData
+            : scheduleService.day2ScheduleData;
 
     for (var item in currentSchedule) {
       final allEvents = [...?item.stage1Events, ...?item.stage2Events];
@@ -106,8 +114,11 @@ class _TimetablePageState extends State<TimetablePage> {
     final double dayButtonHeight = MediaQuery.of(context).size.height * 0.082;
     final double dayButtonWidth = MediaQuery.of(context).size.width * 0.52;
     final topPadding = dayButtonHeight;
+    final scheduleService = Provider.of<ScheduleDataService>(context);
     final currentSchedule =
-        selectedDay == 1 ? day1ScheduleData : day2ScheduleData;
+        selectedDay == 1
+            ? scheduleService.day1ScheduleData
+            : scheduleService.day2ScheduleData;
 
     return Scaffold(
       backgroundColor: Colors.white,

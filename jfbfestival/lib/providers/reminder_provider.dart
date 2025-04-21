@@ -4,40 +4,41 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/notification_service.dart';
 import '/data/timetableData.dart';
-import 'package:flutter/foundation.dart' show kDebugMode;
+// import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:provider/provider.dart';
+import '../data/timetableData.dart';
 
 class ReminderProvider extends ChangeNotifier {
   bool _enabled = false;
-  bool _loaded = false; // 🚨 Add this
+  bool _loaded = false;
   bool get enabled => _enabled;
-  bool get isLoaded => _loaded; // 🚨 Expose load status
+  bool get isLoaded => _loaded;
 
   final _notifier = NotificationService();
 
   ReminderProvider() {
-    _init(); // initialize upon creation
+    _init();
   }
 
   Future<void> _init() async {
     final prefs = await SharedPreferences.getInstance();
     _enabled = prefs.getBool('reminders') ?? false;
-    _loaded = true; // ✅ Mark finished loading
+    _loaded = true;
     notifyListeners();
 
-    await _notifier.init(); // init plugin
-    if (_enabled) unawaited(_scheduleAll());
+    await _notifier.init();
   }
 
-  Future<void> toggle() async {
+  Future<void> toggle(BuildContext context) async {
     if (!_enabled && Platform.isIOS) {
-      await _notifier.requestPermissions(); // ❗ Prompt on enable
+      await _notifier.requestPermissions();
     }
-    await _setEnabled(!_enabled);
+    await _setEnabled(!_enabled, context);
   }
 
-  Future<void> _setEnabled(bool v) async {
+  Future<void> _setEnabled(bool v, BuildContext context) async {
     _enabled = v;
     notifyListeners();
 
@@ -46,16 +47,21 @@ class ReminderProvider extends ChangeNotifier {
 
     if (v) {
       if (Platform.isIOS) {
-        await _notifier.requestPermissions(); // ✅ Prompt user here
+        await _notifier.requestPermissions();
       }
-      unawaited(_scheduleAll());
+
+      final scheduleService = Provider.of<ScheduleDataService>(
+        context,
+        listen: false,
+      );
+      unawaited(_scheduleAll(scheduleService));
     } else {
       unawaited(_notifier.cancelAll());
     }
   }
 
-  Future<void> _scheduleAll() async {
-    await _notifier.cancelAll(); // clean slate
+  Future<void> _scheduleAll(ScheduleDataService scheduleService) async {
+    await _notifier.cancelAll();
     int id = 0;
 
     //   // For debugging purposes
@@ -111,12 +117,14 @@ class ReminderProvider extends ChangeNotifier {
     //   return;
     // }
 
-    final now = tz.TZDateTime.now(tz.local); // current local time
+    final now = tz.TZDateTime.now(tz.local);
+
     final List<List<ScheduleItem>> allDays = [
-      day1ScheduleData,
-      day2ScheduleData,
+      scheduleService.day1ScheduleData,
+      scheduleService.day2ScheduleData,
     ];
-    final List<int> dayDates = [26, 27]; // actual calendar dates
+
+    final List<int> dayDates = [26, 27];
 
     for (int i = 0; i < allDays.length; i++) {
       for (final item in allDays[i]) {

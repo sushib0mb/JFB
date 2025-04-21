@@ -40,18 +40,16 @@ class _SettingsPageState extends State<SettingsPage> {
           // ),
 
           // Event reminders
-     SwitchListTile(
-  title: const Text('Event Reminders'),
-  subtitle: Text(reminderProv.enabled ? 'On' : 'Off'),
-  value: reminderProv.enabled,
-  onChanged: (_) async {
-    await reminderProv.toggle();
-  },
-),
-
-
-        
-
+          SwitchListTile(
+            title: const Text('Event Reminders'),
+            subtitle: Text(reminderProv.enabled ? 'On' : 'Off'),
+            value: reminderProv.enabled,
+            onChanged: (_) async {
+              await reminderProv.toggle(
+                (!reminderProv.enabled) as BuildContext,
+              );
+            },
+          ),
 
           // Calendar sync stub
           // ListTile(
@@ -66,22 +64,22 @@ class _SettingsPageState extends State<SettingsPage> {
           // ),
 
           // Share this app
-    ListTile(
-  leading: const Icon(Icons.share),
-  title: const Text('Share this App'),
-  onTap: () {
-    // you can swap this out for your real URLs
-    final iosUrl = 'https://testflight.apple.com/join/ABC12345';
-    final androidUrl =
-        'https://play.google.com/store/apps/details?id=com.example.jfbfestival';
+          ListTile(
+            leading: const Icon(Icons.share),
+            title: const Text('Share this App'),
+            onTap: () {
+              // you can swap this out for your real URLs
+              final iosUrl = 'https://testflight.apple.com/join/ABC12345';
+              final androidUrl =
+                  'https://play.google.com/store/apps/details?id=com.example.jfbfestival';
 
-    final link = Platform.isAndroid ? androidUrl : iosUrl;
-    Share.share(
-      'Check out the JFB Festival app! Download it now and plan your visit:\n$link',
-      subject: 'JFB Festival App',
-    );
-  },
-),
+              final link = Platform.isAndroid ? androidUrl : iosUrl;
+              Share.share(
+                'Check out the JFB Festival app! Download it now and plan your visit:\n$link',
+                subject: 'JFB Festival App',
+              );
+            },
+          ),
 
           // Report a bug → in‑app feedback form
           // ListTile(

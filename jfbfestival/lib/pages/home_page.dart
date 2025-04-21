@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:jfbfestival/main.dart';
 import '/data/timetableData.dart';
 import 'package:jfbfestival/settings_page.dart';
+import 'package:provider/provider.dart';
 
 class CurrentAndUpcomingEvents {
   final List<EventItem> currentStage1Events;
@@ -285,8 +286,12 @@ class _HomePageState extends State<HomePage> {
 
     // Make sure schedule data exists before proceeding
     final List<ScheduleItem> scheduleList;
+    final scheduleService = Provider.of<ScheduleDataService>(context);
     try {
-      scheduleList = isDay1 ? day1ScheduleData : day2ScheduleData;
+      scheduleList =
+          isDay1
+              ? scheduleService.day1ScheduleData
+              : scheduleService.day2ScheduleData;
 
       // Safety check - if schedule data is empty, show a message
       if (scheduleList.isEmpty) {
@@ -612,8 +617,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   bool _isDay1Event(EventItem e) {
+    final scheduleService = Provider.of<ScheduleDataService>(context);
+
     // returns true if e appears in day1ScheduleData
-    return day1ScheduleData.any(
+    return scheduleService.day1ScheduleData.any(
       (slot) => ([...?slot.stage1Events, ...?slot.stage2Events]).contains(e),
     );
   }

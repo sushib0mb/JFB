@@ -49,6 +49,8 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeNotifier()),
         ChangeNotifierProvider(create: (_) => ReminderProvider()),
+        // Add ScheduleDataService provider
+        ChangeNotifierProvider(create: (_) => ScheduleDataService(supabase)),
       ],
       child: const MyApp(),
     ),
