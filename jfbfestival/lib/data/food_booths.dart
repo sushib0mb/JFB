@@ -62,16 +62,10 @@ class FoodService {
 
       final dishesResponse = await _supabaseClient.from('dishes').select();
 
-      // Debug log for the fetched dishes data
-      print('Fetched dishes data: $dishesResponse');
-
       // Map dishes response to Dish objects
       final Map<String, List<Dish>> dishesByBooth = {};
 
       for (final dishData in dishesResponse) {
-        // Debug log for each dish data
-        print('Processing dish: $dishData');
-
         // Ensure allergens is a list, whether it's a string or already a list
         final allergens = dishData['allergens'];
         List<String> allergensList = [];
