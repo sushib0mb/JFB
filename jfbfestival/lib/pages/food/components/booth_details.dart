@@ -212,7 +212,6 @@ class BoothDetails extends StatelessWidget {
     List<Dish> dishes,
     List<String> selectedAllergens,
   ) {
-    print('Number of dishes: ${dishes.length}'); // Debugging line
     return Column(
       children:
           dishes
