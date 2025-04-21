@@ -96,8 +96,7 @@ Future<void> _fetchDishesData() async {
       });
 
     } catch (e, stackTrace) {
-      print('Error fetching dishes: $e');
-      print('Stack trace: $stackTrace');
+      
       if (mounted) {
         setState(() {
           _errorMessage = 'Failed to load menu. Please check connection and try again.';
@@ -590,7 +589,7 @@ class _DishCardState extends State<DishCard> {
      final dishAllergensLower = widget.dish.allergens.map((a) => a.toLowerCase()).toSet();
      final selectedAllergensLower = widget.selectedAllergens.map((a) => a.toLowerCase()).toSet();
      final containsSelectedAllergens = dishAllergensLower.intersection(selectedAllergensLower).isNotEmpty;
-   print("--- DishCard build for '${widget.dish.name}': widget.dish.imagePath = '${widget.dish.imagePath}'");
+   
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
       elevation: 3,
@@ -813,7 +812,7 @@ class _DishCardState extends State<DishCard> {
 
   Widget _buildDishImage(String imagePath) {
     // ... (This helper remains the same) ...
-     debugPrint("--- [DishCard] Attempting to load image asset: '${widget.dish.imagePath}");
+     
        Widget placeholder = Container(
        height: 180,
        color: Colors.grey[300],

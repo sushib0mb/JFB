@@ -287,23 +287,23 @@ class _FoodPageState extends State<FoodPage> {
             },
           ),
           // Show reset filters button if filters are active
-          if (_hasActiveFilters()) ...[
-            const SizedBox(width: 10),
-            _buildIconButton(
-              icon: Icons.refresh,
-              onPressed: () {
-                setState(() {
-                  selectedPayments.clear();
-                  veganOnly = false;
-                  selectedAllergens.clear();
-                  currentMapLetter = null;
-                  _searchController.clear();
-                  _isSearching = false;
-                  _applyFilters();
-                });
-              },
-            ),
-          ],
+          // if (_hasActiveFilters()) ...[
+          //   const SizedBox(width: 10),
+          //   _buildIconButton(
+          //     icon: Icons.refresh,
+          //     onPressed: () {
+          //       setState(() {
+          //         selectedPayments.clear();
+          //         veganOnly = false;
+          //         selectedAllergens.clear();
+          //         currentMapLetter = null;
+          //         _searchController.clear();
+          //         _isSearching = false;
+          //         _applyFilters();
+          //       });
+          //     },
+          //   ),
+          // ],
         ],
       ),
     );
