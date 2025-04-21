@@ -137,7 +137,6 @@ class ScheduleDataService extends ChangeNotifier {
   // Fetch Day 1 schedule data
   Future<void> fetchDay1ScheduleData() async {
     try {
-      print('Starting fetchDay1ScheduleData');
       isLoadingDay1 = true;
       notifyListeners();
 
@@ -146,8 +145,6 @@ class ScheduleDataService extends ChangeNotifier {
           .from('day1_events')
           .select()
           .order('grouping_time');
-
-      print('Raw Day 1 data received: ${response.length} items');
 
       // Convert the response to the correct type
       List<Map<String, dynamic>> typedResponse =
@@ -161,25 +158,10 @@ class ScheduleDataService extends ChangeNotifier {
       // Process the data
       day1ScheduleData = _processEventData(typedResponse);
 
-      // Debug print
-      print('Day 1 processed data: ${day1ScheduleData.length} items');
-
-      if (day1ScheduleData.isNotEmpty) {
-        print('First event for Day 1: ${day1ScheduleData[0].time}');
-        if (day1ScheduleData[0].stage2Events?.isNotEmpty ?? false) {
-          print(
-            '  - Stage 2: ${day1ScheduleData[0].stage2Events?.first.title}',
-          );
-        }
-      } else {
-        print('Day 1 schedule data is empty after processing');
-      }
-
       isLoadingDay1 = false;
       errorDay1 = null;
       notifyListeners();
     } catch (e) {
-      print('Error in fetchDay1ScheduleData: $e');
       errorDay1 = "Failed to load Day 1 schedule data: $e";
       isLoadingDay1 = false;
       notifyListeners();
@@ -189,7 +171,6 @@ class ScheduleDataService extends ChangeNotifier {
   // Fetch Day 2 schedule data
   Future<void> fetchDay2ScheduleData() async {
     try {
-      print('Starting fetchDay2ScheduleData');
       isLoadingDay2 = true;
       notifyListeners();
 
@@ -198,8 +179,6 @@ class ScheduleDataService extends ChangeNotifier {
           .from('day2_events')
           .select()
           .order('grouping_time');
-
-      print('Raw Day 2 data received: ${response.length} items');
 
       // Convert the response to the correct type
       List<Map<String, dynamic>> typedResponse =
@@ -213,25 +192,10 @@ class ScheduleDataService extends ChangeNotifier {
       // Process the data
       day2ScheduleData = _processEventData(typedResponse);
 
-      // Debug print
-      print('Day 2 processed data: ${day2ScheduleData.length} items');
-
-      if (day2ScheduleData.isNotEmpty) {
-        print('First event for Day 2: ${day2ScheduleData[0].time}');
-        if (day2ScheduleData[0].stage2Events?.isNotEmpty ?? false) {
-          print(
-            '  - Stage 2: ${day2ScheduleData[0].stage2Events?.first.title}',
-          );
-        }
-      } else {
-        print('Day 2 schedule data is empty after processing');
-      }
-
       isLoadingDay2 = false;
       errorDay2 = null;
       notifyListeners();
     } catch (e) {
-      print('Error in fetchDay2ScheduleData: $e');
       errorDay2 = "Failed to load Day 2 schedule data: $e";
       isLoadingDay2 = false;
       notifyListeners();
@@ -241,16 +205,12 @@ class ScheduleDataService extends ChangeNotifier {
   // Process event data into schedule items
   List<ScheduleItem> _processEventData(List<Map<String, dynamic>> data) {
     try {
-      print('Processing ${data.length} raw events');
-
       // Group the events by grouping_time
       Map<String, Map<String, List<EventItem>>> groupedEvents = {};
 
       for (var item in data) {
         String groupingTime = item['grouping_time'] ?? '';
         String stage = item['event_stage'] ?? '';
-
-        print('Processing item: time=$groupingTime, stage=$stage');
 
         // Initialize the grouping time if not exists
         if (!groupedEvents.containsKey(groupingTime)) {
@@ -261,26 +221,16 @@ class ScheduleDataService extends ChangeNotifier {
 
         // Add event to the appropriate stage list
         if (stage == 'Stage 1') {
-          print('Adding Stage 1 event: $event');
           groupedEvents[groupingTime]!['stage1']!.add(event);
         } else if (stage == 'Stage 2') {
-          print('Adding Stage 2 event: $event');
           groupedEvents[groupingTime]!['stage2']!.add(event);
-        } else {
-          print('Unknown stage value: $stage');
         }
       }
-
-      print('Grouped events: ${groupedEvents.keys.length} time slots');
 
       // Convert the grouped data to ScheduleItem list
       List<ScheduleItem> scheduleItems = [];
 
       groupedEvents.entries.forEach((entry) {
-        print('Creating ScheduleItem for time ${entry.key}');
-        print('  - Stage1 events: ${entry.value['stage1']?.length ?? 0}');
-        print('  - Stage2 events: ${entry.value['stage2']?.length ?? 0}');
-
         scheduleItems.add(
           ScheduleItem(
             time: entry.key,
@@ -293,11 +243,8 @@ class ScheduleDataService extends ChangeNotifier {
       // Sort by time
       scheduleItems.sort((a, b) => a.time.compareTo(b.time));
 
-      print('Created ${scheduleItems.length} schedule items');
       return scheduleItems;
     } catch (e) {
-      print('Error in _processEventData: $e');
-      print('Stack trace: ${StackTrace.current}');
       throw "Error processing schedule data: $e";
     }
   }

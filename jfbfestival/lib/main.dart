@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:jfbfestival/data/food_booths.dart';
 import 'package:provider/provider.dart';
 import 'dart:developer' as developer;
 import 'package:hive_flutter/hive_flutter.dart';
@@ -39,10 +40,9 @@ void main() async {
   await Hive.openBox<SurveyEntry>('survey');
 
   // Supabase is now initialized via supabase_config.dart
-  developer.log(
-    'Supabase client initialized: $supabase',
-    name: '🔥 SupabaseInit',
-  );
+  developer.log('Supabase client initialized: $supabase', name: 'SupabaseInit');
+
+  initFoodBoothsService(supabase);
 
   runApp(
     MultiProvider(

@@ -679,7 +679,7 @@ class _PerformanceBoxState extends State<PerformanceBox>
           ),
           child: Padding(
             padding: EdgeInsets.symmetric(
-              vertical: 12.0,
+              vertical: 9.0,
               horizontal: screenWidth * 0.3 * 0.05,
             ),
             child:
@@ -709,7 +709,7 @@ class _PerformanceBoxState extends State<PerformanceBox>
                                   )
                                   : Icon(Icons.event, size: 20),
                         ),
-                        SizedBox(width: screenWidth * 0.3 * 0.075),
+                        SizedBox(width: screenWidth * 0.3 * 0.12),
                         Expanded(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -720,7 +720,7 @@ class _PerformanceBoxState extends State<PerformanceBox>
                                     ? "${widget.eventItem.title.substring(0, 17)}..."
                                     : widget.eventItem.title,
                                 style: TextStyle(
-                                  fontSize: responsiveFontSize * 7.5,
+                                  fontSize: responsiveFontSize * 8,
                                   fontWeight: FontWeight.w500,
                                   height: 0.93,
                                 ),
@@ -729,15 +729,15 @@ class _PerformanceBoxState extends State<PerformanceBox>
                               ),
                               SizedBox(
                                 height:
-                                    MediaQuery.of(context).size.height * 0.006,
+                                    MediaQuery.of(context).size.height * 0.0035,
                               ),
                               Text(
                                 widget.eventItem.time,
                                 style: TextStyle(
-                                  fontSize: responsiveFontSize * 6,
+                                  fontSize: responsiveFontSize * 6.5,
                                   fontWeight: FontWeight.w500,
                                   color: Colors.grey,
-                                  height: 0.9,
+                                  height: 0.3,
                                 ),
                                 textAlign: TextAlign.right,
                               ),

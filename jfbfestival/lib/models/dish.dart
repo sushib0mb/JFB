@@ -4,8 +4,6 @@ class Dish {
   final String imagePath;
   final List<String> allergens;
   final bool isVegan;
-  final double price;
-  
 
   Dish({
     required this.name,
@@ -13,6 +11,5 @@ class Dish {
     this.imagePath = '',
     required this.allergens,
     required this.isVegan,
-    required this.price,
   });
 }
