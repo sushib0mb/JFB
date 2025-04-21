@@ -1,44 +1,56 @@
-// lib/models/dish.dart
-
 class Dish {
+  final String id; // Or whatever type your ID is
+  final String boothId;
   final String name;
   final String description;
   final double price;
+  final String? imagePath; // <-- CHANGE: Make nullable
   final List<String> allergens;
-  final String imagePath;
   final bool isVegan;
 
-  const Dish({
+  Dish({
+    required this.id,
+    required this.boothId,
     required this.name,
     required this.description,
     required this.price,
+    required this.imagePath, // <-- Accepts String? now
     required this.allergens,
-    required this.imagePath,
     required this.isVegan,
   });
 
-  Map<String, dynamic> toJson() => {
-        "name": name,
-        "description": description,
-        "price": price,
-        "allergens": allergens,
-        "image_path": imagePath,
-        "is_vegan": isVegan,
-      };
-
+  // Your fromJson factory (no changes needed here now)
   factory Dish.fromJson(Map<String, dynamic> json) {
-    // sometimes PostgREST will return camelCase or snake_case,
-    // so we do a little fallback for both:
-    final rawImage = json['image_path'] ?? json['imagePath'] ?? '';
-    final rawVegan = json['is_vegan'] ?? json['isVegan'] ?? false;
+  String? parseImagePath(dynamic pathValue) {
+    if (pathValue is String) {
+      final trimmedPath = pathValue.trim();
+      return trimmedPath.isEmpty ? null : trimmedPath;
+    }
+    return null;
+  }
 
+
+  
+  // ***************************
     return Dish(
-      name: json['name'] as String,
-      description: json['description'] as String,
-      price: (json['price'] as num).toDouble(),
-      allergens: List<String>.from(json['allergens'] ?? <dynamic>[]),
-      imagePath: (rawImage as String).trim(),
-      isVegan: rawVegan as bool,
+      id: json['id'] ?? '',
+      boothId: json['booth_id'] ?? '',
+      name: json['name'] as String? ?? 'Unnamed Dish',
+      description: json['description'] as String? ?? '',
+      price: (json['price'] as num?)?.toDouble() ?? 0.0,
+      imagePath: parseImagePath(json['imagePath']), // Passes String?
+      allergens: (json['allergens'] is List)
+          ? List<String>.from(json['allergens'])
+          : (json['allergens'] is String
+                  ? (json['allergens'] as String)
+                      .split(',')
+                      .map((a) => a.trim())
+                      .where((a) => a.isNotEmpty)
+                      .toList()
+                  : []),
+      isVegan: json['is_vegan'] as bool? ?? false,
     );
   }
+
+
 }

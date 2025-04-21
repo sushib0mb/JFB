@@ -1,13 +1,12 @@
+// lib/pages/food/food_page.dart
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:jfbfestival/models/food_booth.dart';
 import 'package:jfbfestival/pages/food/components/payment_filter.dart';
 import 'package:jfbfestival/pages/food/components/vegan_filter.dart';
 import 'package:jfbfestival/pages/food/components/allergy_filter.dart';
 import 'package:jfbfestival/pages/food/components/booth_details.dart';
-import 'package:jfbfestival/models/food_booth.dart';
 import 'package:jfbfestival/services/supabase_service.dart';
-import 'package:logger/logger.dart';
-
-
 
 class AnimatedBoothDetailWrapper extends StatefulWidget {
   final FoodBooth booth;
@@ -26,7 +25,8 @@ class AnimatedBoothDetailWrapper extends StatefulWidget {
       _AnimatedBoothDetailWrapperState();
 }
 
-class _AnimatedBoothDetailWrapperState extends State<AnimatedBoothDetailWrapper>
+class _AnimatedBoothDetailWrapperState
+    extends State<AnimatedBoothDetailWrapper>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
@@ -35,20 +35,11 @@ class _AnimatedBoothDetailWrapperState extends State<AnimatedBoothDetailWrapper>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
-
-    _fadeAnimation = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    );
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.05),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
-
+    _controller =
+        AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
+    _fadeAnimation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
+    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.05), end: Offset.zero)
+        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
     _controller.forward();
   }
 
@@ -59,19 +50,17 @@ class _AnimatedBoothDetailWrapperState extends State<AnimatedBoothDetailWrapper>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _fadeAnimation,
-      child: SlideTransition(
-        position: _slideAnimation,
-        child: BoothDetails(
-          booth: widget.booth,
-          onClose: widget.onClose,
-          selectedAllergens: widget.selectedAllergens,
+  Widget build(BuildContext context) => FadeTransition(
+        opacity: _fadeAnimation,
+        child: SlideTransition(
+          position: _slideAnimation,
+          child: BoothDetails(
+            booth: widget.booth,
+            onClose: widget.onClose,
+            selectedAllergens: widget.selectedAllergens,
+          ),
         ),
-      ),
-    );
-  }
+      );
 }
 
 class FoodPage extends StatefulWidget {
@@ -79,23 +68,27 @@ class FoodPage extends StatefulWidget {
   const FoodPage({this.selectedMapLetter, Key? key}) : super(key: key);
 
   @override
-  _FoodPageState createState() => _FoodPageState();
+  State<FoodPage> createState() => _FoodPageState();
 }
 
 class _FoodPageState extends State<FoodPage> {
-  final _supabaseService = SupabaseService();
-  final _logger = Logger();
-  final _searchController = TextEditingController();
-  final _searchFocusNode = FocusNode();
+  final SupabaseService _supabaseService = SupabaseService();
+  final Logger _logger = Logger();
+  final TextEditingController _searchController = TextEditingController();
+  final FocusNode _searchFocusNode = FocusNode();
 
   List<FoodBooth> allBooths = [];
   List<FoodBooth> filteredBooths = [];
   Set<String> selectedPayments = {};
   bool veganOnly = false;
   Set<String> selectedAllergens = {};
+
+  // for split sections
   List<FoodBooth> safeBooths = [];
   List<FoodBooth> unsafeBoothsWithAllergens = [];
-  List<FoodBooth> safeVeganBooths = [], nonVeganBooths = [];
+  List<FoodBooth> safeVeganBooths = [];
+  List<FoodBooth> nonVeganBooths = [];
+
   String? currentMapLetter;
   bool loading = true;
   bool _isSearching = false;
@@ -104,13 +97,20 @@ class _FoodPageState extends State<FoodPage> {
   @override
   void initState() {
     super.initState();
-    _searchController.addListener(_onSearchChanged);
     currentMapLetter = widget.selectedMapLetter;
+    _searchController.addListener(_onSearchChanged);
     _loadAndFilterBooths();
   }
 
-  void _onSearchChanged() {
-    _applyFilters();
+  void _onSearchChanged() => _applyFilters();
+
+  @override
+  void didUpdateWidget(FoodPage old) {
+    super.didUpdateWidget(old);
+    if (widget.selectedMapLetter != old.selectedMapLetter) {
+      setState(() => currentMapLetter = widget.selectedMapLetter);
+      _applyFilters();
+    }
   }
 
   @override
@@ -120,218 +120,141 @@ class _FoodPageState extends State<FoodPage> {
     super.dispose();
   }
 
-  Future<void> _loadAndFilterBooths() async {
-    try {
-      final raw = await _supabaseService.fetchFoodBooths();
-      List<FoodBooth> booths = [];
-      
-      // Safely process each item in the raw data
-      for (var item in raw) {
-        try {
-          if (item is Map<String, dynamic>) {
-            booths.add(FoodBooth.fromJson(item));
-          }
-        } catch (e) {
-          _logger.w("Error parsing booth: $e");
-        }
-      }
-
-      setState(() {
-        allBooths = booths;
-        loading = false;
-      });
-
-      _applyFilters();
-    } catch (err, stack) {
-      _logger.e(
-        "Failed to load booths",
-        error: err,
-        stackTrace: stack,
-      );
-      setState(() => loading = false);
-    }
+ Future<void> _loadAndFilterBooths() async {
+  try {
+    final booths = await _supabaseService.fetchFoodBooths();
+    setState(() {
+      allBooths = booths;
+      loading = false;
+    });
+    _applyFilters();
+  } catch (err, stack) {
+    // log both error and stacktrace in one message
+    _logger.e("Failed to load booths: $err\n$stack");
+    setState(() => loading = false);
   }
+}
 
-  @override
-  void didUpdateWidget(FoodPage oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    // Update if selectedMapLetter changes
-    if (widget.selectedMapLetter != oldWidget.selectedMapLetter) {
-      currentMapLetter = widget.selectedMapLetter;
-      _applyFilters();
-    }
-  }
 
   void _applyFilters() {
+    if (!mounted) return;
     setState(() {
-      safeBooths = [];
-      unsafeBoothsWithAllergens = [];
-      safeVeganBooths = [];
-      nonVeganBooths = [];
-      filteredBooths = [];
+      safeBooths.clear();
+      unsafeBoothsWithAllergens.clear();
+      safeVeganBooths.clear();
+      nonVeganBooths.clear();
+      filteredBooths.clear();
 
-      final searchQuery = _searchController.text.toLowerCase();
-      final m = currentMapLetter;
-      final wantPayments = selectedPayments;
-      final wantAllergens = selectedAllergens;
-
-      for (var booth in allBooths) {
-        // 1) map-letter
-        if (m != null && booth.mapPageFoodLocation != m) continue;
-
-        // 2) search
-        if (searchQuery.isNotEmpty) {
-          final matchesName = booth.name.toLowerCase().contains(searchQuery);
-          final matchesLocation = booth.boothLocation.toLowerCase().contains(searchQuery);
-          final matchesGenre = booth.genre.toLowerCase().contains(searchQuery);
-          final matchesDish = booth.dishes.any(
-            (dish) =>
-                dish.name.toLowerCase().contains(searchQuery) ||
-                dish.description.toLowerCase().contains(searchQuery),
-          );
-
-          if (!matchesName && !matchesLocation && !matchesGenre && !matchesDish) {
-            continue;
-          }
+      final query = _searchController.text.toLowerCase();
+      // 1) map + search
+      var initial = allBooths.where((b) {
+        if (currentMapLetter != null && b.mapPageFoodLocation != currentMapLetter) {
+          return false;
         }
-
-        // 3) payments filter
-        if (wantPayments.isNotEmpty &&
-            !booth.payments.any((p) => wantPayments.contains(p))) {
-          continue;
+        if (query.isNotEmpty) {
+          final matchName = b.name.toLowerCase().contains(query);
+          final matchLoc = b.boothLocation.toLowerCase().contains(query);
+          final matchGenre = b.genre.toLowerCase().contains(query);
+          final matchDish = b.dishes.any((d) =>
+              d.name.toLowerCase().contains(query) ||
+              d.description.toLowerCase().contains(query));
+          return matchName || matchLoc || matchGenre || matchDish;
         }
+        return true;
+      }).toList();
 
-        final hasVeganDish = booth.dishes.any((dish) => dish.isVegan);
-
-        bool allDishesContainAllergens = booth.dishes.every(
-          (dish) => dish.allergens.any((a) => wantAllergens.contains(a)),
-        );
-
-        bool hasSafeDish = booth.dishes.any(
-          (dish) => !dish.allergens.any((a) => wantAllergens.contains(a)),
-        );
-
-        // Combo: vegan + allergen
-        if (wantAllergens.isNotEmpty && veganOnly == true) {
-          if (hasVeganDish && hasSafeDish) {
-            safeBooths.add(booth);
-          } else {
-            unsafeBoothsWithAllergens.add(booth);
-          }
-          continue;
-        }
-
-        // Allergen only
-        if (wantAllergens.isNotEmpty) {
-          if (allDishesContainAllergens) {
-            unsafeBoothsWithAllergens.add(booth);
-          } else {
-            safeBooths.add(booth);
-          }
-          continue;
-        }
-
-        // Vegan only
-        if (veganOnly == true) {
-          if (hasVeganDish) {
-            safeVeganBooths.add(booth);
-          } else {
-            nonVeganBooths.add(booth);
-          }
-          continue;
-        }
-
-        // No filters
-        filteredBooths.add(booth);
+      // 2) payment
+      if (selectedPayments.isNotEmpty) {
+        initial = initial
+            .where((b) => b.payments.any((p) => selectedPayments.contains(p)))
+            .toList();
       }
 
-      // Final list
-      if (wantAllergens.isNotEmpty && veganOnly == true) {
+      // 3) vegan & allergen split
+      for (var b in initial) {
+        final hasVegan = b.dishes.any((d) => d.isVegan);
+        final hasSafe = b.dishes.any(
+            (d) => !d.allergens.any((a) => selectedAllergens.contains(a)));
+
+        if (veganOnly && selectedAllergens.isNotEmpty) {
+          // both filters
+          final vegSafe = b.dishes.any((d) =>
+              d.isVegan && !d.allergens.any((a) => selectedAllergens.contains(a)));
+          if (vegSafe) safeBooths.add(b);
+          else unsafeBoothsWithAllergens.add(b);
+        } else if (selectedAllergens.isNotEmpty) {
+          if (hasSafe) safeBooths.add(b);
+          else unsafeBoothsWithAllergens.add(b);
+        } else if (veganOnly) {
+          if (hasVegan) safeVeganBooths.add(b);
+          else nonVeganBooths.add(b);
+        } else {
+          filteredBooths.add(b);
+        }
+      }
+
+      // 4) choose final list
+      if (veganOnly && selectedAllergens.isNotEmpty) {
         filteredBooths = [...safeBooths];
-      } else if (wantAllergens.isNotEmpty) {
+      } else if (selectedAllergens.isNotEmpty) {
         filteredBooths = [...safeBooths];
-      } else if (veganOnly == true) {
+      } else if (veganOnly) {
         filteredBooths = [...safeVeganBooths];
       }
+      // else leave filteredBooths as-is
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (loading) {
-      return const Center(child: CircularProgressIndicator());
-    }
+    if (loading) return const Center(child: CircularProgressIndicator());
 
-    final screenSize = MediaQuery.of(context).size;
-    final screenWidth = screenSize.width;
-    final screenHeight = screenSize.height;
-    final topPadding = MediaQuery.of(context).size.height * 0.082;
+    final w = MediaQuery.of(context).size.width;
+    final h = MediaQuery.of(context).size.height;
+    final topPad = h * 0.082 + MediaQuery.of(context).padding.top + h * 0.015;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: Stack(
-        children: [
-          // Background first
-          _buildBackgroundGradient(),
+      body: Stack(children: [
+        _buildBackgroundGradient(),
+        Column(children: [
+          SizedBox(height: topPad),
+          Expanded(
+            child: Container(
+              margin: const EdgeInsets.all(25),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surface,
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: Padding(
+                padding: EdgeInsets.only(top: _isSearching ? 10 : 0),
+                child: _buildMainContent(w, h),
+              ),
+            ),
+          ),
+        ]),
+        _buildTopActionButtons(),
+        if (_isSearching) _buildSearchBar(),
+      ]),
+    );
+  }
 
-          // Adding white background
-          Column(
-            children: [
-              SizedBox(
-                height:
-                    MediaQuery.of(context).padding.top +
-                    topPadding +
-                    MediaQuery.of(context).size.height * 0.015,
-              ),
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.all(25),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                    color:
-                        Theme.of(
-                          context,
-                        ).colorScheme.surface, // ← themed card color
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.only(top: _isSearching ? 10 : 0),
-                    child: _buildMainContent(screenWidth, screenHeight),
-                  ),
-                ),
-              ),
+  Widget _buildBackgroundGradient() => Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              const Color(0xFF0B3775).withOpacity(0.15),
+              const Color(0xFFBF1D23).withOpacity(0.15),
             ],
           ),
-
-          // Top action buttons
-          _buildTopActionButtons(),
-          if (_isSearching) _buildSearchBar(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBackgroundGradient() {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            const Color(0xFF0B3775).withOpacity(0.15),
-            const Color(0xFFBF1D23).withOpacity(0.15),
-          ],
         ),
-      ),
-    );
-  }
-
+      );
   Widget _buildTopActionButtons() {
     return Positioned(
-      top:
-          MediaQuery.of(context).padding.top +
-          MediaQuery.of(context).size.height * 0.015,
+      top: MediaQuery.of(context).padding.top + MediaQuery.of(context).size.height * 0.015,
       right: MediaQuery.of(context).size.width * 0.05,
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -339,20 +262,19 @@ class _FoodPageState extends State<FoodPage> {
           // Search Button
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
-            child:
-                _isSearching
-                    ? Container() // Empty container when searching
-                    : _buildIconButton(
-                      icon: Icons.search,
-                      onPressed: () {
-                        setState(() {
-                          _isSearching = true;
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            _searchFocusNode.requestFocus();
-                          });
+            child: _isSearching
+                ? const SizedBox.shrink() // Empty when searching
+                : _buildIconButton(
+                    icon: Icons.search,
+                    onPressed: () {
+                      setState(() {
+                        _isSearching = true;
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          _searchFocusNode.requestFocus();
                         });
-                      },
-                    ),
+                      });
+                    },
+                  ),
           ),
           const SizedBox(width: 10),
           // Filter Button
@@ -364,6 +286,24 @@ class _FoodPageState extends State<FoodPage> {
               }
             },
           ),
+          // Show reset filters button if filters are active
+          if (_hasActiveFilters()) ...[
+            const SizedBox(width: 10),
+            _buildIconButton(
+              icon: Icons.refresh,
+              onPressed: () {
+                setState(() {
+                  selectedPayments.clear();
+                  veganOnly = false;
+                  selectedAllergens.clear();
+                  currentMapLetter = null;
+                  _searchController.clear();
+                  _isSearching = false;
+                  _applyFilters();
+                });
+              },
+            ),
+          ],
         ],
       ),
     );
@@ -394,10 +334,9 @@ class _FoodPageState extends State<FoodPage> {
           ),
           child: Padding(
             padding: const EdgeInsets.all(10.0),
-            child:
-                iconAsset != null
-                    ? Image.asset(iconAsset, fit: BoxFit.contain)
-                    : Icon(icon, size: 30),
+            child: iconAsset != null
+                ? Image.asset(iconAsset, fit: BoxFit.contain)
+                : Icon(icon, size: 30),
           ),
         ),
       ),
@@ -406,20 +345,10 @@ class _FoodPageState extends State<FoodPage> {
 
   Widget _buildSearchBar() {
     final pad = MediaQuery.of(context).size.height * 0.082;
-    var topPadding =
-        MediaQuery.of(context).padding.top +
-        pad +
-        MediaQuery.of(context).size.height * 0.015 +
-        32.5;
-    if (!_isSearching) return SizedBox.shrink(); // Hide if not searching
+    var topPadding = MediaQuery.of(context).padding.top + pad + MediaQuery.of(context).size.height * 0.015 + 32.5;
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(
-        30,
-        topPadding,
-        30,
-        0,
-      ), // Tighter top padding
+      padding: EdgeInsets.fromLTRB(30, topPadding, 30, 0),
       child: Material(
         elevation: 4,
         borderRadius: BorderRadius.circular(30),
@@ -447,7 +376,7 @@ class _FoodPageState extends State<FoodPage> {
                     hintText: 'Search food booths...',
                     border: InputBorder.none,
                   ),
-                  onChanged: (_) => setState(() {}),
+                  onChanged: (_) => _applyFilters(),
                   style: const TextStyle(fontSize: 16),
                 ),
               ),
@@ -457,6 +386,7 @@ class _FoodPageState extends State<FoodPage> {
                   setState(() {
                     _searchController.clear();
                     _isSearching = false;
+                    _applyFilters();
                   });
                   _searchFocusNode.unfocus();
                 },
@@ -518,11 +448,17 @@ class _FoodPageState extends State<FoodPage> {
 
   Widget _buildAllBoothsSection(double screenWidth) {
     final bool showSplitSections =
-        safeBooths.isNotEmpty || unsafeBoothsWithAllergens.isNotEmpty;
-    final List<FoodBooth> boothsToShow =
-        showSplitSections
-            ? [...safeBooths, ...unsafeBoothsWithAllergens]
-            : filteredBooths;
+        (selectedAllergens.isNotEmpty || veganOnly) &&
+        (safeBooths.isNotEmpty || safeVeganBooths.isNotEmpty || unsafeBoothsWithAllergens.isNotEmpty || nonVeganBooths.isNotEmpty);
+    
+    final List<FoodBooth> boothsToShow = showSplitSections
+        ? [
+            ...safeBooths,
+            ...safeVeganBooths,
+            ...unsafeBoothsWithAllergens, 
+            ...nonVeganBooths
+          ]
+        : filteredBooths;
 
     // Show empty state if no results
     if (boothsToShow.isEmpty) {
@@ -549,6 +485,21 @@ class _FoodPageState extends State<FoodPage> {
             ),
           ),
           const SizedBox(height: 40),
+          if (_hasActiveFilters())
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  selectedPayments.clear();
+                  veganOnly = false;
+                  selectedAllergens.clear();
+                  currentMapLetter = null;
+                  _searchController.clear();
+                  _isSearching = false;
+                  _applyFilters();
+                });
+              },
+              child: const Text("Clear All Filters"),
+            ),
         ],
       );
     }
@@ -557,11 +508,13 @@ class _FoodPageState extends State<FoodPage> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-        if (widget.selectedMapLetter != null)
+        
+        // Show map section indicator if filtering by map
+        if (currentMapLetter != null)
           Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: Text(
-              'Showing booths in section ${widget.selectedMapLetter}',
+              'Showing booths in section $currentMapLetter',
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
@@ -572,129 +525,149 @@ class _FoodPageState extends State<FoodPage> {
 
         const SizedBox(height: 20),
 
-        if (showSplitSections && safeBooths.isNotEmpty) ...[
-          Text(
-            getSafeSectionTitle(),
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          ),
-          const SizedBox(height: 30),
-          _buildBoothGrid(safeBooths, screenWidth),
-        ],
-        if (showSplitSections && unsafeBoothsWithAllergens.isNotEmpty) ...[
-          const SizedBox(height: 30),
-          Text(
-            getUnsafeSectionTitle(),
-            style: const TextStyle(
-              color: Colors.red,
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
+        // Show filtered sections based on active filters
+        if (showSplitSections) ...[
+          // Safe section (vegan and/or allergen-safe)
+          if (veganOnly && selectedAllergens.isNotEmpty && safeBooths.isNotEmpty) ...[
+            Text(
+              getSafeSectionTitle(),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
             ),
-          ),
-          const SizedBox(height: 30),
-          _buildBoothGrid(unsafeBoothsWithAllergens, screenWidth, faded: true),
-        ] else if (!showSplitSections) ...[
+            const SizedBox(height: 30),
+            _buildBoothGrid(safeBooths, screenWidth),
+          ] else if (veganOnly && safeVeganBooths.isNotEmpty) ...[
+            Text(
+              "✅ Vegan Options",
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+            const SizedBox(height: 30),
+            _buildBoothGrid(safeVeganBooths, screenWidth),
+          ] else if (selectedAllergens.isNotEmpty && safeBooths.isNotEmpty) ...[
+            Text(
+              "✅ Allergen-Safe Options",
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+            const SizedBox(height: 30),
+            _buildBoothGrid(safeBooths, screenWidth),
+          ],
+          
+          // Unsafe section
+          if ((veganOnly && nonVeganBooths.isNotEmpty) || 
+              (selectedAllergens.isNotEmpty && unsafeBoothsWithAllergens.isNotEmpty)) ...[
+            const SizedBox(height: 30),
+            Text(
+              getUnsafeSectionTitle(),
+              style: const TextStyle(
+                color: Colors.red,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+            const SizedBox(height: 30),
+            _buildBoothGrid(
+              veganOnly && selectedAllergens.isEmpty ? nonVeganBooths : unsafeBoothsWithAllergens,
+              screenWidth,
+              faded: true,
+            ),
+          ],
+        ] else ...[
+          // No special filters - show all booths
           _buildBoothGrid(filteredBooths, screenWidth),
         ],
+        
         const SizedBox(height: 80),
       ],
     );
   }
 
-  Widget _buildBoothGrid(
-    List<FoodBooth> booths,
-    double screenWidth, {
-    bool faded = false,
-  }) {
+  Widget _buildBoothGrid(List<FoodBooth> booths, double screenWidth, {bool faded = false}) {
     return Center(
       child: Wrap(
         spacing: 12,
-        runSpacing:
-            MediaQuery.of(context).size.height *
-            0.035, // Spacing between food booths
+        runSpacing: MediaQuery.of(context).size.height * 0.035,
         alignment: WrapAlignment.center,
-        children:
-            booths.map((booth) {
-              return GestureDetector(
-                onTap: () => _showBoothDetails(booth),
-                child: Opacity(
-                  opacity: faded ? 0.5 : 1.0,
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    padding: const EdgeInsets.only(bottom: 20),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surface,
-                      borderRadius: BorderRadius.circular(30),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
+        children: booths.map((booth) {
+          return GestureDetector(
+            onTap: () => _showBoothDetails(booth),
+            child: Opacity(
+              opacity: faded ? 0.5 : 1.0,
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.7,
+                padding: const EdgeInsets.only(bottom: 20),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  borderRadius: BorderRadius.circular(30),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
                     ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: double.infinity,
-                          height: MediaQuery.of(context).size.height * 0.2,
-                          decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(25),
-                              topRight: Radius.circular(25),
-                            ),
-                            image: DecorationImage(
-                              image: AssetImage(booth.dishImagePath),
-                              fit: BoxFit.cover,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 8,
-                                offset: Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          booth.name,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          'Food Booth: ${booth.boothLocation}',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 4),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 6,
-                            horizontal: 20,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            booth.genre,
-                            style: const TextStyle(fontSize: 14),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  ],
                 ),
-              );
-            }).toList(),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      height: MediaQuery.of(context).size.height * 0.2,
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(25),
+                          topRight: Radius.circular(25),
+                        ),
+                        image: DecorationImage(
+                          image: AssetImage(booth.dishImagePath),
+                          fit: BoxFit.cover,
+                        ),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 8,
+                            offset: Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      booth.name,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Food Booth: ${booth.boothLocation}',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 4),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 6,
+                        horizontal: 20,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        booth.genre,
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }).toList(),
       ),
     );
   }
@@ -708,7 +681,6 @@ class _FoodPageState extends State<FoodPage> {
       backgroundColor: Colors.transparent,
       builder: (ctx) {
         return Container(
-          // start 25% down from the top
           margin: EdgeInsets.only(top: height * 0.02),
           child: AnimatedBoothDetailWrapper(
             booth: booth,
@@ -727,18 +699,15 @@ class _FoodPageState extends State<FoodPage> {
     if (_isFilterPopupOpen) return; // Prevent re-entry
     _isFilterPopupOpen = true;
 
-    // Delay just slightly to allow UI to settle but still appear fast
+    // Show filter popup with slight delay
     Future.delayed(const Duration(milliseconds: 50), () {
-      if (!mounted)
-        return; // Prevent showing dialog if widget is no longer in the tree
+      if (!mounted) return;
 
       showGeneralDialog(
         context: context,
         barrierDismissible: true,
         barrierLabel: 'FilterPopup',
-        transitionDuration: const Duration(
-          milliseconds: 200,
-        ), // Faster appearance
+        transitionDuration: const Duration(milliseconds: 200),
         pageBuilder: (context, anim1, anim2) => const SizedBox.shrink(),
         transitionBuilder: (context, anim1, _, __) {
           final curved = CurvedAnimation(parent: anim1, curve: Curves.easeOut);
@@ -751,13 +720,14 @@ class _FoodPageState extends State<FoodPage> {
                 children: [
                   AnimatedOpacity(
                     duration: const Duration(milliseconds: 200),
-                    opacity: curved.value,
+                    opacity: curved.value * 0.5, // Semi-transparent backdrop
                     child: GestureDetector(
                       onTap: () {
                         if (Navigator.of(context).canPop()) {
                           Navigator.of(context).pop();
                         }
                       },
+                      child: Container(color: Colors.black),
                     ),
                   ),
                   AnimatedOpacity(
@@ -769,9 +739,7 @@ class _FoodPageState extends State<FoodPage> {
                         child: Container(
                           constraints: BoxConstraints(
                             maxWidth: MediaQuery.of(context).size.width * 0.85,
-                            maxHeight:
-                                MediaQuery.of(context).size.height *
-                                0.8, // Increased height
+                            maxHeight: MediaQuery.of(context).size.height * 0.8,
                           ),
                           margin: const EdgeInsets.symmetric(horizontal: 24),
                           padding: const EdgeInsets.symmetric(
@@ -779,58 +747,56 @@ class _FoodPageState extends State<FoodPage> {
                             vertical: 10,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.surface,
                             borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
+                            boxShadow: const [
                               BoxShadow(color: Colors.black26, blurRadius: 10),
                             ],
                           ),
                           child: StatefulBuilder(
                             builder: (context, setModalState) {
                               return Column(
-                                mainAxisSize: MainAxisSize.max,
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Align(
-                                    alignment: Alignment.topRight,
-                                    child: IconButton(
-                                      icon: const Icon(Icons.close),
-                                      onPressed: () {
-                                        if (Navigator.of(context).canPop()) {
-                                          Navigator.of(context).pop();
-                                        }
-                                      },
-                                    ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 16.0),
+                                        child: Text(
+                                          "Filters",
+                                          style: Theme.of(context).textTheme.titleLarge,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.close),
+                                        onPressed: () {
+                                          if (Navigator.of(context).canPop()) {
+                                            Navigator.of(context).pop();
+                                          }
+                                        },
+                                      ),
+                                    ],
                                   ),
+                                  const Divider(),
                                   Expanded(
                                     child: SingleChildScrollView(
-                                      padding: const EdgeInsets.only(
-                                        bottom: 24,
-                                      ),
+                                      padding: const EdgeInsets.only(bottom: 24),
                                       child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.stretch,
+                                        crossAxisAlignment: CrossAxisAlignment.stretch,
                                         children: [
-                                          SizedBox(height: 5),
+                                          const SizedBox(height: 5),
                                           Center(
-                                            child: _buildSectionTitle(
-                                              "Payment",
-                                            ),
+                                            child: _buildSectionTitle("Payment"),
                                           ),
                                           const SizedBox(height: 10),
                                           PaymentFilterRow(
                                             selectedPayments: selectedPayments,
-                                            onPaymentSelected: (
-                                              method,
-                                              isSelected,
-                                            ) {
+                                            onPaymentSelected: (method, isSelected) {
                                               setModalState(() {
                                                 isSelected
-                                                    ? selectedPayments.add(
-                                                      method,
-                                                    )
-                                                    : selectedPayments.remove(
-                                                      method,
-                                                    );
+                                                    ? selectedPayments.add(method)
+                                                    : selectedPayments.remove(method);
                                               });
                                             },
                                           ),
@@ -842,48 +808,60 @@ class _FoodPageState extends State<FoodPage> {
                                           VeganFilterOption(
                                             isVegan: veganOnly,
                                             onChanged: (value) {
-                                              setModalState(
-                                                () => veganOnly = value,
-                                              );
+                                              setModalState(() => veganOnly = value);
                                             },
                                           ),
                                           const SizedBox(height: 15),
                                           Center(
-                                            child: _buildSectionTitle(
-                                              "Allergens",
-                                            ),
+                                            child: _buildSectionTitle("Allergens"),
                                           ),
                                           const SizedBox(height: 5),
                                           AllergyFilterGrid(
-                                            selectedAllergens:
-                                                selectedAllergens,
-                                            onAllergenSelected: (
-                                              allergen,
-                                              isSelected,
-                                            ) {
-                                              setModalState(() {
-                                                isSelected
-                                                    ? selectedAllergens.add(
-                                                      allergen,
-                                                    )
-                                                    : selectedAllergens.remove(
-                                                      allergen,
-                                                    );
+                                            selectedAllergens: selectedAllergens,
+                                            onAllergenSelected: (allergen, isSelected) {
+                                              setModalState(() {setModalState(() {
+                                                 isSelected
+                                                    ? selectedAllergens.add(allergen)
+                                                    : selectedAllergens.remove(allergen);
                                               });
+                                              
                                             },
-                                          ),
-                                          _buildApplyButton(
-                                            onApply: _applyFilters,
-                                            closeModal: () {
-                                              if (Navigator.of(
-                                                context,
-                                              ).canPop()) {
-                                                Navigator.of(context).pop();
-                                              }
-                                            },
+                                              );
+                                            }
                                           ),
                                         ],
                                       ),
+                                    ),
+                                  ),
+                                  const Divider(),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: 16.0,
+                                      right: 16.0,
+                                      bottom: 16.0,
+                                      top: 8.0,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                      children: [
+                                        TextButton(
+                                          onPressed: () {
+                                            setModalState(() {
+                                              selectedPayments.clear();
+                                              veganOnly = false;
+                                              selectedAllergens.clear();
+                                            });
+                                          },
+                                          child: const Text("Reset"),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                            _applyFilters();
+                                          },
+                                          child: const Text("Apply"),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
@@ -899,130 +877,31 @@ class _FoodPageState extends State<FoodPage> {
             },
           );
         },
-      ).then((_) async {
-        if (mounted) {
-          _applyFilters();
-          await Future.delayed(const Duration(milliseconds: 150));
-          if (mounted) {
-            setState(() => _isFilterPopupOpen = false);
-          }
-        }
+      ).then((_) {
+        // Reset the flag when dialog is closed
+        _isFilterPopupOpen = false;
       });
     });
   }
 
   Widget _buildSectionTitle(String title) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: Container(
-              width: 120,
-              height: 30,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                borderRadius: BorderRadius.circular(25),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.45),
-                    blurRadius: 5,
-                    spreadRadius: 0,
-                  ),
-                ],
-              ),
-              child: Center(
-                child: Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 2),
-        ],
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
-Widget _buildApplyButton({
-  required VoidCallback onApply,
-  required VoidCallback closeModal,
-}) {
-  return ElevatedButton(
-    style: ElevatedButton.styleFrom(
-      backgroundColor: Colors.red,
-      foregroundColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 36),
-    ),
-    onPressed: () {
-      onApply();
-      closeModal();
-    },
-    child: const Text(
-      'Apply Filters',
-      style: TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-  );
-}
 
-Widget _buildResetButton() {
-  return TextButton(
-    style: TextButton.styleFrom(
-      foregroundColor: Colors.grey,
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
-    ),
-    onPressed: () {
-      setState(() {
-        selectedPayments.clear();
-        veganOnly = false;
-        selectedAllergens.clear();
-        _applyFilters();
-      });
-    },
-    child: const Text(
-      'Reset Filters',
-      style: TextStyle(
-        fontSize: 16,
-        decoration: TextDecoration.underline,
-      ),
-    ),
-  );
-}
-
-// Method to clear map filter if applied
-void _clearMapFilter() {
-  if (currentMapLetter != null) {
-    setState(() {
-      currentMapLetter = null;
-      _applyFilters();
-    });
+  bool _hasActiveFilters() {
+    return selectedPayments.isNotEmpty ||
+        veganOnly ||
+        selectedAllergens.isNotEmpty ||
+        currentMapLetter != null ||
+        _searchController.text.isNotEmpty;
   }
-}
-
-// Method to handle when the user wants to search by text
-void _startSearch() {
-  setState(() {
-    _isSearching = true;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _searchFocusNode.requestFocus();
-    });
-  });
-}
-
-// Method to check if there are any active filters
-bool _hasActiveFilters() {
-  return selectedPayments.isNotEmpty || 
-         veganOnly || 
-         selectedAllergens.isNotEmpty || 
-         currentMapLetter != null ||
-         _searchController.text.isNotEmpty;
-}
 }
