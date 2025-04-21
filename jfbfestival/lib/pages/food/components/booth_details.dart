@@ -100,8 +100,6 @@ class _BoothDetailsState extends State<BoothDetails> {
         _isLoading = false;
       });
     } catch (e, stackTrace) {
-      print('Error fetching dishes: $e');
-      print('Stack trace: $stackTrace');
       if (mounted) {
         setState(() {
           _errorMessage =
@@ -647,6 +645,14 @@ class _DishCardState extends State<DishCard> {
 
   @override
   Widget build(BuildContext context) {
+    // Case-insensitive check for selected allergens
+    final dishAllergensLower =
+        widget.dish.allergens.map((a) => a.toLowerCase()).toSet();
+    final selectedAllergensLower =
+        widget.selectedAllergens.map((a) => a.toLowerCase()).toSet();
+    final containsSelectedAllergens =
+        dishAllergensLower.intersection(selectedAllergensLower).isNotEmpty;
+
     // Case-insensitive check for selected allergens
     final dishAllergensLower =
         widget.dish.allergens.map((a) => a.toLowerCase()).toSet();
