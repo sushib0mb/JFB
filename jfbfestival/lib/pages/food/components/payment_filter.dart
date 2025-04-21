@@ -18,20 +18,40 @@ class PaymentFilterRow extends StatelessWidget {
       "Zelle",
       "Credit Card",
       "PayPal",
-      "ApplePay",
+      "Apple Pay",
     ];
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children:
-          payments.map((method) {
-            final isSelected = selectedPayments.contains(method);
-            return _PaymentFilterItem(
-              method: method,
-              isSelected: isSelected,
-              onTap: () => onPaymentSelected(method, !isSelected),
-            );
-          }).toList(),
+    final half = (payments.length / 2).ceil();
+    final firstRowPayments = payments.sublist(0, half);
+    final secondRowPayments = payments.sublist(half);
+
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children:
+              firstRowPayments.map((method) {
+                final isSelected = selectedPayments.contains(method);
+                return _PaymentFilterItem(
+                  method: method,
+                  isSelected: isSelected,
+                  onTap: () => onPaymentSelected(method, !isSelected),
+                );
+              }).toList(),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children:
+              secondRowPayments.map((method) {
+                final isSelected = selectedPayments.contains(method);
+                return _PaymentFilterItem(
+                  method: method,
+                  isSelected: isSelected,
+                  onTap: () => onPaymentSelected(method, !isSelected),
+                );
+              }).toList(),
+        ),
+      ],
     );
   }
 }
@@ -85,7 +105,7 @@ class _PaymentFilterItem extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 4),
           SizedBox(
             height: 40, // bump this up a bit more
             child: Padding(
@@ -93,7 +113,11 @@ class _PaymentFilterItem extends StatelessWidget {
                 bottom: 4.0,
               ), // 👈 add a bit of bottom padding
               child: Text(
-                method == "Credit Card" ? "Credit\nCard" : method,
+                method == "Credit Card"
+                    ? "Credit\nCard"
+                    : method == "Apple Pay"
+                    ? "Apple\nPay"
+                    : method,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
