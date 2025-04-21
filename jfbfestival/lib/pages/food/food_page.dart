@@ -619,18 +619,15 @@ class _FoodPageState extends State<FoodPage> {
     if (_isFilterPopupOpen) return; // Prevent re-entry
     _isFilterPopupOpen = true;
 
-    // Delay just slightly to allow UI to settle but still appear fast
+    // Show filter popup with slight delay
     Future.delayed(const Duration(milliseconds: 50), () {
-      if (!mounted)
-        return; // Prevent showing dialog if widget is no longer in the tree
+      if (!mounted) return;
 
       showGeneralDialog(
         context: context,
         barrierDismissible: true,
         barrierLabel: 'FilterPopup',
-        transitionDuration: const Duration(
-          milliseconds: 200,
-        ), // Faster appearance
+        transitionDuration: const Duration(milliseconds: 200),
         pageBuilder: (context, anim1, anim2) => const SizedBox.shrink(),
         transitionBuilder: (context, anim1, _, __) {
           final curved = CurvedAnimation(parent: anim1, curve: Curves.easeOut);
@@ -639,17 +636,17 @@ class _FoodPageState extends State<FoodPage> {
             animation: curved,
             builder: (context, child) {
               return Stack(
-                fit: StackFit.expand,
                 children: [
                   AnimatedOpacity(
                     duration: const Duration(milliseconds: 200),
-                    opacity: curved.value,
+                    opacity: curved.value * 0.5,
                     child: GestureDetector(
                       onTap: () {
                         if (Navigator.of(context).canPop()) {
                           Navigator.of(context).pop();
                         }
                       },
+                      child: Container(color: Colors.black),
                     ),
                   ),
                   AnimatedOpacity(
@@ -662,8 +659,7 @@ class _FoodPageState extends State<FoodPage> {
                           constraints: BoxConstraints(
                             maxWidth: MediaQuery.of(context).size.width * 0.85,
                             maxHeight:
-                                MediaQuery.of(context).size.height *
-                                0.8, // Increased height
+                                MediaQuery.of(context).size.height * 0.785,
                           ),
                           margin: const EdgeInsets.symmetric(horizontal: 24),
                           padding: const EdgeInsets.symmetric(
@@ -671,27 +667,42 @@ class _FoodPageState extends State<FoodPage> {
                             vertical: 10,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.surface,
                             borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
+                            boxShadow: const [
                               BoxShadow(color: Colors.black26, blurRadius: 10),
                             ],
                           ),
                           child: StatefulBuilder(
                             builder: (context, setModalState) {
                               return Column(
-                                mainAxisSize: MainAxisSize.max,
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Align(
-                                    alignment: Alignment.topRight,
-                                    child: IconButton(
-                                      icon: const Icon(Icons.close),
-                                      onPressed: () {
-                                        if (Navigator.of(context).canPop()) {
-                                          Navigator.of(context).pop();
-                                        }
-                                      },
-                                    ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          left: 16.0,
+                                        ),
+                                        child: Text(
+                                          "Filters",
+                                          style:
+                                              Theme.of(
+                                                context,
+                                              ).textTheme.titleLarge,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.close),
+                                        onPressed: () {
+                                          if (Navigator.of(context).canPop()) {
+                                            Navigator.of(context).pop();
+                                          }
+                                        },
+                                      ),
+                                    ],
                                   ),
                                   Expanded(
                                     child: SingleChildScrollView(
@@ -702,7 +713,7 @@ class _FoodPageState extends State<FoodPage> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.stretch,
                                         children: [
-                                          SizedBox(height: 5),
+                                          const SizedBox(height: 5),
                                           Center(
                                             child: _buildSectionTitle(
                                               "Payment",
@@ -726,7 +737,6 @@ class _FoodPageState extends State<FoodPage> {
                                               });
                                             },
                                           ),
-                                          const SizedBox(height: 5),
                                           Center(
                                             child: _buildSectionTitle("Vegan"),
                                           ),
@@ -739,7 +749,7 @@ class _FoodPageState extends State<FoodPage> {
                                               );
                                             },
                                           ),
-                                          const SizedBox(height: 15),
+                                          const SizedBox(height: 10),
                                           Center(
                                             child: _buildSectionTitle(
                                               "Allergens",
@@ -754,35 +764,85 @@ class _FoodPageState extends State<FoodPage> {
                                               isSelected,
                                             ) {
                                               setModalState(() {
-                                                isSelected
-                                                    ? selectedAllergens.add(
-                                                      allergen,
-                                                    )
-                                                    : selectedAllergens.remove(
-                                                      allergen,
-                                                    );
+                                                setModalState(() {
+                                                  isSelected
+                                                      ? selectedAllergens.add(
+                                                        allergen,
+                                                      )
+                                                      : selectedAllergens
+                                                          .remove(allergen);
+                                                });
                                               });
-                                            },
-                                          ),
-                                          // SizedBox(
-                                          //   height:
-                                          //       MediaQuery.of(
-                                          //         context,
-                                          //       ).size.height *
-                                          //       0.001,
-                                          // ),
-                                          _buildApplyButton(
-                                            onApply: _applyFilters,
-                                            closeModal: () {
-                                              if (Navigator.of(
-                                                context,
-                                              ).canPop()) {
-                                                Navigator.of(context).pop();
-                                              }
                                             },
                                           ),
                                         ],
                                       ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: 16.0,
+                                      right: 16.0,
+                                      bottom: 16.0,
+                                      top: 8.0,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.white,
+                                            foregroundColor: Colors.white,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30),
+                                            ),
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 18,
+                                              horizontal: 40,
+                                            ),
+                                            elevation: 10,
+                                          ).copyWith(
+                                            shadowColor:
+                                                MaterialStateProperty.all(
+                                                  const Color.fromARGB(
+                                                    255,
+                                                    0,
+                                                    0,
+                                                    0,
+                                                  ).withOpacity(0.5),
+                                                ),
+                                          ),
+                                          onPressed: () {
+                                            setModalState(() {
+                                              selectedPayments.clear();
+                                              veganOnly = false;
+                                              selectedAllergens.clear();
+                                            });
+                                          },
+                                          child: Text(
+                                            "Reset",
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              letterSpacing: 1.2,
+                                            ),
+                                          ),
+                                        ),
+                                        _buildApplyButton(
+                                          addedText: "Apply Filters",
+                                          onApply: _applyFilters,
+                                          closeModal: () {
+                                            if (Navigator.of(
+                                              context,
+                                            ).canPop()) {
+                                              Navigator.of(context).pop();
+                                            }
+                                          },
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
@@ -798,14 +858,9 @@ class _FoodPageState extends State<FoodPage> {
             },
           );
         },
-      ).then((_) async {
-        if (mounted) {
-          _applyFilters();
-          await Future.delayed(const Duration(milliseconds: 150));
-          if (mounted) {
-            setState(() => _isFilterPopupOpen = false);
-          }
-        }
+      ).then((_) {
+        // Reset the flag when dialog is closed
+        _isFilterPopupOpen = false;
       });
     });
   }
@@ -851,6 +906,7 @@ class _FoodPageState extends State<FoodPage> {
   Widget _buildApplyButton({
     required VoidCallback onApply,
     required VoidCallback closeModal,
+    required String addedText,
   }) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
@@ -868,8 +924,8 @@ class _FoodPageState extends State<FoodPage> {
         onApply();
         closeModal();
       },
-      child: const Text(
-        "Apply Filters",
+      child: Text(
+        addedText,
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,

@@ -224,44 +224,50 @@ class BoothDetails extends StatelessWidget {
   }
 
   Widget _buildPaymentOptions(List<String> payments) {
-    return Center(
-      child: Wrap(
-        alignment: WrapAlignment.center,
-        spacing: 40, // horizontal space between items
-        runSpacing: 16, // vertical space if wrapping
-        children: [
-          _buildPaymentItem(
-            "Venmo",
-            "assets/payments/venmo.png",
-            payments.contains("Venmo"),
-          ),
-          _buildPaymentItem(
-            "Zelle",
-            "assets/payments/zelle.png",
-            payments.contains("Zelle"),
-          ),
-          _buildPaymentItem(
-            "Cash",
-            "assets/payments/cash.png",
-            payments.contains("Cash"),
-          ),
-          _buildPaymentItem(
-            "Credit",
-            "assets/payments/credit_card.png",
-            payments.contains("Credit Card"),
-          ),
-          _buildPaymentItem(
-            "PayPal",
-            "assets/payments/paypal.png",
-            payments.contains("PayPal"),
-          ),
-          _buildPaymentItem(
-            "Apple Pay",
-            "assets/payments/apple_pay.png",
-            payments.contains("Apple Pay"),
-          ),
-        ],
+    final items = [
+      _buildPaymentItem(
+        "Venmo",
+        "assets/payments/venmo.png",
+        payments.contains("Venmo"),
       ),
+      _buildPaymentItem(
+        "Zelle",
+        "assets/payments/zelle.png",
+        payments.contains("Zelle"),
+      ),
+      _buildPaymentItem(
+        "Cash",
+        "assets/payments/cash.png",
+        payments.contains("Cash"),
+      ),
+      _buildPaymentItem(
+        "Credit",
+        "assets/payments/credit_card.png",
+        payments.contains("Credit Card"),
+      ),
+      _buildPaymentItem(
+        "PayPal",
+        "assets/payments/paypal.png",
+        payments.contains("PayPal"),
+      ),
+      _buildPaymentItem(
+        "Apple\nPay",
+        "assets/payments/apple_pay.png",
+        payments.contains("Apple Pay"),
+      ),
+    ];
+
+    // Split into 2 equal rows (3 items each)
+    final row1 = items.sublist(0, 3);
+    final row2 = items.sublist(3, 6);
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: row1),
+        SizedBox(height: 16),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: row2),
+      ],
     );
   }
 
@@ -296,6 +302,7 @@ class BoothDetails extends StatelessWidget {
         const SizedBox(height: 8),
         Text(
           label,
+          textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.normal,
