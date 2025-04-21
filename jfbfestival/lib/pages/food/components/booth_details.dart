@@ -653,16 +653,6 @@ class _DishCardState extends State<DishCard> {
     final containsSelectedAllergens =
         dishAllergensLower.intersection(selectedAllergensLower).isNotEmpty;
 
-    // Case-insensitive check for selected allergens
-    final dishAllergensLower =
-        widget.dish.allergens.map((a) => a.toLowerCase()).toSet();
-    final selectedAllergensLower =
-        widget.selectedAllergens.map((a) => a.toLowerCase()).toSet();
-    final containsSelectedAllergens =
-        dishAllergensLower.intersection(selectedAllergensLower).isNotEmpty;
-    print(
-      "--- DishCard build for '${widget.dish.name}': widget.dish.imagePath = '${widget.dish.imagePath}'",
-    );
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
       elevation: 3,
