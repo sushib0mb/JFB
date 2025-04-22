@@ -23,6 +23,7 @@ class _TimetablePageState extends State<TimetablePage> {
   EventItem? selectedEvent;
   bool isShowingDetail = false;
   late ScrollController _scrollController;
+  bool _fromHomeTap = true;
   @override
   void initState() {
     super.initState();
@@ -125,7 +126,7 @@ class _TimetablePageState extends State<TimetablePage> {
       extendBodyBehindAppBar: true,
 
       appBar:
-          isShowingDetail
+          (isShowingDetail && _fromHomeTap)
               ? AppBar(
                 backgroundColor: Colors.transparent,
                 elevation: 0,
@@ -271,6 +272,7 @@ class _TimetablePageState extends State<TimetablePage> {
                                     setState(() {
                                       selectedEvent = event;
                                       isShowingDetail = true;
+                                       _fromHomeTap    = false;
                                     });
                                   },
                                 ),
