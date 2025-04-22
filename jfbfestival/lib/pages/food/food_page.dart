@@ -122,16 +122,15 @@ class _FoodPageState extends State<FoodPage> {
     }
   }
 
-  @override
-  void didUpdateWidget(FoodPage oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    // Update if selectedMapLetter changes
-    if (widget.selectedMapLetter != oldWidget.selectedMapLetter) {
-      currentMapLetter = widget.selectedMapLetter;
-      _applyInitialMapFilter();
-    }
+@override
+void didUpdateWidget(FoodPage oldWidget) {
+  super.didUpdateWidget(oldWidget);
+  if (widget.selectedMapLetter != oldWidget.selectedMapLetter) {
+    currentMapLetter = widget.selectedMapLetter;
+    _applyFilters();
   }
+}
+
 
   @override
   void dispose() {
@@ -945,97 +944,80 @@ class _FoodPageState extends State<FoodPage> {
       ),
     );
   }
+void _applyFilters() {
+  setState(() {
+    safeBooths = [];
+    unsafeBoothsWithAllergens = [];
+    safeVeganBooths = [];
+    nonVeganBooths = [];
+    filteredBooths = [];
 
-  void _applyFilters() {
-    setState(() {
-      safeBooths = [];
-      unsafeBoothsWithAllergens = [];
-      safeVeganBooths = [];
-      nonVeganBooths = [];
-      filteredBooths = [];
+    final searchQuery = _searchController.text.toLowerCase();
 
-      final searchQuery = _searchController.text.toLowerCase();
+    // 1) Start from the map‐filtered list:
+    final baseList = (currentMapLetter != null)
+      ? foodBooths.where((b) => b.mapPageFoodLocation == currentMapLetter).toList()
+      : List<FoodBooth>.from(foodBooths);
 
-      for (var booth in foodBooths) {
-        // Search filter
-        if (searchQuery.isNotEmpty) {
-          final matchesName = booth.name.toLowerCase().contains(searchQuery);
-          final matchesLocation = booth.boothLocation.toLowerCase().contains(
-            searchQuery,
-          );
-          final matchesGenre = booth.genre.toLowerCase().contains(searchQuery);
-          final matchesDish = booth.dishes.any(
-            (dish) =>
-                dish.name.toLowerCase().contains(searchQuery) ||
-                dish.description.toLowerCase().contains(searchQuery),
-          );
-
-          if (!matchesName &&
-              !matchesLocation &&
-              !matchesGenre &&
-              !matchesDish) {
-            continue;
-          }
-        }
-
-        // Payments filter
-        if (selectedPayments.isNotEmpty &&
-            !booth.payments.any((p) => selectedPayments.contains(p))) {
-          continue;
-        }
-
-        final hasVeganDish = booth.dishes.any((dish) => dish.isVegan);
-
-        bool allDishesContainAllergens = booth.dishes.every(
-          (dish) => dish.allergens.any((a) => selectedAllergens.contains(a)),
+    // 2) Now run through baseList instead of foodBooths
+    for (var booth in baseList) {
+      // — Search filter
+      if (searchQuery.isNotEmpty) {
+        final matchesName     = booth.name.toLowerCase().contains(searchQuery);
+        final matchesLocation = booth.boothLocation.toLowerCase().contains(searchQuery);
+        final matchesGenre    = booth.genre.toLowerCase().contains(searchQuery);
+        final matchesDish     = booth.dishes.any((d) =>
+          d.name.toLowerCase().contains(searchQuery)
+          || d.description.toLowerCase().contains(searchQuery)
         );
-
-        bool hasSafeDish = booth.dishes.any(
-          (dish) => !dish.allergens.any((a) => selectedAllergens.contains(a)),
-        );
-
-        // Combo logic: both vegan & allergen filters selected
-        if (selectedAllergens.isNotEmpty && veganOnly == true) {
-          if (hasVeganDish && hasSafeDish) {
-            safeBooths.add(booth);
-          } else {
-            unsafeBoothsWithAllergens.add(booth);
-          }
+        if (!matchesName && !matchesLocation && !matchesGenre && !matchesDish) {
           continue;
         }
-
-        // Allergen filter only
-        if (selectedAllergens.isNotEmpty) {
-          if (allDishesContainAllergens) {
-            unsafeBoothsWithAllergens.add(booth);
-          } else {
-            safeBooths.add(booth);
-          }
-          continue;
-        }
-
-        // Vegan filter only
-        if (veganOnly == true) {
-          if (hasVeganDish) {
-            safeVeganBooths.add(booth);
-          } else {
-            nonVeganBooths.add(booth);
-          }
-          continue;
-        }
-
-        // No allergen or vegan filters
-        filteredBooths.add(booth);
       }
 
-      // Final display list
+      // — Payment filter
+      if (selectedPayments.isNotEmpty &&
+          !booth.payments.any((p) => selectedPayments.contains(p))) {
+        continue;
+      }
+
+      // — Vegan/allergen logic (unchanged) …
+      final hasVeganDish = booth.dishes.any((d) => d.isVegan);
+      final allHaveAllergens = booth.dishes.every((d) =>
+        d.allergens.any((a) => selectedAllergens.contains(a))
+      );
+      final hasSafeDish = booth.dishes.any((d) =>
+        !d.allergens.any((a) => selectedAllergens.contains(a))
+      );
+
       if (selectedAllergens.isNotEmpty && veganOnly == true) {
-        filteredBooths = [...safeBooths];
-      } else if (selectedAllergens.isNotEmpty) {
-        filteredBooths = [...safeBooths];
-      } else if (veganOnly == true) {
-        filteredBooths = [...safeVeganBooths];
+        if (hasVeganDish && hasSafeDish) safeBooths.add(booth);
+        else                                 unsafeBoothsWithAllergens.add(booth);
+        continue;
       }
-    });
-  }
+      if (selectedAllergens.isNotEmpty) {
+        if (allHaveAllergens) unsafeBoothsWithAllergens.add(booth);
+        else                  safeBooths.add(booth);
+        continue;
+      }
+      if (veganOnly == true) {
+        if (hasVeganDish) safeVeganBooths.add(booth);
+        else              nonVeganBooths.add(booth);
+        continue;
+      }
+
+      // — no vegan or allergen filters
+      filteredBooths.add(booth);
+    }
+
+    // 3) assemble final filteredBooths list (same as before)
+    if (selectedAllergens.isNotEmpty && veganOnly == true) {
+      filteredBooths = [...safeBooths];
+    } else if (selectedAllergens.isNotEmpty) {
+      filteredBooths = [...safeBooths];
+    } else if (veganOnly == true) {
+      filteredBooths = [...safeVeganBooths];
+    }
+  });
+}
 }
