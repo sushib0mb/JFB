@@ -251,7 +251,7 @@ class BoothDetails extends StatelessWidget {
         payments.contains("PayPal"),
       ),
       _buildPaymentItem(
-        "Apple\nPay",
+        "Apple",
         "assets/payments/apple_pay.png",
         payments.contains("Apple Pay"),
       ),
