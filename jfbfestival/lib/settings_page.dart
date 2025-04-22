@@ -113,11 +113,27 @@ class _SettingsPageState extends State<SettingsPage> {
           //   ),
 
           // About & Version
-          AboutListTile(
-            icon: const Icon(Icons.info_outline),
-            applicationName: 'JFBoston',
-            applicationVersion: '1.0.0',
-            applicationLegalese: '© 2025 Japan Festival Boston',
+          ListTile(
+            leading: const Icon(Icons.info_outline),
+            title: const Text('About'),
+            onTap: () {
+              showAboutDialog(
+                context: context,
+                applicationName: 'JFBoston',
+                applicationVersion: '1.0.0',
+                applicationLegalese: '© 2025 Japan Festival Boston',
+                children: [
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Team Members:',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const Text('• Taizo Azuchi\n• Jordan Lin\n• Soi Hirose'),
+                  const SizedBox(height: 8),
+                  const Text('Thanks for using our app!'),
+                ],
+              );
+            },
           ),
         ],
       ),
