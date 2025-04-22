@@ -272,7 +272,7 @@ class _TimetablePageState extends State<TimetablePage> {
                                     setState(() {
                                       selectedEvent = event;
                                       isShowingDetail = true;
-                                       _fromHomeTap    = false;
+                                      _fromHomeTap = false;
                                     });
                                   },
                                 ),
@@ -1154,14 +1154,16 @@ class _EventDetailViewState extends State<EventDetailView>
                                         ),
                                         child: Center(
                                           child: Padding(
-                                            padding: EdgeInsets.all(10),
-                                            child: Text(
-                                              widget.event.description,
-                                              textAlign: TextAlign.center,
-                                              style: const TextStyle(
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w400,
-                                                color: Colors.black87,
+                                            padding: const EdgeInsets.all(10),
+                                            child: SingleChildScrollView(
+                                              child: Text(
+                                                widget.event.description,
+                                                textAlign: TextAlign.center,
+                                                style: const TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.black87,
+                                                ),
                                               ),
                                             ),
                                           ),
