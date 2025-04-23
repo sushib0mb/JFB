@@ -6,9 +6,9 @@ import '../services/notification_service.dart';
 import '/data/timetableData.dart';
 // import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:timezone/timezone.dart' as tz;
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
-import '../data/timetableData.dart';
+// import '../data/timetableData.dart';
 
 class ReminderProvider extends ChangeNotifier {
   bool _enabled = false;

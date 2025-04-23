@@ -41,13 +41,10 @@ class MapPageState extends State<MapPage> {
   }
 
   void _onLetterTap(String letter) {
-    Navigator.pushReplacement(
-      context,
+    Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => MainScreen(
-          initialIndex: 1, 
-          selectedMapLetter: letter,
-        ),
+        builder:
+            (context) => MainScreen(initialIndex: 1, selectedMapLetter: letter),
       ),
     );
   }
@@ -107,8 +104,8 @@ class MapPageState extends State<MapPage> {
 
                   // ABC Buttons - always visible, position based on filter
                   // Only hide for specific filters that don't need them
-                  if (_selectedFilter != 'Information Center' && 
-                      _selectedFilter != 'Toilets' && 
+                  if (_selectedFilter != 'Information Center' &&
+                      _selectedFilter != 'Toilets' &&
                       _selectedFilter != 'Trash Station')
                     Positioned(
                       // Much lower position (120) for 'All', original position (7) for 'Food Vendors'
@@ -142,8 +139,8 @@ class MapPageState extends State<MapPage> {
                     color: Colors.black.withOpacity(0.4),
                     child: Center(
                       child: Container(
-                         width: screenSize.width * 0.75,  // Adjust width here
-                         height: screenSize.height * 0.65,
+                        width: screenSize.width * 0.75, // Adjust width here
+                        height: screenSize.height * 0.65,
                         padding: EdgeInsets.all(24),
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -157,23 +154,26 @@ class MapPageState extends State<MapPage> {
                           ],
                         ),
                         child: SingleChildScrollView(
-                           child: Column(
-                             mainAxisAlignment: MainAxisAlignment.start,
-                             children: [
-                               Align(
-                                 alignment: Alignment.topRight,
-                                 child: IconButton(
-                                   icon: const Icon(Icons.close),
-                                   onPressed: _toggleMiniWindow,
-                                 )
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: IconButton(
+                                  icon: const Icon(Icons.close),
+                                  onPressed: _toggleMiniWindow,
+                                ),
                               ),
-                               _buildFilterButton('All', screenSize),
-                               _buildFilterButton('Food Vendors', screenSize),
-                               _buildFilterButton('Information Center', screenSize),
-                               _buildFilterButton('Toilets', screenSize),
-                               _buildFilterButton('Trash Station', screenSize),
-                             ],
-                           ),
+                              _buildFilterButton('All', screenSize),
+                              _buildFilterButton('Food Vendors', screenSize),
+                              _buildFilterButton(
+                                'Information Center',
+                                screenSize,
+                              ),
+                              _buildFilterButton('Toilets', screenSize),
+                              _buildFilterButton('Trash Station', screenSize),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -185,7 +185,8 @@ class MapPageState extends State<MapPage> {
 
           // Filter icon button
           Positioned(
-            top: MediaQuery.of(context).padding.top +
+            top:
+                MediaQuery.of(context).padding.top +
                 MediaQuery.of(context).size.height * 0.015,
             right: MediaQuery.of(context).size.width * 0.05,
             child: GestureDetector(
@@ -203,9 +204,10 @@ class MapPageState extends State<MapPage> {
                       spreadRadius: 1,
                     ),
                   ],
-                  color: _isMiniWindowVisible || isFilterActive
-                      ? Colors.grey.shade300
-                      : Colors.white,
+                  color:
+                      _isMiniWindowVisible || isFilterActive
+                          ? Colors.grey.shade300
+                          : Colors.white,
                 ),
                 padding: EdgeInsets.all(10),
                 child: ClipOval(
@@ -213,7 +215,9 @@ class MapPageState extends State<MapPage> {
                     'assets/Filter.png',
                     fit: BoxFit.contain,
                     color:
-                        _isMiniWindowVisible || isFilterActive ? Colors.black : null,
+                        _isMiniWindowVisible || isFilterActive
+                            ? Colors.black
+                            : null,
                   ),
                 ),
               ),

@@ -74,7 +74,7 @@ class _AnimatedBoothDetailWrapperState extends State<AnimatedBoothDetailWrapper>
 class FoodPage extends StatefulWidget {
   final String? selectedMapLetter;
 
-  const FoodPage({this.selectedMapLetter, Key? key}) : super(key: key);
+  const FoodPage({this.selectedMapLetter, super.key});
 
   @override
   State<FoodPage> createState() => _FoodPageState();
@@ -122,15 +122,14 @@ class _FoodPageState extends State<FoodPage> {
     }
   }
 
-@override
-void didUpdateWidget(FoodPage oldWidget) {
-  super.didUpdateWidget(oldWidget);
-  if (widget.selectedMapLetter != oldWidget.selectedMapLetter) {
-    currentMapLetter = widget.selectedMapLetter;
-    _applyFilters();
+  @override
+  void didUpdateWidget(FoodPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.selectedMapLetter != oldWidget.selectedMapLetter) {
+      currentMapLetter = widget.selectedMapLetter;
+      _applyFilters();
+    }
   }
-}
-
 
   @override
   void dispose() {
@@ -944,80 +943,96 @@ void didUpdateWidget(FoodPage oldWidget) {
       ),
     );
   }
-void _applyFilters() {
-  setState(() {
-    safeBooths = [];
-    unsafeBoothsWithAllergens = [];
-    safeVeganBooths = [];
-    nonVeganBooths = [];
-    filteredBooths = [];
 
-    final searchQuery = _searchController.text.toLowerCase();
+  void _applyFilters() {
+    setState(() {
+      safeBooths = [];
+      unsafeBoothsWithAllergens = [];
+      safeVeganBooths = [];
+      nonVeganBooths = [];
+      filteredBooths = [];
 
-    // 1) Start from the map‐filtered list:
-    final baseList = (currentMapLetter != null)
-      ? foodBooths.where((b) => b.mapPageFoodLocation == currentMapLetter).toList()
-      : List<FoodBooth>.from(foodBooths);
+      final searchQuery = _searchController.text.toLowerCase();
 
-    // 2) Now run through baseList instead of foodBooths
-    for (var booth in baseList) {
-      // — Search filter
-      if (searchQuery.isNotEmpty) {
-        final matchesName     = booth.name.toLowerCase().contains(searchQuery);
-        final matchesLocation = booth.boothLocation.toLowerCase().contains(searchQuery);
-        final matchesGenre    = booth.genre.toLowerCase().contains(searchQuery);
-        final matchesDish     = booth.dishes.any((d) =>
-          d.name.toLowerCase().contains(searchQuery)
-          || d.description.toLowerCase().contains(searchQuery)
-        );
-        if (!matchesName && !matchesLocation && !matchesGenre && !matchesDish) {
+      // 1) Start from the map‐filtered list:
+      final baseList =
+          (currentMapLetter != null)
+              ? foodBooths
+                  .where((b) => b.mapPageFoodLocation == currentMapLetter)
+                  .toList()
+              : List<FoodBooth>.from(foodBooths);
+
+      // 2) Now run through baseList instead of foodBooths
+      for (var booth in baseList) {
+        // — Search filter
+        if (searchQuery.isNotEmpty) {
+          final matchesName = booth.name.toLowerCase().contains(searchQuery);
+          final matchesLocation = booth.boothLocation.toLowerCase().contains(
+            searchQuery,
+          );
+          final matchesGenre = booth.genre.toLowerCase().contains(searchQuery);
+          final matchesDish = booth.dishes.any(
+            (d) =>
+                d.name.toLowerCase().contains(searchQuery) ||
+                d.description.toLowerCase().contains(searchQuery),
+          );
+          if (!matchesName &&
+              !matchesLocation &&
+              !matchesGenre &&
+              !matchesDish) {
+            continue;
+          }
+        }
+
+        // — Payment filter
+        if (selectedPayments.isNotEmpty &&
+            !booth.payments.any((p) => selectedPayments.contains(p))) {
           continue;
         }
+
+        // — Vegan/allergen logic (unchanged) …
+        final hasVeganDish = booth.dishes.any((d) => d.isVegan);
+        final allHaveAllergens = booth.dishes.every(
+          (d) => d.allergens.any((a) => selectedAllergens.contains(a)),
+        );
+        final hasSafeDish = booth.dishes.any(
+          (d) => !d.allergens.any((a) => selectedAllergens.contains(a)),
+        );
+
+        if (selectedAllergens.isNotEmpty && veganOnly == true) {
+          if (hasVeganDish && hasSafeDish)
+            safeBooths.add(booth);
+          else
+            unsafeBoothsWithAllergens.add(booth);
+          continue;
+        }
+        if (selectedAllergens.isNotEmpty) {
+          if (allHaveAllergens)
+            unsafeBoothsWithAllergens.add(booth);
+          else
+            safeBooths.add(booth);
+          continue;
+        }
+        if (veganOnly == true) {
+          if (hasVeganDish)
+            safeVeganBooths.add(booth);
+          else
+            nonVeganBooths.add(booth);
+          continue;
+        }
+
+        // — no vegan or allergen filters
+        filteredBooths.add(booth);
       }
 
-      // — Payment filter
-      if (selectedPayments.isNotEmpty &&
-          !booth.payments.any((p) => selectedPayments.contains(p))) {
-        continue;
-      }
-
-      // — Vegan/allergen logic (unchanged) …
-      final hasVeganDish = booth.dishes.any((d) => d.isVegan);
-      final allHaveAllergens = booth.dishes.every((d) =>
-        d.allergens.any((a) => selectedAllergens.contains(a))
-      );
-      final hasSafeDish = booth.dishes.any((d) =>
-        !d.allergens.any((a) => selectedAllergens.contains(a))
-      );
-
+      // 3) assemble final filteredBooths list (same as before)
       if (selectedAllergens.isNotEmpty && veganOnly == true) {
-        if (hasVeganDish && hasSafeDish) safeBooths.add(booth);
-        else                                 unsafeBoothsWithAllergens.add(booth);
-        continue;
+        filteredBooths = [...safeBooths];
+      } else if (selectedAllergens.isNotEmpty) {
+        filteredBooths = [...safeBooths];
+      } else if (veganOnly == true) {
+        filteredBooths = [...safeVeganBooths];
       }
-      if (selectedAllergens.isNotEmpty) {
-        if (allHaveAllergens) unsafeBoothsWithAllergens.add(booth);
-        else                  safeBooths.add(booth);
-        continue;
-      }
-      if (veganOnly == true) {
-        if (hasVeganDish) safeVeganBooths.add(booth);
-        else              nonVeganBooths.add(booth);
-        continue;
-      }
-
-      // — no vegan or allergen filters
-      filteredBooths.add(booth);
-    }
-
-    // 3) assemble final filteredBooths list (same as before)
-    if (selectedAllergens.isNotEmpty && veganOnly == true) {
-      filteredBooths = [...safeBooths];
-    } else if (selectedAllergens.isNotEmpty) {
-      filteredBooths = [...safeBooths];
-    } else if (veganOnly == true) {
-      filteredBooths = [...safeVeganBooths];
-    }
-  });
-}
+    });
+  }
 }

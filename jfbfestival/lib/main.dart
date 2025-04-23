@@ -75,7 +75,7 @@ class MyApp extends StatelessWidget {
               fontFamily: 'Fredoka',
             ),
             themeMode: theme.mode,
-            home: const MainScreen(),
+            home: const VideoSplashScreen(),
 
             routes: {
               SettingsPage.routeName: (_) => const SettingsPage(),
@@ -101,7 +101,7 @@ class MainScreen extends StatefulWidget {
     this.initialIndex = 0,
     this.selectedEvent,
     this.selectedMapLetter,
-    this.selectedDay, // ← accept it here
+    this.selectedDay,
   }) : super(key: key);
 
   @override

@@ -5,12 +5,11 @@ import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'dart:io' show Platform;
 
-import 'theme_notifier.dart';
-import 'pages/survey/survey_list_page.dart';
+// import 'theme_notifier.dart';
+// import 'pages/survey/survey_list_page.dart';
 import 'pages/survey/survey_page.dart';
-import 'package:flutter/foundation.dart';
 import 'providers/reminder_provider.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class SettingsPage extends StatefulWidget {
   static const routeName = '/settings';
@@ -23,7 +22,7 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
-    final theme = context.watch<ThemeNotifier>();
+    // final theme = context.watch<ThemeNotifier>();
     final reminderProv = context.watch<ReminderProvider>();
 
     return Scaffold(
