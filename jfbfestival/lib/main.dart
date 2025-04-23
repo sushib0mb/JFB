@@ -166,7 +166,8 @@ class _MainScreenState extends State<MainScreen> {
         'is provided for guidance only and may not be fully accurate. '
         'Please check directly with vendors for any dietary concerns. '
         'We cannot guarantee the absence of any allergens. '
-        'Use at your own discretion.\n\n'
+        'Use at your own discretion. Images are for illustration purposes only. Actual food items may vary in appearance.\n\n'
+        
         'By clicking "I Acknowledge", you confirm that you have read and '
         'understand this disclaimer and agree to release JFB Festival, its '
         'organizers, sponsors, and vendors from any liability arising from '
