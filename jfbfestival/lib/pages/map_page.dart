@@ -188,7 +188,7 @@ class MapPageState extends State<MapPage> with SingleTickerProviderStateMixin {
                         width: screenSize.width * 0.75,
                         height: screenSize.height * 0.65,
                         margin: EdgeInsets.only(
-                          top: MediaQuery.of(context).padding.top + 170,
+                          top: MediaQuery.of(context).padding.top + MediaQuery.of(context).size.height * 0.1,
                         ), // Adjust top margin as needed
                         padding: const EdgeInsets.all(24),
                         decoration: BoxDecoration(

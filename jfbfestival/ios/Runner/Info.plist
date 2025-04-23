@@ -50,3 +50,7 @@
 	</array>
 </dict>
 </plist>
+<key>UIRequiredDeviceCapabilities</key>
+<array>
+    <string>phone</string>
+</array>
