@@ -119,7 +119,7 @@ class _SettingsPageState extends State<SettingsPage> {
             applicationLegalese: '© 2025 Boston Japan Community Hub Inc.',
           ),
 
-          SizedBox(height: MediaQuery.of(context).size.height * 0.075),
+          SizedBox(height: 30),
 
           ListTile(
             title: const Center(
