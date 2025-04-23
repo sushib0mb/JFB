@@ -5,11 +5,12 @@ import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'dart:io' show Platform;
 
-// import 'theme_notifier.dart';
-// import 'pages/survey/survey_list_page.dart';
+import 'theme_notifier.dart';
+import 'pages/survey/survey_list_page.dart';
 import 'pages/survey/survey_page.dart';
+import 'package:flutter/foundation.dart';
 import 'providers/reminder_provider.dart';
-// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class SettingsPage extends StatefulWidget {
   static const routeName = '/settings';
@@ -22,7 +23,7 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
-    // final theme = context.watch<ThemeNotifier>();
+    final theme = context.watch<ThemeNotifier>();
     final reminderProv = context.watch<ReminderProvider>();
 
     return Scaffold(
@@ -43,11 +44,12 @@ class _SettingsPageState extends State<SettingsPage> {
             title: const Text('Event Reminders'),
             subtitle: Text(reminderProv.enabled ? 'On' : 'Off'),
             value: reminderProv.enabled,
-            onChanged: (_) async {
-              await reminderProv.toggle(
-                (!reminderProv.enabled) as BuildContext,
-              );
-            },
+           // Suppose: Future<void> toggle(BuildContext ctx)
+onChanged: (newVal) async {
+  await reminderProv.toggle(context);
+},
+
+
           ),
 
           // Calendar sync stub
@@ -112,27 +114,11 @@ class _SettingsPageState extends State<SettingsPage> {
           //   ),
 
           // About & Version
-          ListTile(
-            leading: const Icon(Icons.info_outline),
-            title: const Text('About'),
-            onTap: () {
-              showAboutDialog(
-                context: context,
-                applicationName: 'JFBoston',
-                applicationVersion: '1.0.0',
-                applicationLegalese: '© 2025 Japan Festival Boston',
-                children: [
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Team Members:',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  const Text('• Taizo Azuchi\n• Jordan Lin\n• Soi Hirose'),
-                  const SizedBox(height: 8),
-                  const Text('Thanks for using our app!'),
-                ],
-              );
-            },
+          AboutListTile(
+            icon: const Icon(Icons.info_outline),
+            applicationName: 'JFBoston',
+            applicationVersion: '1.0.0',
+            applicationLegalese: '© 2025 Japan Festival Boston',
           ),
         ],
       ),
