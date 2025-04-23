@@ -384,7 +384,7 @@ class _FoodPageState extends State<FoodPage> {
 
   String getSafeSectionTitle() {
     if (veganOnly! && selectedAllergens.isNotEmpty) {
-      return "✅ Vegan & Allergen-Safe Options";
+      return "✅ Vegatarian & Allergen-Safe Options";
     } else if (veganOnly!) {
       return "✅ Vegan Options";
     } else if (selectedAllergens.isNotEmpty) {

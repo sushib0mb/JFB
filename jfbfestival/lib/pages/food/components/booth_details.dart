@@ -253,7 +253,7 @@ class BoothDetails extends StatelessWidget {
       _buildPaymentItem(
         "Apple",
         "assets/payments/apple_pay.png",
-        payments.contains("Apple Pay"),
+        payments.contains("Apple"),
       ),
     ];
 
@@ -381,7 +381,7 @@ class _DishCardState extends State<DishCard> {
     "Peanut": "assets/allergens/peanut.png",
     "Milk": "assets/allergens/milk.png",
     "Soy": "assets/allergens/soy.png",
-    "Tree Nut": "assets/allergens/tree_nut.png",
+    "Tree Nuts": "assets/allergens/tree_nut.png",
     "Fish": "assets/allergens/fish.png",
     "Shellfish": "assets/allergens/shellfish.png",
     "Sesame": "assets/allergens/sesame.png",
@@ -459,7 +459,7 @@ class _DishCardState extends State<DishCard> {
                           Icon(Icons.eco, color: Colors.white, size: 14),
                           SizedBox(width: 4),
                           Text(
-                            "Vegan",
+                            "Vegatarian",
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 12,
