@@ -117,17 +117,101 @@ class _SettingsPageState extends State<SettingsPage> {
             applicationName: 'JFBoston',
             applicationVersion: '1.0.0',
             applicationLegalese: '© 2025 Japan Festival Boston',
-            aboutBoxChildren: <Widget>[
-              const SizedBox(height: 24),
-              const Text(
+          ),
+
+          SizedBox(height: MediaQuery.of(context).size.height * 0.075),
+
+          ListTile(
+            title: const Center(
+              child: Text(
                 'Credits',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 8),
-              const Text('Taizo Azuchi'),
-              const Text('Jordan Lin'),
-              const Text('Soi Hirose'),
-            ],
+            ),
+            subtitle: const Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 20),
+                  Text(
+                    'Application Development Team',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    'Taizo Azuchi — Team Leader',
+                    style: TextStyle(fontSize: 15),
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    'Jordan Lin — Lead Developer',
+                    style: TextStyle(fontSize: 15),
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    'Soi Hirose — Lead Developer',
+                    style: TextStyle(fontSize: 15),
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    'Ryusei Okamoto — Developer',
+                    style: TextStyle(fontSize: 15),
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    'Umi Imai — Developer',
+                    style: TextStyle(fontSize: 15),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 12),
+                  Text(
+                    'Application Design Team',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    'Hiroharu Okabe — UI/UX Designer',
+                    style: TextStyle(fontSize: 15),
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    'Chikada Hanezu — UI/UX Designer',
+                    style: TextStyle(fontSize: 15),
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    'Mina Baba — UI/UX Designer',
+                    style: TextStyle(fontSize: 15),
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    'Hayate Kosuga — Logo Animator',
+                    style: TextStyle(fontSize: 15),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 12),
+                  Text(
+                    'Special Thanks To',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    'Nobuhiro Mitsuoka',
+                    style: TextStyle(fontSize: 15),
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    'Yoshiatsu Murata',
+                    style: TextStyle(fontSize: 15),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
