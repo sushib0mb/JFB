@@ -163,10 +163,14 @@ class _MainScreenState extends State<MainScreen> {
             title: const Text('Allergy Disclaimer'),
             content: const Text(
               'Please note: the allergen information on the Food Booth page '
-              'is provided for guidance only and may not be fully accurate. '
-              'Please check directly with vendors for any dietary concerns. '
-              'We cannot guarantee the absence of any allergens. '
-              'Use at your own discretion.'
+        'is provided for guidance only and may not be fully accurate. '
+        'Please check directly with vendors for any dietary concerns. '
+        'We cannot guarantee the absence of any allergens. '
+        'Use at your own discretion.\n\n'
+        'By clicking "I Acknowledge", you confirm that you have read and '
+        'understand this disclaimer and agree to release JFB Festival, its '
+        'organizers, sponsors, and vendors from any liability arising from '
+        'allergen-related issues or inaccuracies.'
             ),
             actions: [
               TextButton(
