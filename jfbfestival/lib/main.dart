@@ -120,7 +120,7 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
     _currentIndex = widget.initialIndex;
     _dayForTimetable = widget.selectedDay ?? 1; 
-    Timer(const Duration(seconds: 10), () {
+    Timer(const Duration(seconds: 600), () {
       if (mounted && !_surveyPromptShown) {
         _showSurveyPrompt(context);
         _surveyPromptShown = true;
