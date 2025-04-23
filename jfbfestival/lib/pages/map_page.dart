@@ -8,12 +8,13 @@ class MapPage extends StatefulWidget {
   MapPageState createState() => MapPageState();
 }
 
-class MapPageState extends State<MapPage> {
+class MapPageState extends State<MapPage> with SingleTickerProviderStateMixin {
   bool _isMiniWindowVisible = false;
-  // Default filter set to 'All'
   String _selectedFilter = 'All';
-
-  final Duration _animationDuration = Duration(milliseconds: 300);
+  final Duration _animationDuration = const Duration(milliseconds: 300);
+  late AnimationController _animationController;
+  late Animation<Offset> _slideAnimation;
+  String _currentMapImage = 'assets/MapNew.png'; // Initial map image
 
   final Map<String, String> mapImages = {
     'All': 'assets/MapNew.png',
@@ -23,28 +24,70 @@ class MapPageState extends State<MapPage> {
     'Trash Station': 'assets/MapNew2.png',
   };
 
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: _animationDuration,
+    );
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, -1), // Start off-screen at the top
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   void _toggleMiniWindow() {
     setState(() {
       _isMiniWindowVisible = !_isMiniWindowVisible;
+      if (_isMiniWindowVisible) {
+        _animationController.forward();
+      } else {
+        _animationController.reverse();
+      }
     });
   }
 
   void _selectFilter(String filter) {
     setState(() {
       if (_selectedFilter == filter) {
-        _selectedFilter = 'All'; // Default to 'All' instead of empty string
+        _selectedFilter = 'All';
       } else {
         _selectedFilter = filter;
       }
       _isMiniWindowVisible = false;
+      _animationController.reverse();
+      _currentMapImage = mapImages[_selectedFilter] ?? mapImages['All']!; // Update current map image
     });
   }
 
   void _onLetterTap(String letter) {
     Navigator.of(context).push(
-      MaterialPageRoute(
-        builder:
-            (context) => MainScreen(initialIndex: 1, selectedMapLetter: letter),
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => MainScreen(initialIndex: 1, selectedMapLetter: letter),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = 0.0;
+          const end = 1.0;
+          const curve = Curves.easeInOut;
+
+          var fadeTween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          var opacityAnimation = animation.drive(fadeTween);
+
+          return FadeTransition(
+            opacity: opacityAnimation,
+            child: child,
+          );
+        },
+        transitionDuration: _animationDuration, // Use the existing animation duration
       ),
     );
   }
@@ -53,15 +96,14 @@ class MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
     final bool isFilterActive = _selectedFilter != 'All';
-
-    final String mapImage = mapImages[_selectedFilter] ?? mapImages['All']!;
+    final String targetMapImage = mapImages[_selectedFilter] ?? mapImages['All']!;
 
     return Scaffold(
       body: Stack(
         children: [
           // Background gradient
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [
                   Color.fromRGBO(10, 56, 117, 0.15),
@@ -73,75 +115,63 @@ class MapPageState extends State<MapPage> {
             ),
           ),
 
-          // Centered map container
+          // Centered map container with AnimatedCrossFade for image transition
           Center(
-            child: Container(
-              width: screenSize.width * 0.85,
-              height: screenSize.height * 0.65,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(30),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 10,
-                    spreadRadius: 2,
-                  ),
-                ],
-              ),
-              padding: EdgeInsets.all(10),
-              child: Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Image.asset(
-                      mapImage,
-                      fit: BoxFit.contain,
-                      width: double.infinity,
-                      height: double.infinity,
-                    ),
-                  ),
-
-                  // ABC Buttons - always visible, position based on filter
-                  // Only hide for specific filters that don't need them
-                  if (_selectedFilter != 'Information Center' &&
-                      _selectedFilter != 'Toilets' &&
-                      _selectedFilter != 'Trash Station')
+            child: AnimatedCrossFade(
+              firstChild: _buildMapContainer(screenSize, _currentMapImage, _selectedFilter),
+              secondChild: _buildMapContainer(screenSize, targetMapImage, _selectedFilter),
+              crossFadeState: _currentMapImage == targetMapImage ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+              duration: _animationDuration,
+              layoutBuilder: (topChild, topChildKey, bottomChild, bottomChildKey) {
+                return Stack(
+                  alignment: Alignment.center,
+                  children: <Widget>[
                     Positioned(
-                      // Much lower position (120) for 'All', original position (7) for 'Food Vendors'
-                      bottom: _selectedFilter == 'Food Vendors' ? 5 : 3,
-                      left: 0,
-                      right: 0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _buildLetterButton('A', Colors.red),
-                          _buildLetterButton('B', Colors.blue),
-                          _buildLetterButton('C', Colors.green),
-                        ],
-                      ),
+                      key: bottomChildKey,
+                      child: bottomChild,
                     ),
-                ],
-              ),
+                    Positioned(
+                      key: topChildKey,
+                      child: topChild,
+                    ),
+                  ],
+                );
+              },
             ),
           ),
 
           // Mini window overlay
-          Positioned.fill(
-            child: AnimatedOpacity(
-              duration: Duration(milliseconds: 300),
-              opacity: _isMiniWindowVisible ? 1 : 0,
-              child: IgnorePointer(
-                ignoring: !_isMiniWindowVisible,
-                child: GestureDetector(
-                  onTap: _toggleMiniWindow,
-                  child: Container(
-                    color: Colors.black.withOpacity(0.4),
-                    child: Center(
-                      child: Container(
-                        width: screenSize.width * 0.75, // Adjust width here
+          Stack(
+            children: [
+              // Full-screen semi-transparent background
+              if (_isMiniWindowVisible)
+                Positioned.fill(
+                  child: GestureDetector(
+                    onTap: _toggleMiniWindow,
+                    child: AnimatedContainer(
+                      duration: _animationDuration,
+                      color: Colors.black.withOpacity(0.4),
+                    ),
+                  ),
+                ),
+              // Sliding filter menu
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: IgnorePointer(
+                  ignoring: !_isMiniWindowVisible,
+                  child: Align(
+                    alignment: Alignment.topCenter, // Or another alignment if desired
+                    child: SlideTransition(
+                      position: _slideAnimation,
+                      child: AnimatedContainer( // Added AnimatedContainer for potential future animations
+                        duration: _animationDuration,
+                        width: screenSize.width * 0.75,
                         height: screenSize.height * 0.65,
-                        padding: EdgeInsets.all(24),
+                        margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 60), // Adjust top margin as needed
+                        padding: const EdgeInsets.all(24),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(24),
@@ -180,7 +210,7 @@ class MapPageState extends State<MapPage> {
                   ),
                 ),
               ),
-            ),
+            ],
           ),
 
           // Filter icon button
@@ -209,7 +239,7 @@ class MapPageState extends State<MapPage> {
                           ? Colors.grey.shade300
                           : Colors.white,
                 ),
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: ClipOval(
                   child: Image.asset(
                     'assets/Filter.png',
@@ -228,12 +258,60 @@ class MapPageState extends State<MapPage> {
     );
   }
 
+  Widget _buildMapContainer(Size screenSize, String imagePath, String selectedFilter) {
+    return Container(
+      width: screenSize.width * 0.85,
+      height: screenSize.height * 0.65,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            spreadRadius: 2,
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(10),
+      child: Stack(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Image.asset(
+              imagePath,
+              fit: BoxFit.contain,
+              width: double.infinity,
+              height: double.infinity,
+            ),
+          ),
+          if (selectedFilter != 'Information Center' &&
+              selectedFilter != 'Toilets' &&
+              selectedFilter != 'Trash Station')
+            Positioned(
+              bottom: selectedFilter == 'Food Vendors' ? 5 : 3,
+              left: 0,
+              right: 0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildLetterButton('A', Colors.red),
+                  _buildLetterButton('B', Colors.blue),
+                  _buildLetterButton('C', Colors.green),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildLetterButton(String letter, Color color) {
     return GestureDetector(
       onTap: () => _onLetterTap(letter),
       child: Container(
         width: 80,
-        height: 35, // Reduced from 50 to 35
+        height: 35,
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(10),
@@ -241,16 +319,16 @@ class MapPageState extends State<MapPage> {
             BoxShadow(
               color: Colors.black.withOpacity(0.3),
               blurRadius: 6,
-              offset: Offset(0, 3),
+              offset: const Offset(0, 3),
             ),
           ],
         ),
         child: Center(
           child: Text(
             letter,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
-              fontSize: 18, // Reduced from 20 to 18 for better proportion
+              fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -265,8 +343,8 @@ class MapPageState extends State<MapPage> {
       onTap: () => _selectFilter(label),
       child: Container(
         width: screenSize.width * 0.75,
-        padding: EdgeInsets.symmetric(vertical: 20),
-        margin: EdgeInsets.symmetric(vertical: 12),
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        margin: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           color: isSelected ? Colors.grey.shade400 : Colors.grey.shade200,
           borderRadius: BorderRadius.circular(16),

@@ -118,8 +118,7 @@ class _MainScreenState extends State<MainScreen> {
     _currentIndex = widget.initialIndex;
     _dayForTimetable = widget.selectedDay ?? 1; // default to Day 1
   }
-
-  void _onItemTapped(int index) {
+void _onItemTapped(int index) {
     setState(() {
       _currentIndex = index;
 
@@ -127,20 +126,30 @@ class _MainScreenState extends State<MainScreen> {
       if (index != 1 && widget.selectedMapLetter != null) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-            builder:
-                (_) => MainScreen(
-                  initialIndex: index,
-                  selectedEvent: widget.selectedEvent,
-                  selectedMapLetter: null,
-                  selectedDay: _dayForTimetable,
-                ),
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => MainScreen(
+              initialIndex: index,
+              selectedEvent: widget.selectedEvent,
+              selectedMapLetter: null,
+              selectedDay: _dayForTimetable,
+            ),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              const begin = 0.0;
+              const end = 1.0;
+              const curve = Curves.easeInOut;
+              final fadeTween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+              final opacityAnimation = animation.drive(fadeTween);
+              return FadeTransition(
+                opacity: opacityAnimation,
+                child: child,
+              );
+            },
+            transitionDuration: const Duration(milliseconds: 300), // Adjust as needed
           ),
         );
       }
     });
   }
-
   @override
   Widget build(BuildContext context) {
     final pages = <Widget>[

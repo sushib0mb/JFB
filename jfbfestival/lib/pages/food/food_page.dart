@@ -294,7 +294,7 @@ class _FoodPageState extends State<FoodPage> {
   }
 
   Widget _buildSearchBar() {
-    final pad = MediaQuery.of(context).size.height * 0.082;
+    final pad = MediaQuery.of(context).size.height * 0.070;
     var topPadding =
         MediaQuery.of(context).padding.top +
         pad +
