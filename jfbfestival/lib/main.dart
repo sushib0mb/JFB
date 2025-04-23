@@ -306,7 +306,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final pages = <Widget>[
-      HomePage(testTime: DateTime(2025, 4, 27, 14, 00)),
+      HomePage(),
       FoodPage(selectedMapLetter: widget.selectedMapLetter),
       // Pass both event *and* day into TimetablePage:
       TimetablePage(
