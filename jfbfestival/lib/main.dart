@@ -97,7 +97,6 @@ class MainScreen extends StatefulWidget {
   final EventItem? selectedEvent;
   final String? selectedMapLetter;
   final int? selectedDay; // ← new
-  
 
   const MainScreen({
     Key? key,
@@ -114,42 +113,43 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   late int _currentIndex;
   late int _dayForTimetable;
-   static const _kSurveyShownKey = 'surveyPromptShown';
-    static const _kAllergyDisclaimerKey = 'allergyDisclaimerShown';
-    bool _surveyPromptLoaded = false;
-    bool _surveyPromptShown  = false;
+  static const _kSurveyShownKey = 'surveyPromptShown';
+  static const _kAllergyDisclaimerKey = 'allergyDisclaimerShown';
+  bool _surveyPromptLoaded = false;
+  bool _surveyPromptShown = false;
 
   @override
   void initState() {
     super.initState();
     _currentIndex = widget.initialIndex;
-    _dayForTimetable = widget.selectedDay ?? 1; 
+    _dayForTimetable = widget.selectedDay ?? 1;
     _loadSurveyFlagAndMaybeSchedule();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.initialIndex == 0) {
         _maybeShowAllergyDisclaimer();
       }
     }); // default to Day 1
-  }Future<void> _maybeShowAllergyDisclaimer() async {
-  final prefs = await SharedPreferences.getInstance();
-  final shown = prefs.getBool(_kAllergyDisclaimerKey) ?? false;
-  if (shown) return; // already shown
+  }
 
-  // mark it shown so it never reappears
-  await prefs.setBool(_kAllergyDisclaimerKey, true);
+  Future<void> _maybeShowAllergyDisclaimer() async {
+    final prefs = await SharedPreferences.getInstance();
+    final shown = prefs.getBool(_kAllergyDisclaimerKey) ?? false;
+    if (shown) return; // already shown
 
-  int secondsRemaining = 3;
-  Timer? timer;
+    // mark it shown so it never reappears
+    await prefs.setBool(_kAllergyDisclaimerKey, true);
 
-  showDialog(
-    context: context,
-    barrierDismissible: false, // force tap “OK”
-    builder: (ctx) {
-      return StatefulBuilder(
-        builder: (ctx2, setState) {
-          // start the countdown on first build
-          if (timer == null) {
-            timer = Timer.periodic(const Duration(seconds: 1), (_) {
+    int secondsRemaining = 3;
+    Timer? timer;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false, // force tap “OK”
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (ctx2, setState) {
+            // start the countdown on first build
+            timer ??= Timer.periodic(const Duration(seconds: 1), (_) {
               setState(() {
                 secondsRemaining--;
                 if (secondsRemaining == 0) {
@@ -157,50 +157,49 @@ class _MainScreenState extends State<MainScreen> {
                 }
               });
             });
-          }
 
-          return AlertDialog(
-            title: const Text('Allergy Disclaimer'),
-            content: const Text(
-              'Please note: the allergen information on the Food Booth page '
-        'is provided for guidance only and may not be fully accurate. '
-        'Please check directly with vendors for any dietary concerns. '
-        'We cannot guarantee the absence of any allergens. '
-        'Use at your own discretion. Images are for illustration purposes only. Actual food items may vary in appearance.\n\n'
-        
-        'By clicking "I Acknowledge", you confirm that you have read and '
-        'understand this disclaimer and agree to release JFB Festival, its '
-        'organizers, sponsors, and vendors from any liability arising from '
-        'allergen-related issues or inaccuracies.'
-            ),
-            actions: [
-              TextButton(
-                // only allow pop when countdown is done
-                onPressed: secondsRemaining == 0
-                    ? () {
-                        Navigator.of(ctx2).pop();
-                      }
-                    : null,
-                child: Text(
-                  secondsRemaining == 0
-                      ? 'I acknowledge'
-                      : 'I acknowledge ($secondsRemaining)',
-                ),
+            return AlertDialog(
+              title: const Text('Allergy Disclaimer'),
+              content: const Text(
+                'Please note: the allergen information on the Food Booth page '
+                'is provided for guidance only and may not be fully accurate. '
+                'Please check directly with vendors for any dietary concerns. '
+                'We cannot guarantee the absence of any allergens. '
+                'Use at your own discretion. \nImages are for illustration purposes only. Actual food items may vary in appearance.\n\n'
+                'By clicking "I Acknowledge", you confirm that you have read and '
+                'understand this disclaimer and agree to release JFB Festival, its '
+                'organizers, sponsors, and vendors from any liability arising from '
+                'allergen-related issues or inaccuracies.',
               ),
-            ],
-          );
-        },
-      );
-    },
-  );
-}
+              actions: [
+                TextButton(
+                  // only allow pop when countdown is done
+                  onPressed:
+                      secondsRemaining == 0
+                          ? () {
+                            Navigator.of(ctx2).pop();
+                          }
+                          : null,
+                  child: Text(
+                    secondsRemaining == 0
+                        ? 'I acknowledge'
+                        : 'I acknowledge ($secondsRemaining)',
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
 
-Future<void> _loadSurveyFlagAndMaybeSchedule() async {
+  Future<void> _loadSurveyFlagAndMaybeSchedule() async {
     final prefs = await SharedPreferences.getInstance();
     final shown = prefs.getBool(_kSurveyShownKey) ?? false;
     setState(() {
       _surveyPromptLoaded = true;
-      _surveyPromptShown  = shown;
+      _surveyPromptShown = shown;
     });
 
     if (!shown) {
@@ -221,43 +220,49 @@ Future<void> _loadSurveyFlagAndMaybeSchedule() async {
     return showDialog<void>(
       context: context,
       barrierDismissible: true,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Enjoying the App?'),
-        content: const Text('If you are enjoying this app, please give your feedback!'),
-        actions: [
-          TextButton(
-            child: const Text('Not Now'),
-            onPressed: () => Navigator.of(ctx).pop(),
+      builder:
+          (ctx) => AlertDialog(
+            title: const Text('Enjoying the App?'),
+            content: const Text(
+              'If you are enjoying this app, please give your feedback!',
+            ),
+            actions: [
+              TextButton(
+                child: const Text('Not Now'),
+                onPressed: () => Navigator.of(ctx).pop(),
+              ),
+              TextButton(
+                child: const Text('Give Feedback'),
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                  Navigator.of(context).push(
+                    PageRouteBuilder(
+                      pageBuilder: (_, a1, a2) => const SurveyPage(),
+                      transitionsBuilder: (_, anim, __, child) {
+                        return SlideTransition(
+                          position: Tween<Offset>(
+                            begin: const Offset(1, 0),
+                            end: Offset.zero,
+                          ).animate(
+                            CurvedAnimation(
+                              parent: anim,
+                              curve: Curves.easeInOut,
+                            ),
+                          ),
+                          child: child,
+                        );
+                      },
+                      transitionDuration: const Duration(milliseconds: 400),
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
-          TextButton(
-            child: const Text('Give Feedback'),
-            onPressed: () {
-              Navigator.of(ctx).pop();
-              Navigator.of(context).push(
-                PageRouteBuilder(
-                  pageBuilder: (_, a1, a2) => const SurveyPage(),
-                  transitionsBuilder: (_, anim, __, child) {
-                    return SlideTransition(
-                      position: Tween<Offset>(
-                        begin: const Offset(1, 0),
-                        end: Offset.zero,
-                      ).animate(CurvedAnimation(
-                        parent: anim,
-                        curve: Curves.easeInOut,
-                      )),
-                      child: child,
-                    );
-                  },
-                  transitionDuration: const Duration(milliseconds: 400),
-                ),
-              );
-            },
-          ),
-        ],
-      ),
     );
   }
-void _onItemTapped(int index) {
+
+  void _onItemTapped(int index) {
     setState(() {
       _currentIndex = index;
 
@@ -266,29 +271,38 @@ void _onItemTapped(int index) {
         Navigator.pushReplacement(
           context,
           PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => MainScreen(
-              initialIndex: index,
-              selectedEvent: widget.selectedEvent,
-              selectedMapLetter: null,
-              selectedDay: _dayForTimetable,
-            ),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            pageBuilder:
+                (context, animation, secondaryAnimation) => MainScreen(
+                  initialIndex: index,
+                  selectedEvent: widget.selectedEvent,
+                  selectedMapLetter: null,
+                  selectedDay: _dayForTimetable,
+                ),
+            transitionsBuilder: (
+              context,
+              animation,
+              secondaryAnimation,
+              child,
+            ) {
               const begin = 0.0;
               const end = 1.0;
               const curve = Curves.easeInOut;
-              final fadeTween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+              final fadeTween = Tween(
+                begin: begin,
+                end: end,
+              ).chain(CurveTween(curve: curve));
               final opacityAnimation = animation.drive(fadeTween);
-              return FadeTransition(
-                opacity: opacityAnimation,
-                child: child,
-              );
+              return FadeTransition(opacity: opacityAnimation, child: child);
             },
-            transitionDuration: const Duration(milliseconds: 300), // Adjust as needed
+            transitionDuration: const Duration(
+              milliseconds: 300,
+            ), // Adjust as needed
           ),
         );
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     final pages = <Widget>[
