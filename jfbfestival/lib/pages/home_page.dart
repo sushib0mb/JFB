@@ -34,6 +34,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  // your original images
   final List<String> backgroundImages = [
     "assets/JFB-27.jpg",
     "assets/JFB-4.jpg",
@@ -45,14 +46,23 @@ class _HomePageState extends State<HomePage> {
     "assets/JFB-6.jpg",
   ];
 
-  final PageController _pageController = PageController();
-  int _currentPage = 0;
+  // build an “extended” list with dummy first/last
+  List<String> get _extendedBackgroundImages => [
+        backgroundImages.last,
+        ...backgroundImages,
+        backgroundImages.first,
+      ];
+
+  late final PageController _pageController;
+  int _currentPage = 0; // real index [0..backgroundImages.length-1]
   Timer? _autoScrollTimer;
   Timer? _timetableUpdateTimer;
 
   @override
   void initState() {
     super.initState();
+    // start on page 1, which is actually backgroundImages[0]
+    _pageController = PageController(initialPage: 1);
     _startAutoScroll();
     _timetableUpdateTimer = Timer.periodic(Duration(minutes: 1), (timer) {
       if (mounted) setState(() {});
@@ -60,16 +70,34 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _startAutoScroll() {
-    _autoScrollTimer = Timer.periodic(Duration(seconds: 5), (timer) {
+    _autoScrollTimer?.cancel();
+    _autoScrollTimer = Timer.periodic(Duration(seconds: 5), (_) {
       if (_pageController.hasClients) {
-        int nextPage = (_currentPage + 1) % backgroundImages.length;
+        final int current = _pageController.page!.round();
+        final int next = current + 1;
         _pageController.animateToPage(
-          nextPage,
+          next,
           duration: Duration(milliseconds: 500),
           curve: Curves.easeInOut,
         );
       }
     });
+  }
+
+  void _handlePageChanged(int page) {
+    final int realCount = backgroundImages.length;
+    if (page == 0) {
+      // wrapped to duplicate last → jump to real last
+      _pageController.jumpToPage(realCount);
+      setState(() => _currentPage = realCount - 1);
+    } else if (page == realCount + 1) {
+      // wrapped to duplicate first → jump to real first
+      _pageController.jumpToPage(1);
+      setState(() => _currentPage = 0);
+    } else {
+      // normal case
+      setState(() => _currentPage = page - 1);
+    }
   }
 
   @override
@@ -83,7 +111,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth  = MediaQuery.of(context).size.width;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -117,26 +145,20 @@ class _HomePageState extends State<HomePage> {
                                 children: [
                                   PageView.builder(
                                     controller: _pageController,
-                                    itemCount: backgroundImages.length,
-                                    onPageChanged: (index) {
-                                      setState(() {
-                                        _currentPage = index;
-                                      });
-                                    },
+                                    itemCount: _extendedBackgroundImages.length,
+                                    onPageChanged: _handlePageChanged,
                                     itemBuilder: (context, index) {
-                                      final isLadyInKimono =
-                                          backgroundImages[index] ==
-                                          "assets/JFB-27.jpg";
+                                      final imagePath = _extendedBackgroundImages[index];
+                                      final isLadyInKimono = imagePath == "assets/JFB-27.jpg";
 
                                       Widget image = Image.asset(
-                                        backgroundImages[index],
+                                        imagePath,
                                         fit: BoxFit.cover,
                                         width: double.infinity,
                                         height: screenHeight * 0.6,
-                                        alignment:
-                                            isLadyInKimono
-                                                ? Alignment.topCenter
-                                                : Alignment.center,
+                                        alignment: isLadyInKimono
+                                            ? Alignment.topCenter
+                                            : Alignment.center,
                                       );
 
                                       if (isLadyInKimono) {
@@ -157,25 +179,18 @@ class _HomePageState extends State<HomePage> {
                                     left: 0,
                                     right: 0,
                                     child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: List.generate(
                                         backgroundImages.length,
-                                        (index) => AnimatedContainer(
-                                          duration: const Duration(
-                                            milliseconds: 300,
-                                          ),
-                                          margin: const EdgeInsets.symmetric(
-                                            horizontal: 4,
-                                          ),
-                                          width: _currentPage == index ? 10 : 6,
-                                          height:
-                                              _currentPage == index ? 10 : 6,
+                                        (idx) => AnimatedContainer(
+                                          duration: const Duration(milliseconds: 300),
+                                          margin: const EdgeInsets.symmetric(horizontal: 4),
+                                          width: _currentPage == idx ? 10 : 6,
+                                          height: _currentPage == idx ? 10 : 6,
                                           decoration: BoxDecoration(
-                                            color:
-                                                _currentPage == index
-                                                    ? Colors.white
-                                                    : Colors.white70,
+                                            color: _currentPage == idx
+                                              ? Colors.white
+                                              : Colors.white70,
                                             shape: BoxShape.circle,
                                           ),
                                         ),
@@ -197,12 +212,11 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
 
-                  // 2) Settings button in top‑right
+                  // 2) Settings button in top-right
                   Positioned(
-                    top:
-                        MediaQuery.of(context).padding.top +
-                        MediaQuery.of(context).size.height * 0.015,
-                    right: MediaQuery.of(context).size.width * 0.05,
+                    top: MediaQuery.of(context).padding.top +
+                         screenHeight * 0.015,
+                    right: screenWidth * 0.05,
                     child: GestureDetector(
                       onTap: () {
                         Navigator.pushNamed(context, SettingsPage.routeName);
