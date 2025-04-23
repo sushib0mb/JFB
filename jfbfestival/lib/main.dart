@@ -7,6 +7,7 @@ import 'dart:developer' as developer;
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/foundation.dart';
+import 'dart:async';
 
 import 'theme_notifier.dart';
 import 'settings_page.dart';
@@ -95,6 +96,7 @@ class MainScreen extends StatefulWidget {
   final EventItem? selectedEvent;
   final String? selectedMapLetter;
   final int? selectedDay; // ← new
+  
 
   const MainScreen({
     Key? key,
@@ -111,13 +113,65 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   late int _currentIndex;
   late int _dayForTimetable;
+   bool _surveyPromptShown = false;
 
   @override
   void initState() {
     super.initState();
     _currentIndex = widget.initialIndex;
-    _dayForTimetable = widget.selectedDay ?? 1; // default to Day 1
-  }
+    _dayForTimetable = widget.selectedDay ?? 1; 
+    Timer(const Duration(seconds: 10), () {
+      if (mounted && !_surveyPromptShown) {
+        _showSurveyPrompt(context);
+        _surveyPromptShown = true;
+      }
+    });// default to Day 1
+  }Future<void> _showSurveyPrompt(BuildContext context) async {
+  await showDialog<void>(
+    context: context,
+    builder: (BuildContext dialogContext) {
+      return AnimatedOpacity(
+        opacity: 1.0,
+        duration: const Duration(milliseconds: 300),
+        child: AlertDialog(
+          title: const Text('Enjoying the App?'),
+          content: const Text('If you are enjoying this app, please give your feedback!'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Not Now'),
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Give Feedback'),
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+                Navigator.of(context).push(
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation, secondaryAnimation) => const SurveyPage(),
+                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      const begin = Offset(1.0, 0.0); // Slide from right
+                      const end = Offset.zero;
+                      const curve = Curves.easeInOut;
+                      final slideTween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                      final slideAnimation = animation.drive(slideTween);
+                      return SlideTransition(
+                        position: slideAnimation,
+                        child: child,
+                      );
+                    },
+                    transitionDuration: const Duration(milliseconds: 400), // Adjust duration as needed
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
 void _onItemTapped(int index) {
     setState(() {
       _currentIndex = index;
