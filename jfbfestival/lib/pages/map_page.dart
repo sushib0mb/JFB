@@ -34,10 +34,9 @@ class MapPageState extends State<MapPage> with SingleTickerProviderStateMixin {
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, -1), // Start off-screen at the top
       end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
+    ).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
   }
 
   @override
@@ -66,28 +65,33 @@ class MapPageState extends State<MapPage> with SingleTickerProviderStateMixin {
       }
       _isMiniWindowVisible = false;
       _animationController.reverse();
-      _currentMapImage = mapImages[_selectedFilter] ?? mapImages['All']!; // Update current map image
+      _currentMapImage =
+          mapImages[_selectedFilter] ??
+          mapImages['All']!; // Update current map image
     });
   }
 
   void _onLetterTap(String letter) {
     Navigator.of(context).push(
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => MainScreen(initialIndex: 1, selectedMapLetter: letter),
+        pageBuilder:
+            (context, animation, secondaryAnimation) =>
+                MainScreen(initialIndex: 1, selectedMapLetter: letter),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           const begin = 0.0;
           const end = 1.0;
           const curve = Curves.easeInOut;
 
-          var fadeTween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          var fadeTween = Tween(
+            begin: begin,
+            end: end,
+          ).chain(CurveTween(curve: curve));
           var opacityAnimation = animation.drive(fadeTween);
 
-          return FadeTransition(
-            opacity: opacityAnimation,
-            child: child,
-          );
+          return FadeTransition(opacity: opacityAnimation, child: child);
         },
-        transitionDuration: _animationDuration, // Use the existing animation duration
+        transitionDuration:
+            _animationDuration, // Use the existing animation duration
       ),
     );
   }
@@ -96,7 +100,8 @@ class MapPageState extends State<MapPage> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
     final bool isFilterActive = _selectedFilter != 'All';
-    final String targetMapImage = mapImages[_selectedFilter] ?? mapImages['All']!;
+    final String targetMapImage =
+        mapImages[_selectedFilter] ?? mapImages['All']!;
 
     return Scaffold(
       body: Stack(
@@ -118,22 +123,32 @@ class MapPageState extends State<MapPage> with SingleTickerProviderStateMixin {
           // Centered map container with AnimatedCrossFade for image transition
           Center(
             child: AnimatedCrossFade(
-              firstChild: _buildMapContainer(screenSize, _currentMapImage, _selectedFilter),
-              secondChild: _buildMapContainer(screenSize, targetMapImage, _selectedFilter),
-              crossFadeState: _currentMapImage == targetMapImage ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+              firstChild: _buildMapContainer(
+                screenSize,
+                _currentMapImage,
+                _selectedFilter,
+              ),
+              secondChild: _buildMapContainer(
+                screenSize,
+                targetMapImage,
+                _selectedFilter,
+              ),
+              crossFadeState:
+                  _currentMapImage == targetMapImage
+                      ? CrossFadeState.showFirst
+                      : CrossFadeState.showSecond,
               duration: _animationDuration,
-              layoutBuilder: (topChild, topChildKey, bottomChild, bottomChildKey) {
+              layoutBuilder: (
+                topChild,
+                topChildKey,
+                bottomChild,
+                bottomChildKey,
+              ) {
                 return Stack(
                   alignment: Alignment.center,
                   children: <Widget>[
-                    Positioned(
-                      key: bottomChildKey,
-                      child: bottomChild,
-                    ),
-                    Positioned(
-                      key: topChildKey,
-                      child: topChild,
-                    ),
+                    Positioned(key: bottomChildKey, child: bottomChild),
+                    Positioned(key: topChildKey, child: topChild),
                   ],
                 );
               },
@@ -163,14 +178,18 @@ class MapPageState extends State<MapPage> with SingleTickerProviderStateMixin {
                 child: IgnorePointer(
                   ignoring: !_isMiniWindowVisible,
                   child: Align(
-                    alignment: Alignment.topCenter, // Or another alignment if desired
+                    alignment:
+                        Alignment.topCenter, // Or another alignment if desired
                     child: SlideTransition(
                       position: _slideAnimation,
-                      child: AnimatedContainer( // Added AnimatedContainer for potential future animations
+                      child: AnimatedContainer(
+                        // Added AnimatedContainer for potential future animations
                         duration: _animationDuration,
                         width: screenSize.width * 0.75,
                         height: screenSize.height * 0.65,
-                        margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 60), // Adjust top margin as needed
+                        margin: EdgeInsets.only(
+                          top: MediaQuery.of(context).padding.top + 170,
+                        ), // Adjust top margin as needed
                         padding: const EdgeInsets.all(24),
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -258,7 +277,11 @@ class MapPageState extends State<MapPage> with SingleTickerProviderStateMixin {
     );
   }
 
-  Widget _buildMapContainer(Size screenSize, String imagePath, String selectedFilter) {
+  Widget _buildMapContainer(
+    Size screenSize,
+    String imagePath,
+    String selectedFilter,
+  ) {
     return Container(
       width: screenSize.width * 0.85,
       height: screenSize.height * 0.65,
