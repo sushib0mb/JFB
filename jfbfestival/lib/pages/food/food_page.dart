@@ -105,6 +105,7 @@ class _FoodPageState extends State<FoodPage> {
 
     // Filter by map section if coming from map
     _applyInitialMapFilter();
+    filteredBooths.sort((a, b) => a.name.compareTo(b.name));
   }
 
   void _applyInitialMapFilter() {
@@ -1033,6 +1034,10 @@ class _FoodPageState extends State<FoodPage> {
       } else if (veganOnly == true) {
         filteredBooths = [...safeVeganBooths];
       }
+    filteredBooths.sort((a, b) => a.name.compareTo(b.name));
+    safeBooths.sort((a, b) => a.name.compareTo(b.name));
+    unsafeBoothsWithAllergens.sort((a, b) => a.name.compareTo(b.name));
+    safeVeganBooths.sort((a, b) => a.name.compareTo(b.name));
     });
   }
 }
