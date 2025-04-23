@@ -116,7 +116,7 @@ class _SettingsPageState extends State<SettingsPage> {
             icon: const Icon(Icons.info_outline),
             applicationName: 'JFBoston',
             applicationVersion: '1.0.0',
-            applicationLegalese: '© 2025 Japan Festival Boston',
+            applicationLegalese: '© 2025 Boston Japan Community Hub Inc.',
           ),
 
           SizedBox(height: MediaQuery.of(context).size.height * 0.075),
