@@ -125,8 +125,10 @@ class _MainScreenState extends State<MainScreen> {
     _currentIndex = widget.initialIndex;
     _dayForTimetable = widget.selectedDay ?? 1; 
     _loadSurveyFlagAndMaybeSchedule();
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-      _maybeShowAllergyDisclaimer();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.initialIndex == 0) {
+        _maybeShowAllergyDisclaimer();
+      }
     }); // default to Day 1
   }Future<void> _maybeShowAllergyDisclaimer() async {
   final prefs = await SharedPreferences.getInstance();
