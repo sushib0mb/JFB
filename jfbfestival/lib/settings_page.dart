@@ -44,12 +44,10 @@ class _SettingsPageState extends State<SettingsPage> {
             title: const Text('Event Reminders'),
             subtitle: Text(reminderProv.enabled ? 'On' : 'Off'),
             value: reminderProv.enabled,
-           // Suppose: Future<void> toggle(BuildContext ctx)
-onChanged: (newVal) async {
-  await reminderProv.toggle(context);
-},
-
-
+            // Suppose: Future<void> toggle(BuildContext ctx)
+            onChanged: (newVal) async {
+              await reminderProv.toggle(context);
+            },
           ),
 
           // Calendar sync stub
@@ -119,6 +117,17 @@ onChanged: (newVal) async {
             applicationName: 'JFBoston',
             applicationVersion: '1.0.0',
             applicationLegalese: '© 2025 Japan Festival Boston',
+            aboutBoxChildren: <Widget>[
+              const SizedBox(height: 24),
+              const Text(
+                'Credits',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              const Text('Taizo Azuchi'),
+              const Text('Jordan Lin'),
+              const Text('Soi Hirose'),
+            ],
           ),
         ],
       ),
