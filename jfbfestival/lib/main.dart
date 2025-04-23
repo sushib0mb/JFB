@@ -115,17 +115,80 @@ class _MainScreenState extends State<MainScreen> {
   late int _currentIndex;
   late int _dayForTimetable;
    static const _kSurveyShownKey = 'surveyPromptShown';
-  bool _surveyPromptLoaded = false;
-  bool _surveyPromptShown  = false;
+    static const _kAllergyDisclaimerKey = 'allergyDisclaimerShown';
+    bool _surveyPromptLoaded = false;
+    bool _surveyPromptShown  = false;
 
   @override
   void initState() {
     super.initState();
     _currentIndex = widget.initialIndex;
     _dayForTimetable = widget.selectedDay ?? 1; 
-    _loadSurveyFlagAndMaybeSchedule();// default to Day 1
-  }
-  Future<void> _loadSurveyFlagAndMaybeSchedule() async {
+    _loadSurveyFlagAndMaybeSchedule();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+      _maybeShowAllergyDisclaimer();
+    }); // default to Day 1
+  }Future<void> _maybeShowAllergyDisclaimer() async {
+  final prefs = await SharedPreferences.getInstance();
+  final shown = prefs.getBool(_kAllergyDisclaimerKey) ?? false;
+  if (shown) return; // already shown
+
+  // mark it shown so it never reappears
+  await prefs.setBool(_kAllergyDisclaimerKey, true);
+
+  int secondsRemaining = 3;
+  Timer? timer;
+
+  showDialog(
+    context: context,
+    barrierDismissible: false, // force tap “OK”
+    builder: (ctx) {
+      return StatefulBuilder(
+        builder: (ctx2, setState) {
+          // start the countdown on first build
+          if (timer == null) {
+            timer = Timer.periodic(const Duration(seconds: 1), (_) {
+              setState(() {
+                secondsRemaining--;
+                if (secondsRemaining == 0) {
+                  timer?.cancel();
+                }
+              });
+            });
+          }
+
+          return AlertDialog(
+            title: const Text('Allergy Disclaimer'),
+            content: const Text(
+              'Please note: the allergen information on the Food Booth page '
+              'is provided for guidance only and may not be fully accurate. '
+              'Please check directly with vendors for any dietary concerns. '
+              'We cannot guarantee the absence of any allergens. '
+              'Use at your own discretion.'
+            ),
+            actions: [
+              TextButton(
+                // only allow pop when countdown is done
+                onPressed: secondsRemaining == 0
+                    ? () {
+                        Navigator.of(ctx2).pop();
+                      }
+                    : null,
+                child: Text(
+                  secondsRemaining == 0
+                      ? 'I acknowledge'
+                      : 'I acknowledge ($secondsRemaining)',
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}
+
+Future<void> _loadSurveyFlagAndMaybeSchedule() async {
     final prefs = await SharedPreferences.getInstance();
     final shown = prefs.getBool(_kSurveyShownKey) ?? false;
     setState(() {
