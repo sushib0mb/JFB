@@ -21,6 +21,12 @@ class _SurveyPageState extends State<SurveyPage> {
   String? age;
   String? cameWith;
   String? participated;
+  
+  // New sustainability questions with updated variable names
+  final List<String> sustainabilityEfforts = [];
+  String? trashSeparate;
+  String? trashSeparateWhy;
+  String? trashStation;
 
   // controllers for any-Other fields
   final genderOther   = TextEditingController();
@@ -28,22 +34,33 @@ class _SurveyPageState extends State<SurveyPage> {
   final heardOther    = TextEditingController();
   final lookingOther  = TextEditingController();
   final cameWithOther = TextEditingController();
+  final effortsOther  = TextEditingController();
+  final reasonOther   = TextEditingController();
 
-  // ← NEW: free-form feedback controller
+  // ← free-form feedback controller
   final feedbackController = TextEditingController();
 
   Future<void> _submit() async {
     // no need to validate a FormField — we gate via buttonEnabled
     final response = {
-      'gender':       gender == 'Other'        ? genderOther.text     : gender,
-      'from':         from == 'Other'          ? fromOther.text       : from,
-      'heard':        heardFrom == 'Other'     ? heardOther.text      : heardFrom,
-      'looking':      lookingForward == 'Other'? lookingOther.text    : lookingForward,
-      'age':          age,
-      'cameWith':     cameWith == 'Other'      ? cameWithOther.text   : cameWith,
-      'participated': participated,
-      'feedback':     feedbackController.text,  // ← optional
-      'timestamp':    DateTime.now().toIso8601String(),
+      'gender':           gender == 'Other'            ? genderOther.text     : gender,
+      'from':             from == 'Other'              ? fromOther.text       : from,
+      'heard':            heardFrom == 'Other'         ? heardOther.text      : heardFrom,
+      'looking':          lookingForward == 'Other'    ? lookingOther.text    : lookingForward,
+      'age':              age,
+      'cameWith':         cameWith == 'Other'          ? cameWithOther.text   : cameWith,
+      'participated':     participated,
+      
+      // New sustainability responses with updated names
+      'sustainabilityEfforts': sustainabilityEfforts.contains('Other') 
+                          ? [...sustainabilityEfforts.where((e) => e != 'Other'), effortsOther.text]
+                          : sustainabilityEfforts,
+      'trashSeparate':    trashSeparate,
+      'trashSeparateWhy': trashSeparateWhy == 'Other'  ? reasonOther.text   : trashSeparateWhy,
+      'trashStation':     trashStation,
+      
+      'feedback':         feedbackController.text,  // ← optional
+      'timestamp':        DateTime.now().toIso8601String(),
     };
 
     try {
@@ -64,15 +81,16 @@ class _SurveyPageState extends State<SurveyPage> {
     String? groupVal,
     void Function(String?) onChanged, [
     TextEditingController? otherCtrl,
+    bool isRequired = true,
   ]) {
     // append a red asterisk on required titles
     final label = RichText(
       text: TextSpan(
         text: title,
         style: const TextStyle(fontSize: 16, color: Colors.black),
-        children: const [
-          TextSpan(text: ' *', style: TextStyle(color: Colors.red)),
-        ],
+        children: isRequired 
+            ? const [TextSpan(text: ' *', style: TextStyle(color: Colors.red))]
+            : null,
       ),
     );
 
@@ -86,9 +104,55 @@ class _SurveyPageState extends State<SurveyPage> {
             value: opt,
             groupValue: groupVal,
             onChanged: onChanged,
+            // Position the radio button on the left side
+            controlAffinity: ListTileControlAffinity.leading,
           );
         }),
         if (options.contains('Other') && groupVal == 'Other')
+          Padding(
+            padding: const EdgeInsets.only(left: 16, bottom: 8),
+            child: TextFormField(
+              controller: otherCtrl,
+              decoration: const InputDecoration(labelText: 'Other:'),
+            ),
+          ),
+        const SizedBox(height: 24),
+      ],
+    );
+  }
+
+  Widget _buildCheckboxGroup(
+    String title,
+    List<String> options,
+    List<String> selectedValues,
+    void Function(bool?, String) onChanged,
+    [TextEditingController? otherCtrl,
+    bool isRequired = true,]
+  ) {
+    final label = RichText(
+      text: TextSpan(
+        text: title,
+        style: const TextStyle(fontSize: 16, color: Colors.black),
+        children: isRequired 
+            ? const [TextSpan(text: ' *', style: TextStyle(color: Colors.red))]
+            : null,
+      ),
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        label,
+        ...options.map((opt) {
+          return CheckboxListTile(
+            title: Text(opt),
+            value: selectedValues.contains(opt),
+            onChanged: (bool? value) => onChanged(value, opt),
+            // Position the checkbox on the left side
+            controlAffinity: ListTileControlAffinity.leading,
+          );
+        }),
+        if (options.contains('Other') && selectedValues.contains('Other'))
           Padding(
             padding: const EdgeInsets.only(left: 16, bottom: 8),
             child: TextFormField(
@@ -108,6 +172,8 @@ class _SurveyPageState extends State<SurveyPage> {
     heardOther.dispose();
     lookingOther.dispose();
     cameWithOther.dispose();
+    effortsOther.dispose();
+    reasonOther.dispose();
     feedbackController.dispose();
     super.dispose();
   }
@@ -117,8 +183,10 @@ class _SurveyPageState extends State<SurveyPage> {
     // only enable submit when every required field is non-null
     final isFormValid = <String?>[
       gender, from, heardFrom,
-      lookingForward, age, cameWith, participated
-    ].every((v) => v != null);
+      lookingForward, age, cameWith, participated,
+      trashSeparate, trashStation,
+    ].every((v) => v != null) && 
+    (trashSeparate != 'No' || trashSeparateWhy != null);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Festival Survey')),
@@ -178,6 +246,68 @@ class _SurveyPageState extends State<SurveyPage> {
               ["First time!", "2nd or 3rd time", "4th time or more"],
               participated,
               (val) => setState(() => participated = val),
+            ),
+
+            // New sustainability questions with updated variable names
+            _buildCheckboxGroup(
+              "1. What sustainability efforts did you notice?",
+              [
+                "Sustainability booth (workshops and awareness events)",
+                "Recycling Efforts",
+                "SDGs Stamp Rally",
+                "Sponsor/partner collaboration",
+                "Fundraising to sell sustainability items",
+                "RecycleMeter (real-time waste tracking display)",
+                "None",
+                "Other"
+              ],
+              sustainabilityEfforts,
+              (checked, option) {
+                setState(() {
+                  if (checked == true) {
+                    if (option == "None") {
+                      sustainabilityEfforts.clear();
+                      sustainabilityEfforts.add("None");
+                    } else {
+                      sustainabilityEfforts.remove("None");
+                      sustainabilityEfforts.add(option);
+                    }
+                  } else {
+                    sustainabilityEfforts.remove(option);
+                  }
+                });
+              },
+              effortsOther,
+              false, // Making this optional to handle "None" response
+            ),
+
+            _buildRadioGroup(
+              "2. Did you separate your trash correctly at our trash station?",
+              ["Definitely", "Not sure", "No"],
+              trashSeparate,
+              (val) => setState(() => trashSeparate = val),
+            ),
+
+            if (trashSeparate == "No")
+              _buildRadioGroup(
+                "3. If not, what was the reason?",
+                [
+                  "I didn't know it was possible",
+                  "I couldn't find a trash station",
+                  "I didn't have time",
+                  "I didn't think it mattered",
+                  "Other"
+                ],
+                trashSeparateWhy,
+                (val) => setState(() => trashSeparateWhy = val),
+                reasonOther,
+              ),
+
+            _buildRadioGroup(
+              "4. Were the trash stations easy to find?",
+              ["Yes", "No"],
+              trashStation,
+              (val) => setState(() => trashStation = val),
             ),
 
             // ← feedback is **optional**, so no asterisk
