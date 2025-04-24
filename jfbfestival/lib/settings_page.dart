@@ -1,16 +1,12 @@
-// lib/settings_page.dart
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'dart:io' show Platform;
 
 import 'theme_notifier.dart';
-import 'pages/survey/survey_list_page.dart';
 import 'pages/survey/survey_page.dart';
 import 'package:flutter/foundation.dart';
 import 'providers/reminder_provider.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class SettingsPage extends StatefulWidget {
   static const routeName = '/settings';
@@ -23,195 +19,126 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
+    // Responsive sizing
+    final screenWidth = MediaQuery.of(context).size.width;
+    final bool isTablet = screenWidth >= 600;
+    final double padH = isTablet ? 24 : 8;
+    final double padV = isTablet ? 16 : 8;
+    final double iconSize = isTablet ? 32 : 24;
+    final double titleSize = isTablet ? 20 : 16;
+    final double subtitleSize = isTablet ? 18 : 14;
+    final double headerSize = isTablet ? 24 : 20;
+
     final theme = context.watch<ThemeNotifier>();
     final reminderProv = context.watch<ReminderProvider>();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(
+        title: Text('Settings', style: TextStyle(fontSize: headerSize)),
+      ),
       body: ListView(
-        padding: const EdgeInsets.all(8),
+        padding: EdgeInsets.symmetric(horizontal: padH, vertical: padV),
         children: [
-          // Dark mode
-          // SwitchListTile(
-          //   title: const Text('Dark Mode'),
-          //   subtitle: Text(theme.isDark ? 'Enabled' : 'Disabled'),
-          //   value: theme.isDark,
-          //   onChanged: (_) => theme.toggle(),
-          // ),
-
           // Event reminders
           SwitchListTile(
-            title: const Text('Event Reminders'),
-            subtitle: Text(reminderProv.enabled ? 'On' : 'Off'),
+            contentPadding: EdgeInsets.symmetric(horizontal: padH, vertical: padV),
+            title: Text('Event Reminders', style: TextStyle(fontSize: titleSize)),
+            subtitle: Text(
+              reminderProv.enabled ? 'On' : 'Off',
+              style: TextStyle(fontSize: subtitleSize),
+            ),
             value: reminderProv.enabled,
-            // Suppose: Future<void> toggle(BuildContext ctx)
             onChanged: (newVal) async {
               await reminderProv.toggle(context);
             },
           ),
 
-          // Calendar sync stub
-          // ListTile(
-          //   leading: const Icon(Icons.calendar_today),
-          //   title: const Text('Sync with Calendar'),
-          //   onTap: () {
-          //     // TODO: implement real calendar sync
-          //     ScaffoldMessenger.of(context).showSnackBar(
-          //       const SnackBar(content: Text('Sync not yet implemented')),
-          //     );
-          //   },
-          // ),
-
           // Share this app
           ListTile(
-            leading: const Icon(Icons.share),
-            title: const Text('Share this App'),
+            contentPadding: EdgeInsets.symmetric(horizontal: padH, vertical: padV),
+            leading: Icon(Icons.share, size: iconSize),
+            title: Text('Share this App', style: TextStyle(fontSize: titleSize)),
             onTap: () {
-              // you can swap this out for your real URLs
               final iosUrl = 'https://testflight.apple.com/join/ABC12345';
               final androidUrl =
                   'https://play.google.com/store/apps/details?id=com.example.jfbfestival';
-
               final link = Platform.isAndroid ? androidUrl : iosUrl;
               Share.share(
-                'Check out the JFB Festival app! Download it now and plan your visit:\n$link',
+                'Check out the JFB Festival app! Download it now and plan your visit:\n\$link',
                 subject: 'JFB Festival App',
               );
             },
           ),
 
-          // Report a bug → in‑app feedback form
-          // ListTile(
-          //   leading: const Icon(Icons.bug_report),
-          //   title: const Text('Report a Bug'),
-          //   onTap: () {
-          //     Navigator.pushNamed(context, FeedbackPage.routeName);
-          //   },
-          // ),
-          //           ListTile(
-          //   leading: const Icon(Icons.pending_actions),
-          //   title: const Text('Pending Feedback'),
-          //   onTap: () =>
-          //       Navigator.pushNamed(context, FeedbackListPage.routeName),
-          // ),
+          // Fill Out Survey
           ListTile(
-            leading: const Icon(Icons.poll),
-            title: const Text('Fill Out Survey'),
+            contentPadding: EdgeInsets.symmetric(horizontal: padH, vertical: padV),
+            leading: Icon(Icons.poll, size: iconSize),
+            title: Text('Fill Out Survey', style: TextStyle(fontSize: titleSize)),
             onTap: () => Navigator.pushNamed(context, SurveyPage.routeName),
           ),
-          // ListTile(
-          //   leading: const Icon(Icons.list),
-          //   title: const Text('View All Surveys'),
-          //   onTap: () => Navigator.pushNamed(context, SurveyListPage.routeName),
-          // ),
-          // if (kDebugMode)
-          //   ListTile(
-          //     leading: Icon(Icons.admin_panel_settings),
-          //     title: Text('Admin Dashboard'),
-          //     onTap: () => Navigator.pushNamed(context, AdminDashboardPage.routeName),
-          //   ),
 
           // About & Version
           AboutListTile(
-            icon: const Icon(Icons.info_outline),
+            icon: Icon(Icons.info_outline, size: iconSize),
             applicationName: 'JFBoston',
             applicationVersion: '1.0.0',
             applicationLegalese: '© 2025 Boston Japan Community Hub Inc.',
+            aboutBoxChildren: [],
+            dense: false,
+            child: Text('About', style: TextStyle(fontSize: titleSize)),
           ),
 
-          SizedBox(height: 30),
+          SizedBox(height: padV * 2),
 
-          ListTile(
-            title: const Center(
-              child: Text(
-                'Credits',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                textAlign: TextAlign.center,
-              ),
+          // Credits header
+          Center(
+            child: Text(
+              'Credits',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: headerSize),
+              textAlign: TextAlign.center,
             ),
-            subtitle: const Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: 20),
-                  Text(
-                    'Application Development Team',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    'Taizo Azuchi — Team Leader',
-                    style: TextStyle(fontSize: 15),
-                    textAlign: TextAlign.center,
-                  ),
-                  Text(
-                    'Jordan Lin — Lead Developer',
-                    style: TextStyle(fontSize: 15),
-                    textAlign: TextAlign.center,
-                  ),
-                  Text(
-                    'Soi Hirose — Lead Developer',
-                    style: TextStyle(fontSize: 15),
-                    textAlign: TextAlign.center,
-                  ),
-                  Text(
-                    'Ryusei Okamoto — Developer',
-                    style: TextStyle(fontSize: 15),
-                    textAlign: TextAlign.center,
-                  ),
-                  Text(
-                    'Umi Imai — Developer',
-                    style: TextStyle(fontSize: 15),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 12),
-                  Text(
-                    'Application Design Team',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    'Hiroharu Okabe — UI/UX Designer',
-                    style: TextStyle(fontSize: 15),
-                    textAlign: TextAlign.center,
-                  ),
-                  Text(
-                    'Chikada Hanezu — UI/UX Designer',
-                    style: TextStyle(fontSize: 15),
-                    textAlign: TextAlign.center,
-                  ),
-                  Text(
-                    'Mina Baba — UI/UX Designer',
-                    style: TextStyle(fontSize: 15),
-                    textAlign: TextAlign.center,
-                  ),
-                  Text(
-                    'Hayate Kosuga — Logo Animator',
-                    style: TextStyle(fontSize: 15),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 12),
-                  Text(
-                    'Special Thanks To',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    'Nobuhiro Mitsuoka',
-                    style: TextStyle(fontSize: 15),
-                    textAlign: TextAlign.center,
-                  ),
-                  Text(
-                    'Yoshiatsu Murata',
-                    style: TextStyle(fontSize: 15),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+          ),
+
+          SizedBox(height: padV),
+
+          // Credits list
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'Application Development Team',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: titleSize),
               ),
-            ),
+              SizedBox(height: padV / 2),
+              Text('Taizo Azuchi — Team Leader', style: TextStyle(fontSize: subtitleSize)),
+              Text('Jordan Lin — Lead Developer', style: TextStyle(fontSize: subtitleSize)),
+              Text('Soi Hirose — Lead Developer', style: TextStyle(fontSize: subtitleSize)),
+              Text('Ryusei Okamoto — Developer', style: TextStyle(fontSize: subtitleSize)),
+              Text('Umi Imai — Developer', style: TextStyle(fontSize: subtitleSize)),
+
+              SizedBox(height: padV),
+              Text(
+                'Application Design Team',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: titleSize),
+              ),
+              SizedBox(height: padV / 2),
+              Text('Hiroharu Okabe — UI/UX Designer', style: TextStyle(fontSize: subtitleSize)),
+              Text('Chikada Hanezu — UI/UX Designer', style: TextStyle(fontSize: subtitleSize)),
+              Text('Mina Baba — UI/UX Designer', style: TextStyle(fontSize: subtitleSize)),
+              Text('Hayate Kosuga — Logo Animator', style: TextStyle(fontSize: subtitleSize)),
+
+              SizedBox(height: padV),
+              Text(
+                'Special Thanks To',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: titleSize),
+              ),
+              SizedBox(height: padV / 2),
+              Text('Nobuhiro Mitsuoka', style: TextStyle(fontSize: subtitleSize)),
+              Text('Yoshiatsu Murata', style: TextStyle(fontSize: subtitleSize)),
+
+              SizedBox(height: padV * 2),
+            ],
           ),
         ],
       ),
