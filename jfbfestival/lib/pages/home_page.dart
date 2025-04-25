@@ -1112,7 +1112,6 @@ class _HomePageState extends State<HomePage> {
 
     return Column(
       children: [
-        SizedBox(height: MediaQuery.of(context).size.height * 0.15),
         Container(
           padding: EdgeInsets.symmetric(vertical: 6, horizontal: 26),
           margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
