@@ -288,7 +288,7 @@ class MapPageState extends State<MapPage> with SingleTickerProviderStateMixin {
       width: screenSize.width * 0.85,
       height: screenSize.height * 0.65,
       decoration: BoxDecoration(
-        color: Colors.red,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(30),
         boxShadow: [
           BoxShadow(
@@ -318,7 +318,7 @@ class MapPageState extends State<MapPage> with SingleTickerProviderStateMixin {
               selectedFilter != 'Toilets' &&
               selectedFilter != 'Trash Station')
             Padding(
-              padding: const EdgeInsets.only(top: 10, bottom: 10),
+              padding: const EdgeInsets.only(bottom: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
