@@ -19,6 +19,7 @@ class _SurveyPageState extends State<SurveyPage> {
   String? heardFrom;
   String? lookingForward;
   String? age;
+  String? downtownStage; // Added downtown stage variable
   String? cameWith;
   String? participated;
   
@@ -48,6 +49,7 @@ class _SurveyPageState extends State<SurveyPage> {
       'heard':            heardFrom == 'Other'         ? heardOther.text      : heardFrom,
       'looking':          lookingForward == 'Other'    ? lookingOther.text    : lookingForward,
       'age':              age,
+      'downtownStage':    downtownStage,  // Added downtown stage to response
       'cameWith':         cameWith == 'Other'          ? cameWithOther.text   : cameWith,
       'participated':     participated,
       
@@ -183,7 +185,7 @@ class _SurveyPageState extends State<SurveyPage> {
     // only enable submit when every required field is non-null
     final isFormValid = <String?>[
       gender, from, heardFrom,
-      lookingForward, age, cameWith, participated,
+      lookingForward, age, downtownStage, cameWith, participated,
       trashSeparate, trashStation,
     ].every((v) => v != null) && 
     (trashSeparate != 'No' || trashSeparateWhy != null);
@@ -234,6 +236,13 @@ class _SurveyPageState extends State<SurveyPage> {
             ),
 
             _buildRadioGroup(
+              "Did you visit the downtown stage?",
+              ["Yes", "No, I wasn't interested", "No, but wanted to go", "I did not know about it"],
+              downtownStage,
+              (val) => setState(() => downtownStage = val),
+            ),
+
+            _buildRadioGroup(
               "Did you come with",
               ["Family", "Friends", "On your own", "Other"],
               cameWith,
@@ -250,7 +259,7 @@ class _SurveyPageState extends State<SurveyPage> {
 
             // New sustainability questions with updated variable names
             _buildCheckboxGroup(
-              "1. What sustainability efforts did you notice?",
+              "What sustainability efforts did you notice?",
               [
                 "Sustainability booth (workshops and awareness events)",
                 "Recycling Efforts",
@@ -282,7 +291,7 @@ class _SurveyPageState extends State<SurveyPage> {
             ),
 
             _buildRadioGroup(
-              "2. Did you separate your trash correctly at our trash station?",
+              "Did you separate your trash correctly at our trash station?",
               ["Definitely", "Not sure", "No"],
               trashSeparate,
               (val) => setState(() => trashSeparate = val),
@@ -290,7 +299,7 @@ class _SurveyPageState extends State<SurveyPage> {
 
             if (trashSeparate == "No")
               _buildRadioGroup(
-                "3. If not, what was the reason?",
+                "If not, what was the reason?",
                 [
                   "I didn't know it was possible",
                   "I couldn't find a trash station",
@@ -304,7 +313,7 @@ class _SurveyPageState extends State<SurveyPage> {
               ),
 
             _buildRadioGroup(
-              "4. Were the trash stations easy to find?",
+              "Were the trash stations easy to find?",
               ["Yes", "No"],
               trashStation,
               (val) => setState(() => trashStation = val),
