@@ -524,10 +524,10 @@ class _PerformanceBoxState extends State<PerformanceBox>
     // adjust sizing for tablets
     final timeSectionHeight = screenHeight * (isTablet ? 0.20 : 0.253);
     final eventHeight       =
-        widget.eventItem.duration / 60 * timeSectionHeight + (isTablet ? 10 : 6.7);
-    final containerWidth    = screenWidth * (isTablet ? 0.25 : 0.30);
+        widget.eventItem.duration / 60 * timeSectionHeight + (isTablet ? 3 : 6.7);
+    final containerWidth    = screenWidth * (isTablet ? 0.5 : 0.30);
     final horizontalPadding = containerWidth * (isTablet ? 0.06 : 0.05);
-    final verticalPadding   = isTablet ? 12.0 : 9.0;
+    final verticalPadding   = isTablet ? 8.0 : 9.0;
     final responsiveScale   = screenWidth / (isTablet ? 600 : 380);
 
     return GestureDetector(
@@ -569,7 +569,7 @@ class _PerformanceBoxState extends State<PerformanceBox>
   }
 
   Widget _buildInnerContent(bool isTablet, double scale, double eventHeight) {
-    final iconSize = isTablet ? 40.0 : 30.0;
+    final iconSize = isTablet ? 40.0 : 10.0;
 
     if (widget.eventItem.duration < 10) {
       return Row(
@@ -757,15 +757,16 @@ class _EventDetailViewState extends State<EventDetailView>
   Widget build(BuildContext context) {
     final screenW  = MediaQuery.of(context).size.width;
     final screenH  = MediaQuery.of(context).size.height;
-    final isTablet = screenW >= 600;
+    final bool isTablet = screenW >= 600; 
+    
 
     final cardW = screenW * (isTablet ? 0.6 : 0.7);
-    final cardH = screenH * (isTablet ? 0.7 : 0.6);
+    final cardH = screenH * (isTablet ? 0.6 : 0.6);
     final avatarRadius = isTablet ? 70.0 : 50.0;
     final headerImgHeight = isTablet ? 280.0 : 200.0;
     final titleSize = isTablet ? 28.0 : 24.0;
-    final infoFont  = isTablet ? 19.0 : 17.0;
-    final descFont  = isTablet ? 17.0 : 15.0;
+    final infoFont  = isTablet ? 30.0 : 14.0;
+    final descFont  = isTablet ? 25.0 : 14.0;
 
     return AnimatedBuilder(
       animation: _controller,
@@ -800,9 +801,14 @@ class _EventDetailViewState extends State<EventDetailView>
                     ),
                   ],
                 ),
-                child: _buildCardContent(
-                  headerImgHeight, titleSize, infoFont, descFont, avatarRadius,
-                ),
+               child: _buildCardContent(
+  isTablet,              // ← now this matches
+  headerImgHeight,
+  titleSize,
+  infoFont,
+  descFont,
+  avatarRadius,
+),
               ),
             ),
           ),
@@ -811,13 +817,14 @@ class _EventDetailViewState extends State<EventDetailView>
     );
   }
 
-  Widget _buildCardContent(
-    double headerH,
-    double titleSize,
-    double infoFont,
-    double descFont,
-    double avatarR,
-  ) {
+ Widget _buildCardContent(
+  bool isTablet,               // ← add this
+  double headerH,
+  double titleSize,
+  double infoFont,
+  double descFont,
+  double avatarR,
+) {
     return Stack(
       clipBehavior: Clip.none,
       children: [
@@ -926,25 +933,28 @@ class _EventDetailViewState extends State<EventDetailView>
         ),
 
         // floating icon
-        Positioned(
-          top: headerH * 0.6,
-          left: 0, right: 0,
-          child: Center(
-            child: CircleAvatar(
-              radius: avatarR,
-              backgroundColor: Colors.white,
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Image.asset(
-                  widget.event.iconImage,
-                  fit: BoxFit.contain,
-                  width: avatarR * 1.4,
-                  height: avatarR * 1.4,
-                ),
-              ),
-            ),
-          ),
+        // new code – the avatar is fixed at the top-center
+Positioned(
+  top: isTablet ? -70.0 : -40.0, // give it a little breathing room from the top edge
+  left: 0,
+  right: 0,
+  child: Center(
+    child: CircleAvatar(
+      radius: avatarR,
+      backgroundColor: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Image.asset(
+          widget.event.iconImage,
+          fit: BoxFit.contain,
+          width: avatarR * 1.4,
+          height: avatarR * 1.4,
         ),
+      ),
+    ),
+  ),
+),
+
       ],
     );
   }

@@ -24,9 +24,14 @@ import 'pages/survey/survey_page.dart';
 import 'pages/survey/survey_list_page.dart';
 import 'providers/reminder_provider.dart';
 import 'config/supabase_config.dart';
+import 'package:flutter/rendering.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  debugPaintSizeEnabled        = false; // box outlines
+  debugPaintBaselinesEnabled   = false; // text baselines
+  debugPaintLayerBordersEnabled= false; // layer borders
+  debugRepaintRainbowEnabled   = false; // repaint flashes
 
   // Load environment variables
   await dotenv.load();

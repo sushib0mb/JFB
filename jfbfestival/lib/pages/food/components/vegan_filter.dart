@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class VeganFilterOption extends StatefulWidget {
   final bool isVegan;
-  final Function(bool) onChanged;
+  final ValueChanged<bool> onChanged;
 
   const VeganFilterOption({
     required this.isVegan,
@@ -17,20 +17,29 @@ class VeganFilterOption extends StatefulWidget {
 class _VeganFilterOptionState extends State<VeganFilterOption> {
   @override
   Widget build(BuildContext context) {
-    final isVegan = widget.isVegan;
+    final isVegan    = widget.isVegan;
+    final screenW    = MediaQuery.of(context).size.width;
+    final isTablet   = screenW >= 600;
+
+    // Tablet vs phone sizing
+    final double containerSize = isTablet ? 60 : 40;
+    final double imageSize     = isTablet ? 64 : 44;
+    final double borderRadius  = containerSize / 2;
+    final double gap           = isTablet ? 12 : 8;
+    final double fontSize      = isTablet ? 25 : 16;
 
     return GestureDetector(
       onTap: () => widget.onChanged(!isVegan),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
           AnimatedContainer(
             duration: const Duration(milliseconds: 200),
-            width: 40,
-            height: 40,
+            width: containerSize,
+            height: containerSize,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(24),
+              borderRadius: BorderRadius.circular(borderRadius),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.25),
@@ -46,18 +55,20 @@ class _VeganFilterOptionState extends State<VeganFilterOption> {
             child: Center(
               child: Image.asset(
                 'assets/vegan.png',
-                width: 44,
-                height: 44,
+                width: imageSize,
+                height: imageSize,
                 color: isVegan ? null : Colors.grey.withOpacity(0.5),
                 colorBlendMode: BlendMode.modulate,
               ),
             ),
           ),
-          const SizedBox(height: 8),
+
+          SizedBox(height: gap),
+
           Text(
             isVegan ? 'Vegan' : 'Not Vegan',
             style: TextStyle(
-              fontSize: 16,
+              fontSize: fontSize,
               color: isVegan ? Colors.black : Colors.grey[400],
             ),
           ),
