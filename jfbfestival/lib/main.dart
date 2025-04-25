@@ -28,10 +28,10 @@ import 'package:flutter/rendering.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  debugPaintSizeEnabled        = false; // box outlines
-  debugPaintBaselinesEnabled   = false; // text baselines
-  debugPaintLayerBordersEnabled= false; // layer borders
-  debugRepaintRainbowEnabled   = false; // repaint flashes
+  debugPaintSizeEnabled = false; // box outlines
+  debugPaintBaselinesEnabled = false; // text baselines
+  debugPaintLayerBordersEnabled = false; // layer borders
+  debugRepaintRainbowEnabled = false; // repaint flashes
 
   // Load environment variables
   await dotenv.load();
@@ -322,6 +322,7 @@ class _MainScreenState extends State<MainScreen> {
     ];
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.black,
       extendBodyBehindAppBar: true,
       body: Stack(
@@ -344,46 +345,46 @@ class _MainScreenState extends State<MainScreen> {
 class TopBar extends StatelessWidget {
   final int selectedIndex;
   const TopBar({super.key, required this.selectedIndex});
-@override
-Widget build(BuildContext context) {
-  final screenWidth  = MediaQuery.of(context).size.width;
-  final screenHeight = MediaQuery.of(context).size.height;
-  final isTablet     = screenWidth >= 600;
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final isTablet = screenWidth >= 600;
 
-  // Increase the logo size slightly on tablets
-  final logoSize = screenHeight * (isTablet ? 0.12 : 0.086);
+    // Increase the logo size slightly on tablets
+    final logoSize = screenHeight * (isTablet ? 0.12 : 0.086);
 
-  return Padding(
-    padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-    child: Stack(
-      alignment: Alignment.topCenter,
-      children: [
-        Align(
-          alignment: Alignment.topCenter,
-          child: Container(
-            width: logoSize,
-            height: logoSize,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.transparent,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(1.0),
-              child: ClipOval(
-                child: Image.asset(
-                  'assets/JFBLogo.png',
-                  fit: BoxFit.cover,
-                  width: logoSize,
-                  height: logoSize,
+    return Padding(
+      padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+      child: Stack(
+        alignment: Alignment.topCenter,
+        children: [
+          Align(
+            alignment: Alignment.topCenter,
+            child: Container(
+              width: logoSize,
+              height: logoSize,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.transparent,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(1.0),
+                child: ClipOval(
+                  child: Image.asset(
+                    'assets/JFBLogo.png',
+                    fit: BoxFit.cover,
+                    width: logoSize,
+                    height: logoSize,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
-    ),
-  );
-}
+        ],
+      ),
+    );
+  }
 }
 
 class BottomBar extends StatelessWidget {
