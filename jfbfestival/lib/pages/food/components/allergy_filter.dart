@@ -40,7 +40,7 @@ class AllergyFilterGrid extends StatelessWidget {
       // shrinkWrap so it takes only as much height as it needs
       shrinkWrap: true,
       // allow the grid itself to scroll if it exceeds its parent’s viewport
-      physics: const AlwaysScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(), 
       padding: EdgeInsets.zero,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: crossCount,
