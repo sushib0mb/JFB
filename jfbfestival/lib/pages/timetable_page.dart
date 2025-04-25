@@ -5,12 +5,12 @@ import 'package:provider/provider.dart';
 /// メインビュー：タイムテーブル
 class TimetablePage extends StatefulWidget {
   final EventItem? selectedEvent;
-  final int? selectedDay; // ← NEW
+  final int? selectedDay;
 
   const TimetablePage({
     Key? key,
     this.selectedEvent,
-    this.selectedDay, // ← NEW
+    this.selectedDay,
   }) : super(key: key);
 
   @override
@@ -19,17 +19,15 @@ class TimetablePage extends StatefulWidget {
 
 class _TimetablePageState extends State<TimetablePage> {
   int selectedDay = 1;
-  int selectedStage = 1;
   EventItem? selectedEvent;
   bool isShowingDetail = false;
   late ScrollController _scrollController;
   bool _fromHomeTap = true;
+
   @override
   void initState() {
     super.initState();
-    if (widget.selectedDay != null) {
-      selectedDay = widget.selectedDay!;
-    }
+    if (widget.selectedDay != null) selectedDay = widget.selectedDay!;
     _scrollController = ScrollController();
     if (widget.selectedEvent != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -39,28 +37,15 @@ class _TimetablePageState extends State<TimetablePage> {
   }
 
   void _highlightSelectedEvent(EventItem selected) {
-    final scheduleService = Provider.of<ScheduleDataService>(
-      context,
-      listen: false,
-    );
-
-    final currentSchedule =
-        selectedDay == 1
-            ? scheduleService.day1ScheduleData
-            : scheduleService.day2ScheduleData;
-
-    for (var item in currentSchedule) {
-      final allEvents = [...?item.stage1Events, ...?item.stage2Events];
-
-      for (var e in allEvents) {
-        if (e.title == selected.title &&
-            e.time == selected.time &&
-            e.stage == selected.stage) {
+    final svc = Provider.of<ScheduleDataService>(context, listen: false);
+    final schedule = selectedDay == 1 ? svc.day1ScheduleData : svc.day2ScheduleData;
+    for (var slot in schedule) {
+      for (var e in [...?slot.stage1Events, ...?slot.stage2Events]) {
+        if (e.title == selected.title && e.time == selected.time && e.stage == selected.stage) {
           setState(() {
             selectedEvent = e;
             isShowingDetail = true;
           });
-
           _scrollToEventTime(e.time);
           return;
         }
@@ -68,41 +53,27 @@ class _TimetablePageState extends State<TimetablePage> {
     }
   }
 
-  int _parseTimeToMinutes(String timeString) {
+  int _parseTimeToMinutes(String s) {
     try {
-      final parts = timeString.split(' ');
-      final timePart = parts[0];
-      final isPM = parts.length > 1 && parts[1].toLowerCase() == 'pm';
-
-      final hourAndMinute = timePart.split(':');
-      int hour = int.parse(hourAndMinute[0]);
-      final int minute =
-          hourAndMinute.length > 1 ? int.parse(hourAndMinute[1]) : 0;
-
-      if (isPM && hour < 12) {
-        hour += 12;
-      }
-      if (!isPM && hour == 12) {
-        hour = 0;
-      }
-
-      return hour * 60 + minute;
-    } catch (e) {
-      print('Error parsing time: $timeString - $e');
-      return 0;
-    }
+      var parts = s.split(' ');
+      var hm = parts[0].split(':');
+      var h = int.parse(hm[0]);
+      var m = hm.length > 1 ? int.parse(hm[1]) : 0;
+      var pm = parts.length>1 && parts[1].toLowerCase()=='pm';
+      if (pm && h<12) h+=12;
+      if (!pm && h==12) h=0;
+      return h*60 + m;
+    } catch(_) { return 0; }
   }
 
   void _scrollToEventTime(String time) {
-    final startMinutes = _parseTimeToMinutes(time);
-    final offset = (startMinutes - _parseTimeToMinutes("11:00 am")) * 10.0;
-
-    _scrollController.animateTo(
-      offset,
-      duration: Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
+    var start = _parseTimeToMinutes(time);
+    var base = _parseTimeToMinutes('11:00 am');
+    var offset = (start - base) * (isTablet(context)?12.0:10.0);
+    _scrollController.animateTo(offset, duration: Duration(milliseconds:300), curve: Curves.easeInOut);
   }
+
+  bool isTablet(BuildContext c) => MediaQuery.of(c).size.width>=600;
 
   @override
   void dispose() {
@@ -112,260 +83,163 @@ class _TimetablePageState extends State<TimetablePage> {
 
   @override
   Widget build(BuildContext context) {
-    final double dayButtonHeight = MediaQuery.of(context).size.height * 0.082;
-    final double dayButtonWidth = MediaQuery.of(context).size.width * 0.52;
-    final topPadding = dayButtonHeight;
-    final scheduleService = Provider.of<ScheduleDataService>(context);
-    final currentSchedule =
-        selectedDay == 1
-            ? scheduleService.day1ScheduleData
-            : scheduleService.day2ScheduleData;
+    final w = MediaQuery.of(context).size.width;
+    final h = MediaQuery.of(context).size.height;
+    final tablet = isTablet(context);
+
+    // Day buttons adapt
+    final dayBtnHeight = h * (tablet?0.10:0.082);
+    final dayBtnWidth = w * (tablet?0.4:0.52);
+    final dayFont = tablet?48.0:40.0;
+    final topPad = dayBtnHeight + MediaQuery.of(context).padding.top;
+
+    final svc = Provider.of<ScheduleDataService>(context);
+    final schedule = selectedDay==1?svc.day1ScheduleData:svc.day2ScheduleData;
 
     return Scaffold(
       backgroundColor: Colors.white,
       extendBodyBehindAppBar: true,
-
-      appBar:
-          (isShowingDetail && _fromHomeTap)
-              ? AppBar(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                leading: Container(
-                  margin: EdgeInsets.only(left: 8),
+      appBar: (isShowingDetail && _fromHomeTap)
+        ? AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            leading: BackButton(color: Colors.white),
+          ) : null,
+      body: Stack(children:[
+        Padding(
+          padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+          child: Stack(children:[
+            // Day selectors
+            Positioned(
+              left: w*0.06, top: h*0.002,
+              child: _dayButton('Day 1',1, dayBtnWidth,dayBtnHeight, dayFont)
+            ),
+            Positioned(
+              right: w*0.06, top: h*0.002,
+              child: _dayButton('Day 2',2, dayBtnWidth,dayBtnHeight, dayFont)
+            ),
+            // Schedule list
+            Column(children:[
+              SizedBox(height: topPad + h*0.015),
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.all(tablet?32:25),
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.5),
-                    shape: BoxShape.circle,
+                    borderRadius: BorderRadius.circular(tablet?32:25),
+                    gradient: LinearGradient(
+                      colors:[Color(0x260A3875),Color(0x26BF1C24)],
+                      begin: Alignment.topLeft,end: Alignment.bottomRight
+                    )
                   ),
-                  child: IconButton(
-                    icon: Icon(Icons.arrow_back, color: Colors.white),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
-              )
-              : null,
-      body: Stack(
-        children: [
-          // Main content with padding
-          Padding(
-            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-            child: Stack(
-              children: [
-                Positioned(
-                  left: MediaQuery.of(context).size.width * 0.06,
-                  top: MediaQuery.of(context).size.height * 0.002,
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedDay = 1;
-                      });
-                    },
-                    child: Container(
-                      width: dayButtonWidth,
-                      height: dayButtonHeight,
-                      decoration: ShapeDecoration(
-                        color:
-                            selectedDay == 1
-                                ? const Color.fromARGB(38, 191, 29, 35)
-                                : const Color.fromARGB(175, 224, 224, 224),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(100),
-                          side:
-                              selectedDay == 1
-                                  ? const BorderSide(
-                                    color: Color.fromARGB(255, 191, 29, 35),
-                                    width: 2.0,
-                                  )
-                                  : BorderSide.none,
-                        ),
-                      ),
-                      alignment: Alignment(-0.3, 0),
-                      child: const Text(
-                        'Day 1',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 40,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  right: MediaQuery.of(context).size.width * 0.06,
-                  top: MediaQuery.of(context).size.height * 0.002,
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedDay = 2;
-                      });
-                    },
-                    child: Container(
-                      width: dayButtonWidth,
-                      height: dayButtonHeight,
-                      decoration: ShapeDecoration(
-                        color:
-                            selectedDay == 1
-                                ? const Color.fromARGB(175, 224, 224, 224)
-                                : const Color.fromARGB(38, 11, 55, 117),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(100),
-                          side:
-                              selectedDay == 2
-                                  ? const BorderSide(
-                                    color: Color.fromARGB(255, 11, 55, 117),
-                                    width: 2.0,
-                                  )
-                                  : BorderSide.none,
-                        ),
-                      ),
-                      alignment: Alignment(0.4, 0),
-                      child: const Text(
-                        'Day 2',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 40,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Column(
-                  children: [
-                    SizedBox(
-                      height:
-                          topPadding +
-                          MediaQuery.of(context).size.height * 0.015,
+                  child: Column(children:[
+                    Padding(
+                      padding: EdgeInsets.only(left:w*(tablet?0.12:0.1)),
+                      child: _buildStageHeader(fontSize:tablet?20:17),
                     ),
                     Expanded(
-                      child: Container(
-                        margin: const EdgeInsets.all(25),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25),
-                          gradient: LinearGradient(
-                            colors: [
-                              const Color.fromRGBO(10, 56, 117, 0.15),
-                              const Color.fromRGBO(191, 28, 36, 0.15),
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(
-                                left: MediaQuery.of(context).size.width * 0.1,
-                              ),
-                              child: _buildStageHeader(),
-                            ),
-                            Expanded(
-                              child: SingleChildScrollView(
-                                controller: _scrollController,
-                                child: ScheduleList(
-                                  scheduleItems: currentSchedule,
-                                  onEventTap: (event) {
-                                    setState(() {
-                                      selectedEvent = event;
-                                      isShowingDetail = true;
-                                      _fromHomeTap = false;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          if (isShowingDetail && selectedEvent != null)
-            EventDetailView(
-              event: selectedEvent!,
-              onClose: () {
-                setState(() {
-                  isShowingDetail = false;
-                  selectedEvent = null;
-                });
-              },
-            ),
-        ],
-      ),
+                      child: SingleChildScrollView(
+                        controller:_scrollController,
+                        child: ScheduleList(
+                          scheduleItems: schedule,
+                          onEventTap: (e){
+                            setState((){
+                              selectedEvent=e;
+                              isShowingDetail=true;
+                              _fromHomeTap=false;
+                            });
+                          }
+                        )
+                      )
+                    )
+                  ])
+                )
+              )
+            ])
+          ])
+        ),
+        if(isShowingDetail && selectedEvent!=null)
+          EventDetailView(
+            event:selectedEvent!,
+            onClose:(){ setState(()=>isShowingDetail=false); }
+          )
+      ])
     );
   }
+Widget _dayButton(
+  String text,
+  int day,
+  double w,
+  double h,
+  double fs,
+) {
+  final screenWidth = MediaQuery.of(context).size.width;
+  final isTablet    = screenWidth >= 600;
 
-  Widget _buildStageHeader() {
-    const double fontSize = 17;
+  // scale up a bit on tablets
+  final width  = isTablet ? w * 1.2 : w;
+  final height = isTablet ? h * 1.2 : h;
+  final font   = isTablet ? fs * 1.2 : fs;
 
+  return GestureDetector(
+    onTap: () => setState(() => selectedDay = day),
+    child: Container(
+      width: width,
+      height: height,
+      alignment: Alignment.center,
+      decoration: ShapeDecoration(
+        color: selectedDay == day
+            ? Colors.red.withOpacity(0.15)
+            : Colors.grey.withOpacity(0.7),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(100),
+          side: selectedDay == day
+              ? BorderSide(
+                  color: day == 1 ? const Color(0xFFBF1C23) : const Color(0xFF0B3775),
+                  width: 2,
+                )
+              : BorderSide.none,
+        ),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: font,
+          fontWeight: FontWeight.w400,
+        ),
+      ),
+    ),
+  );
+}
+
+
+  Widget _buildStageHeader({required double fontSize}){
     return Padding(
-      padding: const EdgeInsets.only(top: 25, bottom: 10),
+      padding: const EdgeInsets.only(top:25,bottom:10),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.64,
-        height: 50,
-        decoration: BoxDecoration(
-          color: Color(0xFF8D8D97),
-          borderRadius: BorderRadius.circular(36),
+        height:50,
+        decoration:BoxDecoration(
+          color:Color(0xFF8D8D97),
+          borderRadius:BorderRadius.circular(36)
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 12, right: 8),
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    "Boston Common",
-                    style: TextStyle(
-                      fontSize: fontSize - 1.5,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              width: 3,
-              height: 30,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8, right: 12),
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    "Downtown",
-                    style: TextStyle(
-                      fontSize: fontSize,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+        child:Row(
+          mainAxisAlignment:MainAxisAlignment.spaceEvenly,
+          children:[
+            _stageLabel('Boston Common',fontSize-1.5),
+            Container(width:3,height:30,decoration:BoxDecoration(color:Colors.white,borderRadius:BorderRadius.circular(20))),
+            _stageLabel('Downtown',fontSize)
+          ]
+        )
+      )
     );
   }
+
+  Widget _stageLabel(String txt,double fs) => Expanded(
+    child:Padding(
+      padding: const EdgeInsets.symmetric(horizontal:12),
+      child:Text(txt,style:TextStyle(fontSize:fs,fontWeight:FontWeight.w500,color:Colors.white),overflow:TextOverflow.ellipsis,maxLines:1,textAlign:TextAlign.center)
+    )
+  );
 }
 
 class ScheduleList extends StatelessWidget {
@@ -623,54 +497,56 @@ int _parseTimeToMinutes(String timeString) {
     return 0; // Default fallback
   }
 }
-
 // / パフォーマンスボックス：タップ時に詳細を表示（タップ時のアニメーション付き）
 class PerformanceBox extends StatefulWidget {
   final EventItem eventItem;
   final Function(EventItem) onTap;
 
-  const PerformanceBox({Key? key, required this.eventItem, required this.onTap})
-    : super(key: key);
+  const PerformanceBox({
+    Key? key,
+    required this.eventItem,
+    required this.onTap,
+  }) : super(key: key);
 
   @override
   _PerformanceBoxState createState() => _PerformanceBoxState();
 }
-
 class _PerformanceBoxState extends State<PerformanceBox>
     with SingleTickerProviderStateMixin {
   bool isPressed = false;
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth  = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final isTablet     = screenWidth >= 600;
 
-    double timeSectionHeight = screenHeight * 0.253;
-    double eventHeight =
-        widget.eventItem.duration / 60 * timeSectionHeight + 6.7;
-    double responsiveFontSize = screenWidth / 380;
+    // adjust sizing for tablets
+    final timeSectionHeight = screenHeight * (isTablet ? 0.20 : 0.253);
+    final eventHeight       =
+        widget.eventItem.duration / 60 * timeSectionHeight + (isTablet ? 10 : 6.7);
+    final containerWidth    = screenWidth * (isTablet ? 0.25 : 0.30);
+    final horizontalPadding = containerWidth * (isTablet ? 0.06 : 0.05);
+    final verticalPadding   = isTablet ? 12.0 : 9.0;
+    final responsiveScale   = screenWidth / (isTablet ? 600 : 380);
 
     return GestureDetector(
       onTap: () {
-        setState(() {
-          isPressed = true;
-        });
+        setState(() => isPressed = true);
         Future.delayed(const Duration(milliseconds: 150), () {
           widget.onTap(widget.eventItem);
-          setState(() {
-            isPressed = false;
-          });
+          setState(() => isPressed = false);
         });
       },
       child: AnimatedScale(
         scale: isPressed ? 0.95 : 1.0,
         duration: const Duration(milliseconds: 150),
         child: Container(
-          width: screenWidth * 0.3,
+          width: containerWidth,
           height: eventHeight,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(45),
+            borderRadius: BorderRadius.circular(isTablet ? 50 : 45),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(isPressed ? 0.05 : 0.1),
@@ -681,198 +557,160 @@ class _PerformanceBoxState extends State<PerformanceBox>
           ),
           child: Padding(
             padding: EdgeInsets.symmetric(
-              vertical: 9.0,
-              horizontal: screenWidth * 0.3 * 0.05,
+              vertical: verticalPadding,
+              horizontal: horizontalPadding,
             ),
-            child:
-                widget.eventItem.duration < 10
-                    ? Row(
-                      // Layout for duration < 10
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Container(
-                          width: 30,
-                          height: 30,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.2),
-                                blurRadius: 2,
-                              ),
-                            ],
-                          ),
-                          child:
-                              widget.eventItem.iconImage.isNotEmpty
-                                  ? Image.asset(
-                                    widget.eventItem.iconImage,
-                                    fit: BoxFit.cover,
-                                  )
-                                  : Icon(Icons.event, size: 20),
-                        ),
-                        SizedBox(width: screenWidth * 0.3 * 0.12),
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                widget.eventItem.title.length > 17
-                                    ? "${widget.eventItem.title.substring(0, 17)}..."
-                                    : widget.eventItem.title,
-                                style: TextStyle(
-                                  fontSize: responsiveFontSize * 8,
-                                  fontWeight: FontWeight.w500,
-                                  height: 0.93,
-                                ),
-                                maxLines: 2,
-                                textAlign: TextAlign.left,
-                              ),
-                              SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.0035,
-                              ),
-                              Text(
-                                widget.eventItem.time,
-                                style: TextStyle(
-                                  fontSize: responsiveFontSize * 6.5,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey,
-                                  height: 0.3,
-                                ),
-                                textAlign: TextAlign.right,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    )
-                    : widget.eventItem.duration == 10
-                    ? Row(
-                      // Layout for duration = 10
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Container(
-                          width: 33,
-                          height: 33,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.2),
-                                blurRadius: 2,
-                              ),
-                            ],
-                          ),
-                          child:
-                              widget.eventItem.iconImage.isNotEmpty
-                                  ? Image.asset(
-                                    widget.eventItem.iconImage,
-                                    fit: BoxFit.cover,
-                                  )
-                                  : Icon(Icons.event, size: 20),
-                        ),
-                        SizedBox(width: screenWidth * 0.3 * 0.054),
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                widget.eventItem.title.length > 25
-                                    ? "${widget.eventItem.title.substring(0, 25)}..."
-                                    : widget.eventItem.title,
-                                style: TextStyle(
-                                  fontSize: responsiveFontSize * 9.5,
-                                  fontWeight: FontWeight.w500,
-                                  height: 1.2,
-                                ),
-                                maxLines: 2,
-                                textAlign: TextAlign.left,
-                              ),
-                              SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.006,
-                              ),
-                              Text(
-                                widget.eventItem.time,
-                                style: TextStyle(
-                                  fontSize: responsiveFontSize * 8,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey,
-                                  height: 0.9,
-                                ),
-                                textAlign: TextAlign.right,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    )
-                    : Column(
-                      // Layout for duration > 10
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.2),
-                                blurRadius: 2,
-                              ),
-                            ],
-                          ),
-                          child: Image.asset(
-                            widget.eventItem.iconImage,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        SizedBox(height: eventHeight * 0.05),
-                        Text(
-                          widget.eventItem.title.length > 27
-                              ? "${widget.eventItem.title.substring(0, 27)}..."
-                              : widget.eventItem.title,
-                          style: TextStyle(
-                            fontSize: responsiveFontSize * 12,
-                            fontWeight: FontWeight.w500,
-                            height: 1.1,
-                          ),
-                          maxLines: 2,
-                          textAlign: TextAlign.center,
-                        ),
-                        SizedBox(height: screenHeight * 0.007),
-                        Text(
-                          widget.eventItem.time,
-                          style: TextStyle(
-                            fontSize: responsiveFontSize * 10,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey,
-                            height: 1.1,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
+            // pass eventHeight into the builder
+            child: _buildInnerContent(isTablet, responsiveScale, eventHeight),
           ),
         ),
       ),
     );
   }
+
+  Widget _buildInnerContent(bool isTablet, double scale, double eventHeight) {
+    final iconSize = isTablet ? 40.0 : 30.0;
+
+    if (widget.eventItem.duration < 10) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          _buildIcon(iconSize),
+          SizedBox(width: iconSize * (isTablet ? 0.04 : 0.12)),
+          _buildTextColumn(
+            maxTitle: 17,
+            titleScale: 8 * scale,
+            timeScale: 6.5 * scale,
+            lineHeight: 0.93,
+            timeLineHeight: 0.3,
+            isTablet: isTablet,
+          ),
+        ],
+      );
+    } else if (widget.eventItem.duration == 10) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          _buildIcon(iconSize + 3),
+          SizedBox(width: (iconSize + 3) * (isTablet ? 0.036 : 0.054)),
+          _buildTextColumn(
+            maxTitle: 25,
+            titleScale: 9.5 * scale,
+            timeScale: 8 * scale,
+            lineHeight: 1.2,
+            timeLineHeight: 0.9,
+            isTablet: isTablet,
+          ),
+        ],
+      );
+    } else {
+      // now eventHeight is in scope
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _buildIcon(iconSize + 10),
+          SizedBox(height: eventHeight * 0.05),
+          Text(
+            widget.eventItem.title.length > 27
+                ? "${widget.eventItem.title.substring(0, 27)}..."
+                : widget.eventItem.title,
+            style: TextStyle(
+              fontSize: scale * 12,
+              fontWeight: FontWeight.w500,
+              height: 1.1,
+            ),
+            maxLines: 2,
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: isTablet ? 12 : 8),
+          Text(
+            widget.eventItem.time,
+            style: TextStyle(
+              fontSize: scale * 10,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey,
+              height: 1.1,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      );
+    }
+  }
+  Widget _buildIcon(double size) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 2,
+          ),
+        ],
+      ),
+      child: widget.eventItem.iconImage.isNotEmpty
+          ? Image.asset(widget.eventItem.iconImage, fit: BoxFit.cover)
+          : Icon(Icons.event, size: size * 0.6),
+    );
+  }
+
+  Widget _buildTextColumn({
+    required int maxTitle,
+    required double titleScale,
+    required double timeScale,
+    required double lineHeight,
+    required double timeLineHeight,
+    required bool isTablet,
+  }) {
+    return Expanded(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment:
+            isTablet ? CrossAxisAlignment.start : CrossAxisAlignment.start,
+        children: [
+          Text(
+            widget.eventItem.title.length > maxTitle
+                ? "${widget.eventItem.title.substring(0, maxTitle)}..."
+                : widget.eventItem.title,
+            style: TextStyle(
+              fontSize: titleScale,
+              fontWeight: FontWeight.w500,
+              height: lineHeight,
+            ),
+            maxLines: 2,
+            textAlign: TextAlign.left,
+          ),
+          SizedBox(height: isTablet ? 6 : 4),
+          Text(
+            widget.eventItem.time,
+            style: TextStyle(
+              fontSize: timeScale,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey,
+              height: timeLineHeight,
+            ),
+            textAlign: TextAlign.right,
+          ),
+        ],
+      ),
+    );
+  }
 }
 
+
+/// イベント詳細ビュー：iPad対応のため幅・高さ・フォントサイズを調整
 class EventDetailView extends StatefulWidget {
   final EventItem event;
   final VoidCallback onClose;
 
-  const EventDetailView({Key? key, required this.event, required this.onClose})
-    : super(key: key);
+  const EventDetailView({
+    Key? key,
+    required this.event,
+    required this.onClose,
+  }) : super(key: key);
 
   @override
   _EventDetailViewState createState() => _EventDetailViewState();
@@ -881,32 +719,27 @@ class EventDetailView extends StatefulWidget {
 class _EventDetailViewState extends State<EventDetailView>
     with TickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<double> _cardOffsetAnimation;
-  late Animation<double> _opacityAnimation;
-  late Animation<double> _headerScaleAnimation;
+  late Animation<double> _cardOffset, _opacity, _headerScale;
 
   @override
   void initState() {
     super.initState();
-    // Animation controller setup
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
-    _cardOffsetAnimation = Tween<double>(
-      begin: 1000,
-      end: 0,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
-    _opacityAnimation = Tween<double>(begin: 0, end: 1).animate(
+    _cardOffset = Tween(begin: 1000.0, end: 0.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+    );
+    _opacity = Tween(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _controller,
         curve: const Interval(0.2, 0.5, curve: Curves.easeIn),
       ),
     );
-    _headerScaleAnimation = Tween<double>(
-      begin: 0.8,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+    _headerScale = Tween(begin: 0.8, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+    );
     _controller.forward();
   }
 
@@ -917,317 +750,229 @@ class _EventDetailViewState extends State<EventDetailView>
   }
 
   void _close() {
-    _controller.reverse().then((value) {
-      widget.onClose();
-    });
+    _controller.reverse().then((_) => widget.onClose());
   }
 
   @override
   Widget build(BuildContext context) {
+    final screenW  = MediaQuery.of(context).size.width;
+    final screenH  = MediaQuery.of(context).size.height;
+    final isTablet = screenW >= 600;
+
+    final cardW = screenW * (isTablet ? 0.6 : 0.7);
+    final cardH = screenH * (isTablet ? 0.7 : 0.6);
+    final avatarRadius = isTablet ? 70.0 : 50.0;
+    final headerImgHeight = isTablet ? 280.0 : 200.0;
+    final titleSize = isTablet ? 28.0 : 24.0;
+    final infoFont  = isTablet ? 19.0 : 17.0;
+    final descFont  = isTablet ? 17.0 : 15.0;
+
     return AnimatedBuilder(
       animation: _controller,
-      builder: (context, child) {
-        return Stack(
-          // Ensure stack fills the screen
-          fit: StackFit.expand,
-          children: [
-            // Background overlay with full screen coverage
-            Positioned.fill(
-              child: Opacity(
-                opacity: _opacityAnimation.value * 0.6, // Set the opacity here
-                child: GestureDetector(
-                  onTap: _close,
-                  child: Container(color: const Color.fromARGB(255, 0, 0, 0)),
+      builder: (context, _) => Stack(
+        fit: StackFit.expand,
+        children: [
+          // overlay
+          Positioned.fill(
+            child: Opacity(
+              opacity: _opacity.value * 0.6,
+              child: GestureDetector(
+                onTap: _close,
+                child: Container(color: Colors.black),
+              ),
+            ),
+          ),
+
+          // detail card
+          Transform.translate(
+            offset: Offset(0, _cardOffset.value + screenH * 0.02),
+            child: Center(
+              child: Container(
+                width: cardW,
+                height: cardH,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(25),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.3),
+                      blurRadius: 12,
+                    ),
+                  ],
+                ),
+                child: _buildCardContent(
+                  headerImgHeight, titleSize, infoFont, descFont, avatarRadius,
                 ),
               ),
             ),
-            // Event detail card animation
-            Transform.translate(
-              offset: Offset(
-                0,
-                _cardOffsetAnimation.value +
-                    MediaQuery.of(context).size.height * 0.02,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCardContent(
+    double headerH,
+    double titleSize,
+    double infoFont,
+    double descFont,
+    double avatarR,
+  ) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Column(
+          children: [
+            // header image + title
+            Container(
+              height: headerH,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(widget.event.eventDetailImage),
+                  fit: BoxFit.cover,
+                ),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(25),
+                  topRight: Radius.circular(25),
+                ),
               ),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  // Event Detail Card
-                  Center(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.7,
-                      height: MediaQuery.of(context).size.height * 0.6,
-                      decoration: BoxDecoration(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.3),
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(25),
+                    topRight: Radius.circular(25),
+                  ),
+                ),
+                child: Center(
+                  child: Transform.scale(
+                    scale: _headerScale.value,
+                    child: Text(
+                      widget.event.title,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: titleSize,
+                        fontWeight: FontWeight.bold,
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
-                            blurRadius: 10,
-                          ),
-                        ],
-                      ),
-                      child: Stack(
-                        children: [
-                          Column(
-                            children: [
-                              // Header image
-                              Container(
-                                height: 200,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: AssetImage(
-                                      widget.event.eventDetailImage,
-                                    ),
-                                    fit: BoxFit.cover,
-                                  ),
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(20),
-                                    topRight: Radius.circular(20),
-                                  ),
-                                ),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.black.withOpacity(0.3),
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(20),
-                                      topRight: Radius.circular(20),
-                                    ),
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const SizedBox(
-                                        height: 50,
-                                      ), // space for floating icon
-                                      Transform.scale(
-                                        scale: _headerScaleAnimation.value,
-                                        child: Text(
-                                          widget.event.title,
-                                          textAlign: TextAlign.center,
-                                          style: const TextStyle(
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                            shadows: [
-                                              Shadow(
-                                                color: Colors.black54,
-                                                offset: Offset(0, 1),
-                                                blurRadius: 2,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-
-                              // Stage and time info
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 10,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    ConstrainedBox(
-                                      constraints: BoxConstraints(
-                                        maxWidth:
-                                            MediaQuery.of(context).size.width *
-                                            0.25,
-                                      ),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color:
-                                              widget.event.stage == "Stage 1"
-                                                  ? const Color.fromARGB(
-                                                    120,
-                                                    191,
-                                                    29,
-                                                    25,
-                                                  )
-                                                  : const Color.fromARGB(
-                                                    76,
-                                                    11,
-                                                    55,
-                                                    117,
-                                                  ),
-                                          borderRadius: BorderRadius.circular(
-                                            20,
-                                          ),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(
-                                                0.3,
-                                              ),
-                                              blurRadius: 20,
-                                            ),
-                                          ],
-                                        ),
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 10,
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            widget.event.stage,
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.black87,
-                                              fontSize: 17,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    ConstrainedBox(
-                                      constraints: BoxConstraints(
-                                        maxWidth:
-                                            MediaQuery.of(context).size.width *
-                                            0.25,
-                                      ),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(
-                                            20,
-                                          ),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(
-                                                0.2,
-                                              ),
-                                              blurRadius: 10,
-                                            ),
-                                          ],
-                                        ),
-                                        padding: const EdgeInsets.symmetric(
-                                          vertical: 10,
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            widget.event.time,
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.black87,
-                                              fontSize: 17,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              // Description section
-                              Expanded(
-                                child: SingleChildScrollView(
-                                  padding: const EdgeInsets.all(16),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                            0.6,
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                            0.27,
-                                        decoration: ShapeDecoration(
-                                          color: const Color.fromARGB(
-                                            13,
-                                            0,
-                                            0,
-                                            0,
-                                          ),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                              25,
-                                            ),
-                                          ),
-                                        ),
-                                        child: Center(
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(10),
-                                            child: SingleChildScrollView(
-                                              child: Text(
-                                                widget.event.description,
-                                                textAlign: TextAlign.center,
-                                                style: const TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: Colors.black87,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          // Close Button
-                          Positioned(
-                            top: 10,
-                            right: 10,
-                            child: GestureDetector(
-                              onTap: _close,
-                              child: Container(
-                                padding: const EdgeInsets.all(5),
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(0.3),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Icon(
-                                  Icons.close,
-                                  size: 20,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
+                        shadows: const [
+                          Shadow(
+                            color: Colors.black54,
+                            offset: Offset(0, 1),
+                            blurRadius: 2,
                           ),
                         ],
                       ),
                     ),
                   ),
+                ),
+              ),
+            ),
 
-                  // Floating Icon
-                  Positioned(
-                    top: MediaQuery.of(context).size.height * 0.15,
-                    left: 0,
-                    right: 0,
-                    child: Center(
-                      child: CircleAvatar(
-                        radius: 50,
-                        backgroundColor: Colors.white,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Image.asset(
-                            widget.event.iconImage,
-                            fit: BoxFit.contain,
-                            width: 100,
-                            height: 100,
-                          ),
-                        ),
-                      ),
-                    ),
+            // stage & time
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _infoChip(
+                    widget.event.stage,
+                    widget.event.stage == "Stage 1"
+                        ? const Color.fromARGB(120, 191, 29, 25)
+                        : const Color.fromARGB(76, 11, 55, 117),
+                    infoFont,
+                  ),
+                  _infoChip(
+                    widget.event.time,
+                    Colors.white,
+                    infoFont,
                   ),
                 ],
               ),
             ),
+
+            // description
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  widget.event.description,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: descFont,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black87,
+                  ),
+                ),
+              ),
+            ),
           ],
-        );
-      },
+        ),
+
+        // close button
+        Positioned(
+          top: 12,
+          right: 12,
+          child: GestureDetector(
+            onTap: _close,
+            child: Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.3),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.close, color: Colors.white, size: 22),
+            ),
+          ),
+        ),
+
+        // floating icon
+        Positioned(
+          top: headerH * 0.6,
+          left: 0, right: 0,
+          child: Center(
+            child: CircleAvatar(
+              radius: avatarR,
+              backgroundColor: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Image.asset(
+                  widget.event.iconImage,
+                  fit: BoxFit.contain,
+                  width: avatarR * 1.4,
+                  height: avatarR * 1.4,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _infoChip(String text, Color bg, double fontSize) {
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.25),
+      child: Container(
+        decoration: BoxDecoration(
+          color: bg,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 8),
+          ],
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+        child: Center(
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: fontSize,
+              fontWeight: FontWeight.w400,
+              color: Colors.black87,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
     );
   }
 }

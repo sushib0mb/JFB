@@ -258,41 +258,48 @@ class _FoodPageState extends State<FoodPage> {
       ),
     );
   }
+Widget _buildIconButton({
+  IconData? icon,
+  String? iconAsset,
+  required VoidCallback onPressed,
+}) {
+  final screenWidth = MediaQuery.of(context).size.width;
+  final isTablet    = screenWidth >= 600;
 
-  Widget _buildIconButton({
-    IconData? icon,
-    String? iconAsset,
-    required VoidCallback onPressed,
-  }) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Material(
-        color: Colors.transparent,
-        child: Container(
-          width: 55,
-          height: 55,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.circular(40),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 10,
-                spreadRadius: 1,
-              ),
-            ],
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child:
-                iconAsset != null
-                    ? Image.asset(iconAsset, fit: BoxFit.contain)
-                    : Icon(icon, size: 30),
-          ),
+  // bump sizes on tablet
+  final double btnSize   = isTablet ? 70.0 : 55.0;
+  final double padding   = isTablet ? 14.0 : 10.0;
+  final double iconSize  = isTablet ? 36.0 : 30.0;
+  final double elevation = isTablet ? 12.0 : 10.0;
+
+  return GestureDetector(
+    onTap: onPressed,
+    child: Material(
+      color: Colors.transparent,
+      child: Container(
+        width: btnSize,
+        height: btnSize,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(btnSize / 2),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.15),
+              blurRadius: elevation,
+              spreadRadius: 1,
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(padding),
+          child: iconAsset != null
+              ? Image.asset(iconAsset, fit: BoxFit.contain)
+              : Icon(icon, size: iconSize),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildSearchBar() {
     final pad = MediaQuery.of(context).size.height * 0.070;
@@ -615,6 +622,8 @@ class _FoodPageState extends State<FoodPage> {
   }
 
   void _showFilterPopup() {
+    final screenSize = MediaQuery.of(context).size;
+final isTablet   = screenSize.width >= 600;
     if (_isFilterPopupOpen) return; // Prevent re-entry
     _isFilterPopupOpen = true;
 
@@ -654,209 +663,180 @@ class _FoodPageState extends State<FoodPage> {
                     child: Center(
                       child: Material(
                         color: Colors.transparent,
-                        child: Container(
-                          constraints: BoxConstraints(
-                            maxWidth: MediaQuery.of(context).size.width * 0.85,
-                            maxHeight:
-                                MediaQuery.of(context).size.height * 0.785,
-                          ),
-                          margin: const EdgeInsets.symmetric(horizontal: 24),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 10,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.surface,
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: const [
-                              BoxShadow(color: Colors.black26, blurRadius: 10),
-                            ],
-                          ),
-                          child: StatefulBuilder(
-                            builder: (context, setModalState) {
-                              return Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                          left: 16.0,
-                                        ),
-                                        child: Text(
-                                          "Filters",
-                                          style:
-                                              Theme.of(
-                                                context,
-                                              ).textTheme.titleLarge,
-                                        ),
-                                      ),
-                                      IconButton(
-                                        icon: const Icon(Icons.close),
-                                        onPressed: () {
-                                          if (Navigator.of(context).canPop()) {
-                                            Navigator.of(context).pop();
-                                          }
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                  Expanded(
-                                    child: SingleChildScrollView(
-                                      padding: const EdgeInsets.only(
-                                        bottom: 24,
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.stretch,
-                                        children: [
-                                          const SizedBox(height: 5),
-                                          Center(
-                                            child: _buildSectionTitle(
-                                              "Payment",
-                                            ),
-                                          ),
-                                          const SizedBox(height: 10),
-                                          PaymentFilterRow(
-                                            selectedPayments: selectedPayments,
-                                            onPaymentSelected: (
-                                              method,
-                                              isSelected,
-                                            ) {
-                                              setModalState(() {
-                                                isSelected
-                                                    ? selectedPayments.add(
-                                                      method,
-                                                    )
-                                                    : selectedPayments.remove(
-                                                      method,
-                                                    );
-                                              });
-                                            },
-                                          ),
-                                          Center(
-                                            child: _buildSectionTitle("Vegan"),
-                                          ),
-                                          const SizedBox(height: 12),
-                                          VeganFilterOption(
-                                            isVegan: veganOnly ?? false,
-                                            onChanged: (value) {
-                                              setModalState(
-                                                () => veganOnly = value,
-                                              );
-                                            },
-                                          ),
-                                          const SizedBox(height: 10),
-                                          Center(
-                                            child: _buildSectionTitle(
-                                              "Allergens",
-                                            ),
-                                          ),
-                                          const SizedBox(height: 5),
-                                          AllergyFilterGrid(
-                                            selectedAllergens:
-                                                selectedAllergens,
-                                            onAllergenSelected: (
-                                              allergen,
-                                              isSelected,
-                                            ) {
-                                              setModalState(() {
-                                                setModalState(() {
-                                                  isSelected
-                                                      ? selectedAllergens.add(
-                                                        allergen,
-                                                      )
-                                                      : selectedAllergens
-                                                          .remove(allergen);
-                                                });
-                                              });
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: 16.0,
-                                      right: 16.0,
-                                      bottom: 16.0,
-                                      top: 8.0,
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.white,
-                                            foregroundColor: Colors.white,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(30),
-                                            ),
-                                            padding: EdgeInsets.symmetric(
-                                              vertical:
-                                                  MediaQuery.of(
-                                                    context,
-                                                  ).size.height *
-                                                  0.017,
-                                              horizontal:
-                                                  MediaQuery.of(
-                                                    context,
-                                                  ).size.width *
-                                                  0.06,
-                                            ),
-                                            elevation: 10,
-                                          ).copyWith(
-                                            shadowColor:
-                                                MaterialStateProperty.all(
-                                                  const Color.fromARGB(
-                                                    255,
-                                                    0,
-                                                    0,
-                                                    0,
-                                                  ).withOpacity(0.5),
-                                                ),
-                                          ),
-                                          onPressed: () {
-                                            setModalState(() {
-                                              selectedPayments.clear();
-                                              veganOnly = false;
-                                              selectedAllergens.clear();
-                                            });
-                                          },
-                                          child: Text(
-                                            "Reset",
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold,
-                                              letterSpacing: 1.2,
-                                            ),
-                                          ),
-                                        ),
-                                        _buildApplyButton(
-                                          addedText: "Apply Filters",
-                                          onApply: _applyFilters,
-                                          closeModal: () {
-                                            if (Navigator.of(
-                                              context,
-                                            ).canPop()) {
-                                              Navigator.of(context).pop();
-                                            }
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          ),
-                        ),
+                      // inside transitionBuilder → Center → Material → Container(
+
+
+// Popup container:
+child: Container(
+  constraints: BoxConstraints(
+    // narrower on phone, wider on tablet
+    maxWidth: isTablet
+        ? screenSize.width * 0.6
+        : screenSize.width * 0.85,
+    // taller on tablet
+    maxHeight: isTablet
+        ? screenSize.height * 0.85
+        : screenSize.height * 0.785,
+  ),
+  margin: EdgeInsets.symmetric(
+    horizontal: isTablet ? 48 : 24,
+  ),
+  padding: EdgeInsets.symmetric(
+    horizontal: isTablet ? 24 : 16,
+    vertical: isTablet ? 16 : 10,
+  ),
+  decoration: BoxDecoration(
+    color: Theme.of(context).colorScheme.surface,
+    borderRadius: BorderRadius.circular(20),
+    boxShadow: const [
+      BoxShadow(color: Colors.black26, blurRadius: 10),
+    ],
+  ),
+  child: StatefulBuilder(
+    builder: (ctx, setModalState) {
+      return Column(
+        // full height for header/body/buttons
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          // header row (Filters + close)
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: isTablet ? 24 : 16,
+              vertical: isTablet ? 12 : 8,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("Filters",
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge!
+                        .copyWith(
+                          fontSize: isTablet ?  24:20,
+                        )),
+                IconButton(
+                  icon: Icon(Icons.close, size: isTablet ? 28 : 24),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            ),
+          ),
+
+          // scrollable filter body
+          Expanded(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(
+                horizontal: isTablet ? 24 : 16,
+                vertical: isTablet ? 12 : 8,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Payment
+                  SizedBox(height: isTablet ? 12 : 5),
+                  Center(child: _buildSectionTitle("Payment")),
+                  SizedBox(height: isTablet ? 16 : 10),
+                  PaymentFilterRow(
+                    selectedPayments: selectedPayments,
+                    onPaymentSelected: (method, isSel) {
+                      setModalState(() {
+                        isSel
+                            ? selectedPayments.add(method)
+                            : selectedPayments.remove(method);
+                      });
+                    },
+                  ),
+
+                  // Vegan
+                  SizedBox(height: isTablet ? 20 : 12),
+                  Center(child: _buildSectionTitle("Vegan")),
+                  SizedBox(height: isTablet ? 16 : 12),
+                  VeganFilterOption(
+                    isVegan: veganOnly ?? false,
+                    onChanged: (v) => setModalState(() => veganOnly = v),
+                  ),
+
+                  // Allergens
+                  SizedBox(height: isTablet ? 20 : 10),
+                  Center(child: _buildSectionTitle("Allergens")),
+                  SizedBox(height: isTablet ? 16 : 8),
+                  AllergyFilterGrid(
+                    selectedAllergens: selectedAllergens,
+                    onAllergenSelected: (all, isSel) {
+                      setModalState(() {
+                        isSel
+                            ? selectedAllergens.add(all)
+                            : selectedAllergens.remove(all);
+                      });
+                    },
+                  ),
+                  SizedBox(height: isTablet ? 24 : 16),
+                ],
+              ),
+            ),
+          ),
+
+          // buttons row
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: isTablet ? 24 : 16,
+              vertical: isTablet ? 16 : 8,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                // Reset
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30)),
+                    padding: EdgeInsets.symmetric(
+                      vertical: isTablet
+                          ? screenSize.height * 0.02
+                          : screenSize.height * 0.017,
+                      horizontal: isTablet
+                          ? screenSize.width * 0.08
+                          : screenSize.width * 0.06,
+                    ),
+                    elevation: isTablet ? 12 : 10,
+                  ).copyWith(
+                    shadowColor: MaterialStateProperty.all(
+                        Colors.black.withOpacity(0.3)),
+                  ),
+                  onPressed: () {
+                    setModalState(() {
+                      selectedPayments.clear();
+                      veganOnly = false;
+                      selectedAllergens.clear();
+                    });
+                  },
+                  child: Text(
+                    "Reset",
+                    style: TextStyle(
+                      fontSize: isTablet ? 17 : 15,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                ),
+
+                // Apply
+                _buildApplyButton(
+                  addedText: "Apply Filters",
+                  onApply: _applyFilters,
+                  closeModal: () => Navigator.of(context).pop(),
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
+    },
+  ),
+),
+
                       ),
                     ),
                   ),
