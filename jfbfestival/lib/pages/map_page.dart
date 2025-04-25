@@ -14,7 +14,7 @@ class MapPageState extends State<MapPage> with SingleTickerProviderStateMixin {
   final Duration _animationDuration = const Duration(milliseconds: 300);
   late AnimationController _animationController;
   late Animation<Offset> _slideAnimation;
-  String _currentMapImage = 'assets/MapNew.png';
+  String _currentMapImage = 'assets/MapNew.png'; // Initial map image
 
   final Map<String, String> mapImages = {
     'All': 'assets/MapNew.png',
@@ -32,7 +32,7 @@ class MapPageState extends State<MapPage> with SingleTickerProviderStateMixin {
       duration: _animationDuration,
     );
     _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, -1),
+      begin: const Offset(0, -1), // Start off-screen at the top
       end: Offset.zero,
     ).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
@@ -65,24 +65,33 @@ class MapPageState extends State<MapPage> with SingleTickerProviderStateMixin {
       }
       _isMiniWindowVisible = false;
       _animationController.reverse();
-      _currentMapImage = mapImages[_selectedFilter] ?? mapImages['All']!;
+      _currentMapImage =
+          mapImages[_selectedFilter] ??
+          mapImages['All']!; // Update current map image
     });
   }
 
   void _onLetterTap(String letter) {
     Navigator.of(context).push(
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            MainScreen(initialIndex: 1, selectedMapLetter: letter),
+        pageBuilder:
+            (context, animation, secondaryAnimation) =>
+                MainScreen(initialIndex: 1, selectedMapLetter: letter),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          var fadeTween = Tween(begin: 0.0, end: 1.0)
-              .chain(CurveTween(curve: Curves.easeInOut));
-          return FadeTransition(
-            opacity: animation.drive(fadeTween),
-            child: child,
-          );
+          const begin = 0.0;
+          const end = 1.0;
+          const curve = Curves.easeInOut;
+
+          var fadeTween = Tween(
+            begin: begin,
+            end: end,
+          ).chain(CurveTween(curve: curve));
+          var opacityAnimation = animation.drive(fadeTween);
+
+          return FadeTransition(opacity: opacityAnimation, child: child);
         },
-        transitionDuration: _animationDuration,
+        transitionDuration:
+            _animationDuration, // Use the existing animation duration
       ),
     );
   }
@@ -90,19 +99,9 @@ class MapPageState extends State<MapPage> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-    final bool isTablet = screenSize.width >= 600;
     final bool isFilterActive = _selectedFilter != 'All';
-    final String targetMapImage = mapImages[_selectedFilter] ?? mapImages['All']!;
-
-    // Adaptive dimensions
-    final double mapWidth = isTablet ? screenSize.width * 0.6 : screenSize.width * 0.85;
-    final double mapHeight = isTablet ? screenSize.height * 0.7 : screenSize.height * 0.65;
-    final double miniWidth = isTablet ? screenSize.width * 0.5 : screenSize.width * 0.75;
-    final double miniHeight = isTablet ? screenSize.height * 0.6 : screenSize.height * 0.65;
-    final double filterBtnFont = isTablet ? 24 : 22;
-    final double letterBtnWidth = isTablet ? 100 : 80;
-    final double letterBtnHeight = isTablet ? 45 : 35;
-    final double letterFont = isTablet ? 20 : 18;
+    final String targetMapImage =
+        mapImages[_selectedFilter] ?? mapImages['All']!;
 
     return Scaffold(
       body: Stack(
@@ -121,102 +120,132 @@ class MapPageState extends State<MapPage> with SingleTickerProviderStateMixin {
             ),
           ),
 
-          // Map with cross-fade
+          // Center the map container in the middle of the screen
           Center(
             child: AnimatedCrossFade(
               firstChild: _buildMapContainer(
-                screenSize, mapWidth, mapHeight,
-                _currentMapImage, isTablet,
-                letterBtnWidth, letterBtnHeight, letterFont
+                screenSize,
+                _currentMapImage,
+                _selectedFilter,
               ),
               secondChild: _buildMapContainer(
-                screenSize, mapWidth, mapHeight,
-                targetMapImage, isTablet,
-                letterBtnWidth, letterBtnHeight, letterFont
+                screenSize,
+                targetMapImage,
+                _selectedFilter,
               ),
-              crossFadeState: _currentMapImage == targetMapImage
-                  ? CrossFadeState.showFirst
-                  : CrossFadeState.showSecond,
+              crossFadeState:
+                  _currentMapImage == targetMapImage
+                      ? CrossFadeState.showFirst
+                      : CrossFadeState.showSecond,
               duration: _animationDuration,
+              layoutBuilder: (
+                topChild,
+                topChildKey,
+                bottomChild,
+                bottomChildKey,
+              ) {
+                return Stack(
+                  alignment: Alignment.center,
+                  children: <Widget>[
+                    Positioned(key: bottomChildKey, child: bottomChild),
+                    Positioned(key: topChildKey, child: topChild),
+                  ],
+                );
+              },
             ),
           ),
 
           // Mini window overlay
-          if (_isMiniWindowVisible)
-            Positioned.fill(
-              child: GestureDetector(
-                onTap: _toggleMiniWindow,
-                child: AnimatedContainer(
-                  duration: _animationDuration,
-                  color: Colors.black.withOpacity(0.4),
+          Stack(
+            children: [
+              // Full-screen semi-transparent background
+              if (_isMiniWindowVisible)
+                Positioned.fill(
+                  child: GestureDetector(
+                    onTap: _toggleMiniWindow,
+                    child: AnimatedContainer(
+                      duration: _animationDuration,
+                      color: Colors.black.withOpacity(0.4),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-
-          // Sliding filter menu
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: IgnorePointer(
-              ignoring: !_isMiniWindowVisible,
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: SlideTransition(
-                  position: _slideAnimation,
-                  child: Container(
-                    width: miniWidth,
-                    height: miniHeight,
-                    margin: EdgeInsets.only(
-                      top: MediaQuery.of(context).padding.top + screenSize.height * 0.1,
-                    ),
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(24),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          blurRadius: 12,
-                          spreadRadius: 4,
-                        ),
-                      ],
-                    ),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: IconButton(
-                              icon: const Icon(Icons.close),
-                              onPressed: _toggleMiniWindow,
+              // Sliding filter menu
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: IgnorePointer(
+                  ignoring: !_isMiniWindowVisible,
+                  child: Align(
+                    alignment:
+                        Alignment.topCenter, // Or another alignment if desired
+                    child: SlideTransition(
+                      position: _slideAnimation,
+                      child: AnimatedContainer(
+                        // Added AnimatedContainer for potential future animations
+                        duration: _animationDuration,
+                        width: screenSize.width * 0.75,
+                        height: screenSize.height * 0.65,
+                        margin: EdgeInsets.only(
+                          top:
+                              MediaQuery.of(context).padding.top +
+                              MediaQuery.of(context).size.height * 0.1,
+                        ), // Adjust top margin as needed
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(24),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 12,
+                              spreadRadius: 4,
                             ),
+                          ],
+                        ),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: IconButton(
+                                  icon: const Icon(Icons.close),
+                                  onPressed: _toggleMiniWindow,
+                                ),
+                              ),
+                              _buildFilterButton('All', screenSize),
+                              _buildFilterButton('Food Vendors', screenSize),
+                              _buildFilterButton(
+                                'Information Center',
+                                screenSize,
+                              ),
+                              _buildFilterButton('Toilets', screenSize),
+                              _buildFilterButton('Trash Station', screenSize),
+                            ],
                           ),
-                          _buildFilterButton('All', miniWidth, filterBtnFont, isTablet),
-                          _buildFilterButton('Food Vendors', miniWidth, filterBtnFont, isTablet),
-                          _buildFilterButton('Information Center', miniWidth, filterBtnFont, isTablet),
-                          _buildFilterButton('Toilets', miniWidth, filterBtnFont, isTablet),
-                          _buildFilterButton('Trash Station', miniWidth, filterBtnFont, isTablet),
-                        ],
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
+            ],
           ),
 
-          // Filter icon
+          // Filter icon button
           Positioned(
-            top: MediaQuery.of(context).padding.top + screenSize.height * 0.015,
-            right: screenSize.width * 0.05,
+            top:
+                MediaQuery.of(context).padding.top +
+                MediaQuery.of(context).size.height * 0.015,
+            right: MediaQuery.of(context).size.width * 0.05,
             child: GestureDetector(
               onTap: _toggleMiniWindow,
               child: AnimatedContainer(
                 duration: _animationDuration,
-                width: isTablet ? 65 : 55,
-                height: isTablet ? 65 : 55,
+                width: 55,
+                height: 55,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   boxShadow: [
@@ -226,16 +255,20 @@ class MapPageState extends State<MapPage> with SingleTickerProviderStateMixin {
                       spreadRadius: 1,
                     ),
                   ],
-                  color: _isMiniWindowVisible || isFilterActive
-                      ? Colors.grey.shade300
-                      : Colors.white,
+                  color:
+                      _isMiniWindowVisible || isFilterActive
+                          ? Colors.grey.shade300
+                          : Colors.white,
                 ),
                 padding: const EdgeInsets.all(10),
                 child: ClipOval(
                   child: Image.asset(
                     'assets/Filter.png',
                     fit: BoxFit.contain,
-                    color: _isMiniWindowVisible || isFilterActive ? Colors.black : null,
+                    color:
+                        _isMiniWindowVisible || isFilterActive
+                            ? Colors.black
+                            : null,
                   ),
                 ),
               ),
@@ -248,19 +281,14 @@ class MapPageState extends State<MapPage> with SingleTickerProviderStateMixin {
 
   Widget _buildMapContainer(
     Size screenSize,
-    double width,
-    double height,
     String imagePath,
-    bool isTablet,
-    double letterBtnWidth,
-    double letterBtnHeight,
-    double letterFont,
+    String selectedFilter,
   ) {
     return Container(
-      width: width,
-      height: height,
+      width: screenSize.width * 0.85,
+      height: screenSize.height * 0.65,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.red,
         borderRadius: BorderRadius.circular(30),
         boxShadow: [
           BoxShadow(
@@ -271,50 +299,46 @@ class MapPageState extends State<MapPage> with SingleTickerProviderStateMixin {
         ],
       ),
       padding: const EdgeInsets.all(10),
-      child: Stack(
+      child: Column(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Image.asset(
-              imagePath,
-              fit: BoxFit.contain,
-              width: double.infinity,
-              height: double.infinity,
+          // Image takes most of the space
+          Expanded(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Image.asset(
+                imagePath,
+                fit: BoxFit.contain,
+                width: double.infinity,
+              ),
             ),
           ),
-          if (_selectedFilter != 'Information Center' &&
-              _selectedFilter != 'Toilets' &&
-              _selectedFilter != 'Trash Station')
-            Positioned(
-              bottom: _selectedFilter == 'Food Vendors' ? 5 : 3,
-              left: 0,
-              right: 0,
+
+          // Add letter buttons below the image but inside the container
+          if (selectedFilter != 'Information Center' &&
+              selectedFilter != 'Toilets' &&
+              selectedFilter != 'Trash Station')
+            Padding(
+              padding: const EdgeInsets.only(top: 10, bottom: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildLetterButton('A', Colors.red, letterBtnWidth, letterBtnHeight, letterFont),
-                  _buildLetterButton('B', Colors.blue, letterBtnWidth, letterBtnHeight, letterFont),
-                  _buildLetterButton('C', Colors.green, letterBtnWidth, letterBtnHeight, letterFont),
+                  _buildLetterButton('A', Colors.red),
+                  _buildLetterButton('B', Colors.blue),
+                  _buildLetterButton('C', Colors.green),
                 ],
               ),
-          ),
+            ),
         ],
       ),
     );
   }
 
-  Widget _buildLetterButton(
-    String letter,
-    Color color,
-    double width,
-    double height,
-    double fontSize,
-  ) {
+  Widget _buildLetterButton(String letter, Color color) {
     return GestureDetector(
       onTap: () => _onLetterTap(letter),
       child: Container(
-        width: width,
-        height: height,
+        width: 80,
+        height: 35,
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(10),
@@ -329,9 +353,9 @@ class MapPageState extends State<MapPage> with SingleTickerProviderStateMixin {
         child: Center(
           child: Text(
             letter,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
-              fontSize: fontSize,
+              fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -340,19 +364,14 @@ class MapPageState extends State<MapPage> with SingleTickerProviderStateMixin {
     );
   }
 
-  Widget _buildFilterButton(
-    String label,
-    double width,
-    double fontSize,
-    bool isTablet,
-  ) {
+  Widget _buildFilterButton(String label, Size screenSize) {
     bool isSelected = _selectedFilter == label;
     return GestureDetector(
       onTap: () => _selectFilter(label),
       child: Container(
-        width: width,
-        padding: EdgeInsets.symmetric(vertical: isTablet ? 24 : 20),
-        margin: EdgeInsets.symmetric(vertical: isTablet ? 14 : 12),
+        width: screenSize.width * 0.75,
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        margin: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           color: isSelected ? Colors.grey.shade400 : Colors.grey.shade200,
           borderRadius: BorderRadius.circular(16),
@@ -361,7 +380,7 @@ class MapPageState extends State<MapPage> with SingleTickerProviderStateMixin {
           child: Text(
             label,
             style: TextStyle(
-              fontSize: fontSize,
+              fontSize: 22,
               fontWeight: FontWeight.bold,
               color: isSelected ? Colors.black : Colors.black87,
             ),
