@@ -12,7 +12,7 @@ class SurveyPage extends StatefulWidget {
 }
 
 class _SurveyPageState extends State<SurveyPage> {
-  final _formKey = GlobalKey<FormState>();
+  // final _formKey = GlobalKey<FormState>();
 
   String? gender;
   String? from;
@@ -22,7 +22,7 @@ class _SurveyPageState extends State<SurveyPage> {
   String? downtownStage; // Added downtown stage variable
   String? cameWith;
   String? participated;
-  
+
   // New sustainability questions with updated variable names
   final List<String> sustainabilityEfforts = [];
   String? trashSeparate;
@@ -30,13 +30,13 @@ class _SurveyPageState extends State<SurveyPage> {
   String? trashStation;
 
   // controllers for any-Other fields
-  final genderOther   = TextEditingController();
-  final fromOther     = TextEditingController();
-  final heardOther    = TextEditingController();
-  final lookingOther  = TextEditingController();
+  final genderOther = TextEditingController();
+  final fromOther = TextEditingController();
+  final heardOther = TextEditingController();
+  final lookingOther = TextEditingController();
   final cameWithOther = TextEditingController();
-  final effortsOther  = TextEditingController();
-  final reasonOther   = TextEditingController();
+  final effortsOther = TextEditingController();
+  final reasonOther = TextEditingController();
 
   // ← free-form feedback controller
   final feedbackController = TextEditingController();
@@ -44,25 +44,30 @@ class _SurveyPageState extends State<SurveyPage> {
   Future<void> _submit() async {
     // no need to validate a FormField — we gate via buttonEnabled
     final response = {
-      'gender':           gender == 'Other'            ? genderOther.text     : gender,
-      'from':             from == 'Other'              ? fromOther.text       : from,
-      'heard':            heardFrom == 'Other'         ? heardOther.text      : heardFrom,
-      'looking':          lookingForward == 'Other'    ? lookingOther.text    : lookingForward,
-      'age':              age,
-      'downtownStage':    downtownStage,  // Added downtown stage to response
-      'cameWith':         cameWith == 'Other'          ? cameWithOther.text   : cameWith,
-      'participated':     participated,
-      
+      'gender': gender == 'Other' ? genderOther.text : gender,
+      'from': from == 'Other' ? fromOther.text : from,
+      'heard': heardFrom == 'Other' ? heardOther.text : heardFrom,
+      'looking': lookingForward == 'Other' ? lookingOther.text : lookingForward,
+      'age': age,
+      'downtownStage': downtownStage, // Added downtown stage to response
+      'cameWith': cameWith == 'Other' ? cameWithOther.text : cameWith,
+      'participated': participated,
+
       // New sustainability responses with updated names
-      'sustainabilityEfforts': sustainabilityEfforts.contains('Other') 
-                          ? [...sustainabilityEfforts.where((e) => e != 'Other'), effortsOther.text]
-                          : sustainabilityEfforts,
-      'trashSeparate':    trashSeparate,
-      'trashSeparateWhy': trashSeparateWhy == 'Other'  ? reasonOther.text   : trashSeparateWhy,
-      'trashStation':     trashStation,
-      
-      'feedback':         feedbackController.text,  // ← optional
-      'timestamp':        DateTime.now().toIso8601String(),
+      'sustainabilityEfforts':
+          sustainabilityEfforts.contains('Other')
+              ? [
+                ...sustainabilityEfforts.where((e) => e != 'Other'),
+                effortsOther.text,
+              ]
+              : sustainabilityEfforts,
+      'trashSeparate': trashSeparate,
+      'trashSeparateWhy':
+          trashSeparateWhy == 'Other' ? reasonOther.text : trashSeparateWhy,
+      'trashStation': trashStation,
+
+      'feedback': feedbackController.text, // ← optional
+      'timestamp': DateTime.now().toIso8601String(),
     };
 
     try {
@@ -90,9 +95,12 @@ class _SurveyPageState extends State<SurveyPage> {
       text: TextSpan(
         text: title,
         style: const TextStyle(fontSize: 16, color: Colors.black),
-        children: isRequired 
-            ? const [TextSpan(text: ' *', style: TextStyle(color: Colors.red))]
-            : null,
+        children:
+            isRequired
+                ? const [
+                  TextSpan(text: ' *', style: TextStyle(color: Colors.red)),
+                ]
+                : null,
       ),
     );
 
@@ -127,17 +135,20 @@ class _SurveyPageState extends State<SurveyPage> {
     String title,
     List<String> options,
     List<String> selectedValues,
-    void Function(bool?, String) onChanged,
-    [TextEditingController? otherCtrl,
-    bool isRequired = true,]
-  ) {
+    void Function(bool?, String) onChanged, [
+    TextEditingController? otherCtrl,
+    bool isRequired = true,
+  ]) {
     final label = RichText(
       text: TextSpan(
         text: title,
         style: const TextStyle(fontSize: 16, color: Colors.black),
-        children: isRequired 
-            ? const [TextSpan(text: ' *', style: TextStyle(color: Colors.red))]
-            : null,
+        children:
+            isRequired
+                ? const [
+                  TextSpan(text: ' *', style: TextStyle(color: Colors.red)),
+                ]
+                : null,
       ),
     );
 
@@ -183,12 +194,20 @@ class _SurveyPageState extends State<SurveyPage> {
   @override
   Widget build(BuildContext context) {
     // only enable submit when every required field is non-null
-    final isFormValid = <String?>[
-      gender, from, heardFrom,
-      lookingForward, age, downtownStage, cameWith, participated,
-      trashSeparate, trashStation,
-    ].every((v) => v != null) && 
-    (trashSeparate != 'No' || trashSeparateWhy != null);
+    final isFormValid =
+        <String?>[
+          gender,
+          from,
+          heardFrom,
+          lookingForward,
+          age,
+          downtownStage,
+          cameWith,
+          participated,
+          trashSeparate,
+          trashStation,
+        ].every((v) => v != null) &&
+        (trashSeparate != 'No' || trashSeparateWhy != null);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Festival Survey')),
@@ -237,7 +256,12 @@ class _SurveyPageState extends State<SurveyPage> {
 
             _buildRadioGroup(
               "Did you visit the downtown stage?",
-              ["Yes", "No, I wasn't interested", "No, but wanted to go", "I did not know about it"],
+              [
+                "Yes",
+                "No, I wasn't interested",
+                "No, but wanted to go",
+                "I did not know about it",
+              ],
               downtownStage,
               (val) => setState(() => downtownStage = val),
             ),
@@ -268,7 +292,7 @@ class _SurveyPageState extends State<SurveyPage> {
                 "Fundraising to sell sustainability items",
                 "RecycleMeter (real-time waste tracking display)",
                 "None",
-                "Other"
+                "Other",
               ],
               sustainabilityEfforts,
               (checked, option) {
@@ -305,7 +329,7 @@ class _SurveyPageState extends State<SurveyPage> {
                   "I couldn't find a trash station",
                   "I didn't have time",
                   "I didn't think it mattered",
-                  "Other"
+                  "Other",
                 ],
                 trashSeparateWhy,
                 (val) => setState(() => trashSeparateWhy = val),

@@ -311,7 +311,7 @@ class _HomePageState extends State<HomePage> {
           ),
           child: const Center(
             child: Text(
-              "Live Timetable is only available during the festival days:\nApr 26 – 27",
+              "Live Timetable is only available on Apr 26 – 27",
               style: TextStyle(fontSize: 16),
               textAlign: TextAlign.center,
             ),
