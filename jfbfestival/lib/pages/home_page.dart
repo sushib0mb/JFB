@@ -3,7 +3,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:jfbfestival/main.dart';
 import '/data/timetableData.dart';
 import 'package:jfbfestival/settings_page.dart';
 import 'package:provider/provider.dart';
@@ -48,10 +47,10 @@ class _HomePageState extends State<HomePage> {
 
   // build an “extended” list with dummy first/last
   List<String> get _extendedBackgroundImages => [
-        backgroundImages.last,
-        ...backgroundImages,
-        backgroundImages.first,
-      ];
+    backgroundImages.last,
+    ...backgroundImages,
+    backgroundImages.first,
+  ];
 
   late final PageController _pageController;
   int _currentPage = 0; // real index [0..backgroundImages.length-1]
@@ -107,174 +106,187 @@ class _HomePageState extends State<HomePage> {
     _pageController.dispose();
     super.dispose();
   }
-@override
-Widget build(BuildContext context) {
-  final screenHeight = MediaQuery.of(context).size.height;
-  final screenWidth  = MediaQuery.of(context).size.width;
-  final isTablet     = screenWidth >= 600;
 
-  // Adaptive dimensions
-  final headerHeight       = screenHeight * (isTablet ? 0.5 : 0.6);
-  final verticalSpacing    = screenHeight * (isTablet ? 0.03 : 0.02);
-  final settingsBtnSize    = isTablet ? 70.0 : 55.0;
-  final settingsIconSize   = isTablet ? 36.0 : 30.0;
-  final settingsIconPadding= isTablet ? 14.0 : 10.0;
+  @override
+  Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isTablet = screenWidth >= 600;
 
-  return LayoutBuilder(
-    builder: (context, constraints) {
-      return Container(
-        color: const Color(0xFFFFF5F5),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                const Color.fromRGBO(10, 56, 117, 0.15),
-                const Color.fromRGBO(191, 28, 36, 0.15),
-              ],
+    // Adaptive dimensions
+    final headerHeight = screenHeight * (isTablet ? 0.5 : 0.6);
+    final verticalSpacing = screenHeight * (isTablet ? 0.03 : 0.02);
+    final settingsBtnSize = isTablet ? 70.0 : 55.0;
+    final settingsIconSize = isTablet ? 36.0 : 30.0;
+    final settingsIconPadding = isTablet ? 14.0 : 10.0;
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Container(
+          color: const Color(0xFFFFF5F5),
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  const Color.fromRGBO(10, 56, 117, 0.15),
+                  const Color.fromRGBO(191, 28, 36, 0.15),
+                ],
+              ),
             ),
-          ),
-          child: Scaffold(
-            backgroundColor: Colors.transparent,
-            body: Stack(
-              children: [
-                // Scrollable content
-                SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      // Carousel header
-                      SizedBox(
-                        width: double.infinity,
-                        height: headerHeight,
-                        child: Stack(
-                          children: [
-                            PageView.builder(
-                              controller: _pageController,
-                              itemCount: _extendedBackgroundImages.length,
-                              onPageChanged: _handlePageChanged,
-                              itemBuilder: (context, index) {
-                                final imagePath = _extendedBackgroundImages[index];
-                                final isLady =
-                                    imagePath == "assets/JFB-27.jpg";
-                                Widget image = Image.asset(
-                                  imagePath,
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                  height: headerHeight,
-                                  alignment: isLady
-                                      ? Alignment.topCenter
-                                      : Alignment.center,
-                                );
-                                if (isLady) {
-                                  image = Transform.scale(
-                                    scale: isTablet ? 1.2 : 1.1,
-                                    child: Align(
-                                      alignment: Alignment.topCenter,
-                                      child: image,
-                                    ),
+            child: Scaffold(
+              backgroundColor: Colors.transparent,
+              body: Stack(
+                children: [
+                  // Scrollable content
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        // Carousel header
+                        SizedBox(
+                          width: double.infinity,
+                          height: headerHeight,
+                          child: Stack(
+                            children: [
+                              PageView.builder(
+                                controller: _pageController,
+                                itemCount: _extendedBackgroundImages.length,
+                                onPageChanged: _handlePageChanged,
+                                itemBuilder: (context, index) {
+                                  final imagePath =
+                                      _extendedBackgroundImages[index];
+                                  final isLady =
+                                      imagePath == "assets/JFB-27.jpg";
+                                  Widget image = Image.asset(
+                                    imagePath,
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    height: headerHeight,
+                                    alignment:
+                                        isLady
+                                            ? Alignment.topCenter
+                                            : Alignment.center,
                                   );
-                                }
-                                return image;
-                              },
-                            ),
-                            Positioned(
-                              bottom: isTablet ? 20 : 10,
-                              left: 0,
-                              right: 0,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: List.generate(
-                                  backgroundImages.length,
-                                  (idx) => AnimatedContainer(
-                                    duration:
-                                        const Duration(milliseconds: 300),
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal: isTablet ? 6 : 4),
-                                    width: _currentPage == idx
-                                        ? (isTablet ? 12 : 10)
-                                        : (isTablet ? 8 : 6),
-                                    height: _currentPage == idx
-                                        ? (isTablet ? 12 : 10)
-                                        : (isTablet ? 8 : 6),
-                                    decoration: BoxDecoration(
-                                      color: _currentPage == idx
-                                          ? Colors.white
-                                          : Colors.white70,
-                                      shape: BoxShape.circle,
+                                  if (isLady) {
+                                    image = Transform.scale(
+                                      scale: isTablet ? 1.2 : 1.1,
+                                      child: Align(
+                                        alignment: Alignment.topCenter,
+                                        child: image,
+                                      ),
+                                    );
+                                  }
+                                  return image;
+                                },
+                              ),
+                              Positioned(
+                                bottom: isTablet ? 20 : 10,
+                                left: 0,
+                                right: 0,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: List.generate(
+                                    backgroundImages.length,
+                                    (idx) => AnimatedContainer(
+                                      duration: const Duration(
+                                        milliseconds: 300,
+                                      ),
+                                      margin: EdgeInsets.symmetric(
+                                        horizontal: isTablet ? 6 : 4,
+                                      ),
+                                      width:
+                                          _currentPage == idx
+                                              ? (isTablet ? 12 : 10)
+                                              : (isTablet ? 8 : 6),
+                                      height:
+                                          _currentPage == idx
+                                              ? (isTablet ? 12 : 10)
+                                              : (isTablet ? 8 : 6),
+                                      decoration: BoxDecoration(
+                                        color:
+                                            _currentPage == idx
+                                                ? Colors.white
+                                                : Colors.white70,
+                                        shape: BoxShape.circle,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
 
-                      // Spacing + Sections
-                      SizedBox(height: verticalSpacing),
-                      _buildLiveTimetable(screenWidth),
-                      _buildSocialMediaIcons(screenWidth),
-                      _buildSponsorsSection(screenWidth),
-                      SizedBox(height: verticalSpacing * 6),
-                    ],
+                        // Spacing + Sections
+                        SizedBox(height: verticalSpacing),
+                        _buildLiveTimetable(screenWidth),
+                        _buildSocialMediaIcons(screenWidth),
+                        _buildSponsorsSection(screenWidth),
+                        SizedBox(height: verticalSpacing * 6),
+                      ],
+                    ),
                   ),
-                ),
 
-                // Settings button
-                Positioned(
-                  top: MediaQuery.of(context).padding.top +
-                      screenHeight * (isTablet ? 0.02 : 0.015),
-                  right: screenWidth * (isTablet ? 0.07 : 0.05),
-                  child: GestureDetector(
-                    onTap: () =>
-                        Navigator.pushNamed(context, SettingsPage.routeName),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: Container(
-                        width: settingsBtnSize,
-                        height: settingsBtnSize,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.surface,
-                          borderRadius:
-                              BorderRadius.circular(settingsBtnSize / 2),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: isTablet ? 12 : 10,
-                              spreadRadius: 1,
+                  // Settings button
+                  Positioned(
+                    top:
+                        MediaQuery.of(context).padding.top +
+                        screenHeight * (isTablet ? 0.02 : 0.015),
+                    right: screenWidth * (isTablet ? 0.07 : 0.05),
+                    child: GestureDetector(
+                      onTap:
+                          () => Navigator.pushNamed(
+                            context,
+                            SettingsPage.routeName,
+                          ),
+                      child: Material(
+                        color: Colors.transparent,
+                        child: Container(
+                          width: settingsBtnSize,
+                          height: settingsBtnSize,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.surface,
+                            borderRadius: BorderRadius.circular(
+                              settingsBtnSize / 2,
                             ),
-                          ],
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(settingsIconPadding),
-                          child: Icon(
-                            Icons.settings,
-                            size: settingsIconSize,
-                            color: Colors.black,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: isTablet ? 12 : 10,
+                                spreadRadius: 1,
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(settingsIconPadding),
+                            child: Icon(
+                              Icons.settings,
+                              size: settingsIconSize,
+                              color: Colors.black,
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
 
   // Helper class to organize events
 
   Widget _buildLiveTimetable(double screenWidth) {
     // Use test time if provided, otherwise use current Boston time (UTC-4)
-  final bool isTablet = screenWidth >= 600;
-  final double sidePadding     = isTablet ? 32.0 : 16.0;
-  final double sectionSpacing  = isTablet ? 24.0 : 16.0;
-  final double statusFontSize  = isTablet ? 18.0 : 16.0;
+    final bool isTablet = screenWidth >= 600;
+    final double sidePadding = isTablet ? 32.0 : 16.0;
+    final double sectionSpacing = isTablet ? 24.0 : 16.0;
+    final double statusFontSize = isTablet ? 18.0 : 16.0;
 
     final now = widget.testTime ?? DateTime.now(); // Local time
 
@@ -349,47 +361,47 @@ Widget build(BuildContext context) {
       now,
       isDay1,
     );
-  return Padding(
-    padding: EdgeInsets.all(sidePadding),
-    child: Column(
-      children: [
-        if (currentAndUpcomingEvents.currentStage1Events.isNotEmpty ||
-            currentAndUpcomingEvents.currentStage2Events.isNotEmpty) ...[
-          _buildEventSection(
-            "🎤 Now Happening",
-            currentAndUpcomingEvents.currentStage1Events,
-            currentAndUpcomingEvents.currentStage2Events,
-            screenWidth,
-            isCurrent: true,
-            isTablet: isTablet,
-          ),
-          SizedBox(height: sectionSpacing),
+    return Padding(
+      padding: EdgeInsets.all(sidePadding),
+      child: Column(
+        children: [
+          if (currentAndUpcomingEvents.currentStage1Events.isNotEmpty ||
+              currentAndUpcomingEvents.currentStage2Events.isNotEmpty) ...[
+            _buildEventSection(
+              "🎤 Now Happening",
+              currentAndUpcomingEvents.currentStage1Events,
+              currentAndUpcomingEvents.currentStage2Events,
+              screenWidth,
+              isCurrent: true,
+              isTablet: isTablet,
+            ),
+            SizedBox(height: sectionSpacing),
+          ],
+          if (currentAndUpcomingEvents.upcomingStage1Events.isNotEmpty ||
+              currentAndUpcomingEvents.upcomingStage2Events.isNotEmpty) ...[
+            _buildEventSection(
+              "⏭️ Up Next",
+              currentAndUpcomingEvents.upcomingStage1Events,
+              currentAndUpcomingEvents.upcomingStage2Events,
+              screenWidth,
+              isCurrent: false,
+              isTablet: isTablet,
+            ),
+            SizedBox(height: sectionSpacing),
+          ],
+          if (currentAndUpcomingEvents.currentStage1Events.isEmpty &&
+              currentAndUpcomingEvents.currentStage2Events.isEmpty &&
+              currentAndUpcomingEvents.upcomingStage1Events.isEmpty &&
+              currentAndUpcomingEvents.upcomingStage2Events.isEmpty)
+            Text(
+              "No current or upcoming events at this time.",
+              style: TextStyle(fontSize: statusFontSize),
+              textAlign: TextAlign.center,
+            ),
         ],
-        if (currentAndUpcomingEvents.upcomingStage1Events.isNotEmpty ||
-            currentAndUpcomingEvents.upcomingStage2Events.isNotEmpty) ...[
-          _buildEventSection(
-            "⏭️ Up Next",
-            currentAndUpcomingEvents.upcomingStage1Events,
-            currentAndUpcomingEvents.upcomingStage2Events,
-            screenWidth,
-            isCurrent: false,
-            isTablet: isTablet,
-          ),
-          SizedBox(height: sectionSpacing),
-        ],
-        if (currentAndUpcomingEvents.currentStage1Events.isEmpty &&
-            currentAndUpcomingEvents.currentStage2Events.isEmpty &&
-            currentAndUpcomingEvents.upcomingStage1Events.isEmpty &&
-            currentAndUpcomingEvents.upcomingStage2Events.isEmpty)
-          Text(
-            "No current or upcoming events at this time.",
-            style: TextStyle(fontSize: statusFontSize),
-            textAlign: TextAlign.center,
-          ),
-      ],
-    ),
-  );
-}
+      ),
+    );
+  }
 
   CurrentAndUpcomingEvents _getCurrentAndUpcomingEvents(
     List<ScheduleItem> scheduleList,
@@ -613,39 +625,43 @@ Widget build(BuildContext context) {
       return DateTime(9999);
     }
   }
-// 2) EVENT SECTION
-Widget _buildEventSection(
-  String title,
-  List<EventItem> stage1Events,
-  List<EventItem> stage2Events,
-  double screenWidth, {
-  required bool isCurrent,
-  required bool isTablet,
-}) {
-  final double titleFontSize = isTablet ? 24.0 : 20.0;
-  final double spacing       = isTablet ? 12.0 : 8.0;
 
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Padding(
-        padding: EdgeInsets.symmetric(horizontal: isTablet ? 12 : 8),
-        child: Text(
-          title,
-          style: TextStyle(
-            fontSize: titleFontSize,
-            fontWeight: FontWeight.bold,
-            color: Colors.pinkAccent,
+  // 2) EVENT SECTION
+  Widget _buildEventSection(
+    String title,
+    List<EventItem> stage1Events,
+    List<EventItem> stage2Events,
+    double screenWidth, {
+    required bool isCurrent,
+    required bool isTablet,
+  }) {
+    final double titleFontSize = isTablet ? 24.0 : 20.0;
+    final double spacing = isTablet ? 12.0 : 8.0;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: isTablet ? 12 : 8),
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: titleFontSize,
+              fontWeight: FontWeight.bold,
+              color: Colors.pinkAccent,
+            ),
           ),
         ),
-      ),
-      SizedBox(height: spacing),
-      ...stage1Events.map((e) => _buildEventCard(e, isCurrent, screenWidth, isTablet)),
-      ...stage2Events.map((e) => _buildEventCard(e, isCurrent, screenWidth, isTablet)),
-    ],
-  );
-}
-
+        SizedBox(height: spacing),
+        ...stage1Events.map(
+          (e) => _buildEventCard(e, isCurrent, screenWidth, isTablet),
+        ),
+        ...stage2Events.map(
+          (e) => _buildEventCard(e, isCurrent, screenWidth, isTablet),
+        ),
+      ],
+    );
+  }
 
   bool _isDay1Event(EventItem e) {
     final scheduleService = Provider.of<ScheduleDataService>(
@@ -658,128 +674,129 @@ Widget _buildEventSection(
       (slot) => ([...?slot.stage1Events, ...?slot.stage2Events]).contains(e),
     );
   }
-// 3) EVENT CARD
-Widget _buildEventCard(
-  EventItem event,
-  bool isCurrent,
-  double screenWidth,
-  bool isTablet,
-) {
-  final double verticalPadding   = isTablet ? 12.0 : 8.0;
-  final EdgeInsets cardPadding   = EdgeInsets.all(isTablet ? 24 : 16);
-  final double borderRadius      = isTablet ? 12.0 : 10.0;
-  final double stageFontSize     = screenWidth * (isTablet ? 0.055 : 0.045) + (isTablet ? 3 : 2);
-  final double titleFontSize     = screenWidth * (isTablet ? 0.055 : 0.045);
-  final double iconDiameter      = screenWidth * (isTablet ? 0.15 : 0.12);
-  final double iconOffset        = isTablet ? -20.0 : -18.0;
-  final double iconPaddingLeft   = isTablet ? 5.0 : 3.0;
 
-  return GestureDetector(
-    onTap: () {
-      // … your existing navigation logic …
-    },
-    child: Padding(
-      padding: EdgeInsets.symmetric(vertical: verticalPadding),
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Container(
-            padding: cardPadding,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(borderRadius),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: isTablet ? 8 : 5,
-                  spreadRadius: isTablet ? 3 : 2,
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Stage label
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    event.stage,
-                    style: TextStyle(
-                      color: Colors.pinkAccent,
-                      fontWeight: FontWeight.bold,
-                      fontSize: stageFontSize,
+  // 3) EVENT CARD
+  Widget _buildEventCard(
+    EventItem event,
+    bool isCurrent,
+    double screenWidth,
+    bool isTablet,
+  ) {
+    final double verticalPadding = isTablet ? 12.0 : 8.0;
+    final EdgeInsets cardPadding = EdgeInsets.all(isTablet ? 24 : 16);
+    final double borderRadius = isTablet ? 12.0 : 10.0;
+    final double stageFontSize =
+        screenWidth * (isTablet ? 0.055 : 0.045) + (isTablet ? 3 : 2);
+    final double titleFontSize = screenWidth * (isTablet ? 0.055 : 0.045);
+    final double iconDiameter = screenWidth * (isTablet ? 0.15 : 0.12);
+    final double iconOffset = isTablet ? -20.0 : -18.0;
+    final double iconPaddingLeft = isTablet ? 5.0 : 3.0;
+
+    return GestureDetector(
+      onTap: () {
+        // … your existing navigation logic …
+      },
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: verticalPadding),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+              padding: cardPadding,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(borderRadius),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: isTablet ? 8 : 5,
+                    spreadRadius: isTablet ? 3 : 2,
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Stage label
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      event.stage,
+                      style: TextStyle(
+                        color: Colors.pinkAccent,
+                        fontWeight: FontWeight.bold,
+                        fontSize: stageFontSize,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(height: isTablet ? 8 : 5),
-                // Title
-                Text(
-                  event.title,
-                  style: TextStyle(
-                    fontSize: titleFontSize,
-                    fontWeight: FontWeight.bold,
+                  SizedBox(height: isTablet ? 8 : 5),
+                  // Title
+                  Text(
+                    event.title,
+                    style: TextStyle(
+                      fontSize: titleFontSize,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                // Time
-                Text(event.time, style: TextStyle(color: Colors.grey)),
-                // “Going on now” badge
-                if (isCurrent)
-                  Padding(
-                    padding: EdgeInsets.only(top: isTablet ? 8.0 : 5.0),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        vertical: isTablet ? 6 : 4,
-                        horizontal: isTablet ? 12 : 8,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.orange,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text(
-                        "Going on now!",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: isTablet ? 14 : 12,
+                  // Time
+                  Text(event.time, style: TextStyle(color: Colors.grey)),
+                  // “Going on now” badge
+                  if (isCurrent)
+                    Padding(
+                      padding: EdgeInsets.only(top: isTablet ? 8.0 : 5.0),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          vertical: isTablet ? 6 : 4,
+                          horizontal: isTablet ? 12 : 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.orange,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          "Going on now!",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: isTablet ? 14 : 12,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-              ],
-            ),
-          ),
-
-          // Floating icon
-          if (event.iconImage.isNotEmpty)
-            Positioned(
-              top: iconOffset,
-              left: iconPaddingLeft,
-              child: Container(
-                padding: EdgeInsets.all(isTablet ? 8 : 6),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: isTablet ? 6 : 5,
-                      spreadRadius: isTablet ? 3 : 2,
-                    ),
-                  ],
-                ),
-                child: Image.asset(
-                  event.iconImage,
-                  height: iconDiameter,
-                  width: iconDiameter,
-                  fit: BoxFit.contain,
-                ),
+                ],
               ),
             ),
-        ],
-      ),
-    ),
-  );
-}
 
+            // Floating icon
+            if (event.iconImage.isNotEmpty)
+              Positioned(
+                top: iconOffset,
+                left: iconPaddingLeft,
+                child: Container(
+                  padding: EdgeInsets.all(isTablet ? 8 : 6),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: isTablet ? 6 : 5,
+                        spreadRadius: isTablet ? 3 : 2,
+                      ),
+                    ],
+                  ),
+                  child: Image.asset(
+                    event.iconImage,
+                    height: iconDiameter,
+                    width: iconDiameter,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
 
   Widget _buildSocialMediaIcons(double screenWidth) {
     return Container(
@@ -861,6 +878,7 @@ Widget _buildEventCard(
           SizedBox(height: 3),
           _buildCorporateSponsors(),
           _buildIndividualSponsors(),
+          _buildAuctionDonors(),
           _buildJfbOrganizers(),
           _buildSupportingSponsors(),
           SizedBox(height: 5),
@@ -901,6 +919,7 @@ Widget _buildEventCard(
       "assets/sponsors/openwater.png",
       "assets/sponsors/idamerica.png",
       "assets/sponsors/downtown.png",
+      "assets/sponsors/redsox.png",
     ];
 
     return Column(
@@ -1079,6 +1098,53 @@ Widget _buildEventCard(
               ),
             ),
           ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAuctionDonors() {
+    List<String> corporateLogos = [
+      "assets/sponsors/sapporostream.png",
+      "assets/sponsors/ogawashou.png",
+      "assets/sponsors/imperial.png",
+    ];
+
+    return Column(
+      children: [
+        SizedBox(height: MediaQuery.of(context).size.height * 0.15),
+        Container(
+          padding: EdgeInsets.symmetric(vertical: 6, horizontal: 26),
+          margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(40),
+          ),
+          child: Text(
+            "Our Silent Auction Donors",
+            style: TextStyle(fontSize: 21, fontWeight: FontWeight.w300),
+          ),
+        ),
+        GridView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          itemCount: corporateLogos.length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 4,
+            mainAxisSpacing: 10,
+            childAspectRatio: 2,
+          ),
+          itemBuilder: (context, index) {
+            return Center(
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.15,
+                width: MediaQuery.of(context).size.width * 0.3,
+                child: Image.asset(corporateLogos[index], fit: BoxFit.contain),
+              ),
+            );
+          },
         ),
       ],
     );

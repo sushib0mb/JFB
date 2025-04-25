@@ -130,7 +130,7 @@ class BoothDetails extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 10),
                                 _buildSection(
-                                  "Vegatarian",
+                                  "Vegetarian",
                                   _buildVeganism(booth.isVegan),
                                 ),
                                 const SizedBox(height: 2),

@@ -7,11 +7,8 @@ class TimetablePage extends StatefulWidget {
   final EventItem? selectedEvent;
   final int? selectedDay;
 
-  const TimetablePage({
-    Key? key,
-    this.selectedEvent,
-    this.selectedDay,
-  }) : super(key: key);
+  const TimetablePage({Key? key, this.selectedEvent, this.selectedDay})
+    : super(key: key);
 
   @override
   _TimetablePageState createState() => _TimetablePageState();
@@ -38,10 +35,13 @@ class _TimetablePageState extends State<TimetablePage> {
 
   void _highlightSelectedEvent(EventItem selected) {
     final svc = Provider.of<ScheduleDataService>(context, listen: false);
-    final schedule = selectedDay == 1 ? svc.day1ScheduleData : svc.day2ScheduleData;
+    final schedule =
+        selectedDay == 1 ? svc.day1ScheduleData : svc.day2ScheduleData;
     for (var slot in schedule) {
       for (var e in [...?slot.stage1Events, ...?slot.stage2Events]) {
-        if (e.title == selected.title && e.time == selected.time && e.stage == selected.stage) {
+        if (e.title == selected.title &&
+            e.time == selected.time &&
+            e.stage == selected.stage) {
           setState(() {
             selectedEvent = e;
             isShowingDetail = true;
@@ -59,21 +59,27 @@ class _TimetablePageState extends State<TimetablePage> {
       var hm = parts[0].split(':');
       var h = int.parse(hm[0]);
       var m = hm.length > 1 ? int.parse(hm[1]) : 0;
-      var pm = parts.length>1 && parts[1].toLowerCase()=='pm';
-      if (pm && h<12) h+=12;
-      if (!pm && h==12) h=0;
-      return h*60 + m;
-    } catch(_) { return 0; }
+      var pm = parts.length > 1 && parts[1].toLowerCase() == 'pm';
+      if (pm && h < 12) h += 12;
+      if (!pm && h == 12) h = 0;
+      return h * 60 + m;
+    } catch (_) {
+      return 0;
+    }
   }
 
   void _scrollToEventTime(String time) {
     var start = _parseTimeToMinutes(time);
     var base = _parseTimeToMinutes('11:00 am');
-    var offset = (start - base) * (isTablet(context)?12.0:10.0);
-    _scrollController.animateTo(offset, duration: Duration(milliseconds:300), curve: Curves.easeInOut);
+    var offset = (start - base) * (isTablet(context) ? 12.0 : 10.0);
+    _scrollController.animateTo(
+      offset,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
 
-  bool isTablet(BuildContext c) => MediaQuery.of(c).size.width>=600;
+  bool isTablet(BuildContext c) => MediaQuery.of(c).size.width >= 600;
 
   @override
   void dispose() {
@@ -88,201 +94,238 @@ class _TimetablePageState extends State<TimetablePage> {
     final tablet = isTablet(context);
 
     // Day buttons adapt
-    final dayBtnHeight = h * (tablet?0.10:0.082);
-    final dayBtnWidth = w * (tablet?0.4:0.52);
-    final dayFont = tablet?48.0:30.0;
+    final dayBtnHeight = h * (tablet ? 0.10 : 0.082);
+    final dayBtnWidth = w * (tablet ? 0.4 : 0.52);
+    final dayFont = tablet ? 48.0 : 40.0;
     final topPad = dayBtnHeight;
 
     final svc = Provider.of<ScheduleDataService>(context);
-    final schedule = selectedDay==1?svc.day1ScheduleData:svc.day2ScheduleData;
+    final schedule =
+        selectedDay == 1 ? svc.day1ScheduleData : svc.day2ScheduleData;
 
     return Scaffold(
       backgroundColor: Colors.white,
       extendBodyBehindAppBar: true,
-      appBar: (isShowingDetail && _fromHomeTap)
-        ? AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            leading: BackButton(color: Colors.white),
-          ) : null,
-      body: Stack(children:[
-        Padding(
-          padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-          child: Stack(children:[
-            // Day selectors
-            Positioned(
-              left: w*0.06, top: h*0.002,
-              child: _dayButton('Day 1',1, dayBtnWidth,dayBtnHeight, dayFont)
-            ),
-            Positioned(
-              right: w*0.06, top: h*0.002,
-              child: _day2Button('Day 2',2, dayBtnWidth,dayBtnHeight, dayFont)
-            ),
-            // Schedule list
-            Column(children:[
-              SizedBox(height: topPad + h*0.015),
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.all(tablet?32:25),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(tablet?32:25),
-                    gradient: LinearGradient(
-                      colors:[Color(0x260A3875),Color(0x26BF1C24)],
-                      begin: Alignment.topLeft,end: Alignment.bottomRight
-                    )
-                  ),
-                  child: Column(children:[
-                    Padding(
-                      padding: EdgeInsets.only(left:w*(tablet?0.12:0.1)),
-                      child: _buildStageHeader(fontSize:tablet?20:17),
-                    ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        controller:_scrollController,
-                        child: ScheduleList(
-                          scheduleItems: schedule,
-                          onEventTap: (e){
-                            setState((){
-                              selectedEvent=e;
-                              isShowingDetail=true;
-                              _fromHomeTap=false;
-                            });
-                          }
-                        )
-                      )
-                    )
-                  ])
-                )
+      appBar:
+          (isShowingDetail && _fromHomeTap)
+              ? AppBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                leading: BackButton(color: Colors.white),
               )
-            ])
-          ])
-        ),
-        if(isShowingDetail && selectedEvent!=null)
-          EventDetailView(
-            event:selectedEvent!,
-            onClose:(){ setState(()=>isShowingDetail=false); }
-          )
-      ])
+              : null,
+      body: Stack(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+            child: Stack(
+              children: [
+                // Day selectors
+                Positioned(
+                  left: w * 0.06,
+                  top: h * 0.002,
+                  child: _dayButton(
+                    'Day 1',
+                    1,
+                    dayBtnWidth,
+                    dayBtnHeight,
+                    dayFont,
+                  ),
+                ),
+                Positioned(
+                  right: w * 0.06,
+                  top: h * 0.002,
+                  child: _day2Button(
+                    'Day 2',
+                    2,
+                    dayBtnWidth,
+                    dayBtnHeight,
+                    dayFont,
+                  ),
+                ),
+                // Schedule list
+                Column(
+                  children: [
+                    SizedBox(height: topPad + h * 0.015),
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.all(tablet ? 32 : 25),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(tablet ? 32 : 25),
+                          gradient: LinearGradient(
+                            colors: [Color(0x260A3875), Color(0x26BF1C24)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(
+                                left: w * (tablet ? 0.12 : 0.1),
+                              ),
+                              child: _buildStageHeader(
+                                fontSize: tablet ? 20 : 17,
+                              ),
+                            ),
+                            Expanded(
+                              child: SingleChildScrollView(
+                                controller: _scrollController,
+                                child: ScheduleList(
+                                  scheduleItems: schedule,
+                                  onEventTap: (e) {
+                                    setState(() {
+                                      selectedEvent = e;
+                                      isShowingDetail = true;
+                                      _fromHomeTap = false;
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          if (isShowingDetail && selectedEvent != null)
+            EventDetailView(
+              event: selectedEvent!,
+              onClose: () {
+                setState(() => isShowingDetail = false);
+              },
+            ),
+        ],
+      ),
     );
   }
-Widget _dayButton(
-  String text,
-  int day,
-  double w,
-  double h,
-  double fs,
-) {
-  final screenWidth = MediaQuery.of(context).size.width;
-  final isTablet    = screenWidth >= 600;
 
-  // scale up a bit on tablets
-  final width  = isTablet ? w * 1.2 : w;
-  final height = isTablet ? h * 1.2 : h;
-  final font   = isTablet ? fs * 1.2 : fs;
+  Widget _dayButton(String text, int day, double w, double h, double fs) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isTablet = screenWidth >= 600;
 
-  return GestureDetector(
-    onTap: () => setState(() => selectedDay = day),
-    child: Container(
-      width: width,
-      height: height,
-      alignment: Alignment(-0.3,0),
-      decoration: ShapeDecoration(
-        color: selectedDay == day
-            ? Colors.red.withOpacity(0.15)
-            : Colors.grey.withOpacity(0.7),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(100),
-          side: selectedDay == day
-              ? BorderSide(
-                  color: day == 1 ? const Color(0xFFBF1C23) : const Color(0xFF0B3775),
-                  width: 2,
-                )
-              : BorderSide.none,
+    // scale up a bit on tablets
+    final width = isTablet ? w * 1.2 : w;
+    final height = isTablet ? h * 1.2 : h;
+    final font = isTablet ? fs * 1.2 : fs;
+
+    return GestureDetector(
+      onTap: () => setState(() => selectedDay = day),
+      child: Container(
+        width: width,
+        height: height,
+        alignment: Alignment(-0.3, 0),
+        decoration: ShapeDecoration(
+          color:
+              selectedDay == day
+                  ? const Color.fromARGB(38, 191, 29, 35)
+                  : const Color.fromARGB(175, 224, 224, 224),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(100),
+            side:
+                selectedDay == day
+                    ? BorderSide(
+                      color: Color.fromARGB(255, 191, 29, 35),
+                      width: 2,
+                    )
+                    : BorderSide.none,
+          ),
+        ),
+        child: Text(
+          text,
+          style: TextStyle(fontSize: font, fontWeight: FontWeight.w400),
         ),
       ),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: font,
-          fontWeight: FontWeight.w400,
+    );
+  }
+
+  Widget _day2Button(String text, int day, double w, double h, double fs) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isTablet = screenWidth >= 600;
+
+    // scale up a bit on tablets
+    final width = isTablet ? w * 1.2 : w;
+    final height = isTablet ? h * 1.2 : h;
+    final font = isTablet ? fs * 1.2 : fs;
+
+    return GestureDetector(
+      onTap: () => setState(() => selectedDay = day),
+      child: Container(
+        width: width,
+        height: height,
+        alignment: Alignment(0.3, 0),
+        decoration: ShapeDecoration(
+          color:
+              selectedDay == day
+                  ? const Color.fromARGB(38, 11, 55, 117)
+                  : const Color.fromARGB(175, 224, 224, 224),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(100),
+            side:
+                selectedDay == day
+                    ? BorderSide(
+                      color: Color.fromARGB(255, 11, 55, 117),
+                      width: 2,
+                    )
+                    : BorderSide.none,
+          ),
+        ),
+        child: Text(
+          text,
+          style: TextStyle(fontSize: font, fontWeight: FontWeight.w400),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
-Widget _day2Button(
-  String text,
-  int day,
-  double w,
-  double h,
-  double fs,
-) {
-  final screenWidth = MediaQuery.of(context).size.width;
-  final isTablet    = screenWidth >= 600;
-
-  // scale up a bit on tablets
-  final width  = isTablet ? w * 1.2 : w;
-  final height = isTablet ? h * 1.2 : h;
-  final font   = isTablet ? fs * 1.2 : fs;
-
-  return GestureDetector(
-    onTap: () => setState(() => selectedDay = day),
-    child: Container(
-      width: width,
-      height: height,
-      alignment: Alignment(0.3,0),
-      decoration: ShapeDecoration(
-        color: selectedDay == day
-            ? Colors.red.withOpacity(0.15)
-            : Colors.grey.withOpacity(0.7),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(100),
-          side: selectedDay == day
-              ? BorderSide(
-                  color: day == 1 ? const Color(0xFFBF1C23) : const Color(0xFF0B3775),
-                  width: 2,
-                )
-              : BorderSide.none,
-        ),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: font,
-          fontWeight: FontWeight.w400,
-        ),
-      ),
-    ),
-  );
-}
-  Widget _buildStageHeader({required double fontSize}){
+  Widget _buildStageHeader({required double fontSize}) {
     return Padding(
-      padding: const EdgeInsets.only(top:25,bottom:10),
+      padding: const EdgeInsets.only(top: 25, bottom: 10),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.64,
-        height:50,
-        decoration:BoxDecoration(
-          color:Color(0xFF8D8D97),
-          borderRadius:BorderRadius.circular(36)
+        height: 50,
+        decoration: BoxDecoration(
+          color: Color(0xFF8D8D97),
+          borderRadius: BorderRadius.circular(36),
         ),
-        child:Row(
-          mainAxisAlignment:MainAxisAlignment.spaceEvenly,
-          children:[
-            _stageLabel('Boston Common',fontSize-1.5),
-            Container(width:3,height:30,decoration:BoxDecoration(color:Colors.white,borderRadius:BorderRadius.circular(20))),
-            _stageLabel('Downtown',fontSize)
-          ]
-        )
-      )
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _stageLabel('Boston Common', fontSize - 1.5),
+            Container(
+              width: 3,
+              height: 30,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+            _stageLabel('Downtown', fontSize),
+          ],
+        ),
+      ),
     );
   }
 
-  Widget _stageLabel(String txt,double fs) => Expanded(
-    child:Padding(
-      padding: const EdgeInsets.symmetric(horizontal:12),
-      child:Text(txt,style:TextStyle(fontSize:fs,fontWeight:FontWeight.w500,color:Colors.white),overflow:TextOverflow.ellipsis,maxLines:1,textAlign:TextAlign.center)
-    )
+  Widget _stageLabel(String txt, double fs) => Expanded(
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Text(
+        txt,
+        style: TextStyle(
+          fontSize: fs,
+          fontWeight: FontWeight.w500,
+          color: Colors.white,
+        ),
+        overflow: TextOverflow.ellipsis,
+        maxLines: 1,
+        textAlign: TextAlign.center,
+      ),
+    ),
   );
 }
 
@@ -541,38 +584,38 @@ int _parseTimeToMinutes(String timeString) {
     return 0; // Default fallback
   }
 }
+
 // / パフォーマンスボックス：タップ時に詳細を表示（タップ時のアニメーション付き）
 class PerformanceBox extends StatefulWidget {
   final EventItem eventItem;
   final Function(EventItem) onTap;
 
-  const PerformanceBox({
-    Key? key,
-    required this.eventItem,
-    required this.onTap,
-  }) : super(key: key);
+  const PerformanceBox({Key? key, required this.eventItem, required this.onTap})
+    : super(key: key);
 
   @override
   _PerformanceBoxState createState() => _PerformanceBoxState();
 }
+
 class _PerformanceBoxState extends State<PerformanceBox>
     with SingleTickerProviderStateMixin {
   bool isPressed = false;
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth  = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    final isTablet     = screenWidth >= 600;
+    final isTablet = screenWidth >= 600;
 
     // adjust sizing for tablets
     final timeSectionHeight = screenHeight * (isTablet ? 0.20 : 0.253);
-    final eventHeight       =
-        widget.eventItem.duration / 60 * timeSectionHeight + (isTablet ? 3 : 6.7);
-    final containerWidth    = screenWidth * (isTablet ? 0.5 : 0.30);
+    final eventHeight =
+        widget.eventItem.duration / 60 * timeSectionHeight +
+        (isTablet ? 3 : 6.7);
+    final containerWidth = screenWidth * (isTablet ? 0.5 : 0.30);
     final horizontalPadding = containerWidth * (isTablet ? 0.06 : 0.05);
-    final verticalPadding   = isTablet ? 8.0 : 9.0;
-    final responsiveScale   = screenWidth / (isTablet ? 600 : 380);
+    final verticalPadding = isTablet ? 8.0 : 9.0;
+    final responsiveScale = screenWidth / (isTablet ? 600 : 380);
 
     return GestureDetector(
       onTap: () {
@@ -613,7 +656,7 @@ class _PerformanceBoxState extends State<PerformanceBox>
   }
 
   Widget _buildInnerContent(bool isTablet, double scale, double eventHeight) {
-    final iconSize = isTablet ? 40.0 : 10.0;
+    final iconSize = isTablet ? 40.0 : 30.0;
 
     if (widget.eventItem.duration < 10) {
       return Row(
@@ -652,7 +695,7 @@ class _PerformanceBoxState extends State<PerformanceBox>
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _buildIcon(iconSize + 10),
+          _buildIcon(iconSize + 20),
           SizedBox(height: eventHeight * 0.05),
           Text(
             widget.eventItem.title.length > 27
@@ -681,6 +724,7 @@ class _PerformanceBoxState extends State<PerformanceBox>
       );
     }
   }
+
   Widget _buildIcon(double size) {
     return Container(
       width: size,
@@ -689,15 +733,13 @@ class _PerformanceBoxState extends State<PerformanceBox>
         shape: BoxShape.circle,
         color: Colors.white,
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 2,
-          ),
+          BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 2),
         ],
       ),
-      child: widget.eventItem.iconImage.isNotEmpty
-          ? Image.asset(widget.eventItem.iconImage, fit: BoxFit.cover)
-          : Icon(Icons.event, size: size * 0.6),
+      child:
+          widget.eventItem.iconImage.isNotEmpty
+              ? Image.asset(widget.eventItem.iconImage, fit: BoxFit.cover)
+              : Icon(Icons.event, size: size * 0.6),
     );
   }
 
@@ -744,17 +786,13 @@ class _PerformanceBoxState extends State<PerformanceBox>
   }
 }
 
-
 /// イベント詳細ビュー：iPad対応のため幅・高さ・フォントサイズを調整
 class EventDetailView extends StatefulWidget {
   final EventItem event;
   final VoidCallback onClose;
 
-  const EventDetailView({
-    Key? key,
-    required this.event,
-    required this.onClose,
-  }) : super(key: key);
+  const EventDetailView({Key? key, required this.event, required this.onClose})
+    : super(key: key);
 
   @override
   _EventDetailViewState createState() => _EventDetailViewState();
@@ -772,18 +810,20 @@ class _EventDetailViewState extends State<EventDetailView>
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
-    _cardOffset = Tween(begin: 1000.0, end: 0.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
+    _cardOffset = Tween(
+      begin: 1000.0,
+      end: 0.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
     _opacity = Tween(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _controller,
         curve: const Interval(0.2, 0.5, curve: Curves.easeIn),
       ),
     );
-    _headerScale = Tween(begin: 0.8, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
+    _headerScale = Tween(
+      begin: 0.8,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
     _controller.forward();
   }
 
@@ -799,76 +839,76 @@ class _EventDetailViewState extends State<EventDetailView>
 
   @override
   Widget build(BuildContext context) {
-    final screenW  = MediaQuery.of(context).size.width;
-    final screenH  = MediaQuery.of(context).size.height;
-    final bool isTablet = screenW >= 600; 
-    
+    final screenW = MediaQuery.of(context).size.width;
+    final screenH = MediaQuery.of(context).size.height;
+    final bool isTablet = screenW >= 600;
 
     final cardW = screenW * (isTablet ? 0.6 : 0.7);
     final cardH = screenH * (isTablet ? 0.6 : 0.6);
     final avatarRadius = isTablet ? 70.0 : 50.0;
     final headerImgHeight = isTablet ? 280.0 : 200.0;
     final titleSize = isTablet ? 28.0 : 24.0;
-    final infoFont  = isTablet ? 30.0 : 14.0;
-    final descFont  = isTablet ? 25.0 : 14.0;
+    final infoFont = isTablet ? 30.0 : 14.0;
+    final descFont = isTablet ? 25.0 : 14.0;
 
     return AnimatedBuilder(
       animation: _controller,
-      builder: (context, _) => Stack(
-        fit: StackFit.expand,
-        children: [
-          // overlay
-          Positioned.fill(
-            child: Opacity(
-              opacity: _opacity.value * 0.6,
-              child: GestureDetector(
-                onTap: _close,
-                child: Container(color: Colors.black),
-              ),
-            ),
-          ),
-
-          // detail card
-          Transform.translate(
-            offset: Offset(0, _cardOffset.value + screenH * 0.02),
-            child: Center(
-              child: Container(
-                width: cardW,
-                height: cardH,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(25),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
-                      blurRadius: 12,
-                    ),
-                  ],
+      builder:
+          (context, _) => Stack(
+            fit: StackFit.expand,
+            children: [
+              // overlay
+              Positioned.fill(
+                child: Opacity(
+                  opacity: _opacity.value * 0.6,
+                  child: GestureDetector(
+                    onTap: _close,
+                    child: Container(color: Colors.black),
+                  ),
                 ),
-               child: _buildCardContent(
-  isTablet,              // ← now this matches
-  headerImgHeight,
-  titleSize,
-  infoFont,
-  descFont,
-  avatarRadius,
-),
               ),
-            ),
+
+              // detail card
+              Transform.translate(
+                offset: Offset(0, _cardOffset.value + screenH * 0.02),
+                child: Center(
+                  child: Container(
+                    width: cardW,
+                    height: cardH,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(25),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.3),
+                          blurRadius: 12,
+                        ),
+                      ],
+                    ),
+                    child: _buildCardContent(
+                      isTablet, // ← now this matches
+                      headerImgHeight,
+                      titleSize,
+                      infoFont,
+                      descFont,
+                      avatarRadius,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
- Widget _buildCardContent(
-  bool isTablet,               // ← add this
-  double headerH,
-  double titleSize,
-  double infoFont,
-  double descFont,
-  double avatarR,
-) {
+  Widget _buildCardContent(
+    bool isTablet, // ← add this
+    double headerH,
+    double titleSize,
+    double infoFont,
+    double descFont,
+    double avatarR,
+  ) {
     return Stack(
       clipBehavior: Clip.none,
       children: [
@@ -932,11 +972,7 @@ class _EventDetailViewState extends State<EventDetailView>
                         : const Color.fromARGB(76, 11, 55, 117),
                     infoFont,
                   ),
-                  _infoChip(
-                    widget.event.time,
-                    Colors.white,
-                    infoFont,
-                  ),
+                  _infoChip(widget.event.time, Colors.white, infoFont),
                 ],
               ),
             ),
@@ -945,14 +981,36 @@ class _EventDetailViewState extends State<EventDetailView>
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
-                child: Text(
-                  widget.event.description,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: descFont,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black87,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.6,
+                      height: MediaQuery.of(context).size.height * 0.27,
+                      decoration: ShapeDecoration(
+                        color: const Color.fromARGB(13, 0, 0, 0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                      ),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: SingleChildScrollView(
+                            child: Text(
+                              widget.event.description,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -978,34 +1036,38 @@ class _EventDetailViewState extends State<EventDetailView>
 
         // floating icon
         // new code – the avatar is fixed at the top-center
-Positioned(
-  top: isTablet ? -70.0 : -40.0, // give it a little breathing room from the top edge
-  left: 0,
-  right: 0,
-  child: Center(
-    child: CircleAvatar(
-      radius: avatarR,
-      backgroundColor: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Image.asset(
-          widget.event.iconImage,
-          fit: BoxFit.contain,
-          width: avatarR * 1.4,
-          height: avatarR * 1.4,
+        Positioned(
+          top:
+              isTablet
+                  ? -70.0
+                  : -40.0, // give it a little breathing room from the top edge
+          left: 0,
+          right: 0,
+          child: Center(
+            child: CircleAvatar(
+              radius: avatarR,
+              backgroundColor: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Image.asset(
+                  widget.event.iconImage,
+                  fit: BoxFit.contain,
+                  width: avatarR * 1.4,
+                  height: avatarR * 1.4,
+                ),
+              ),
+            ),
+          ),
         ),
-      ),
-    ),
-  ),
-),
-
       ],
     );
   }
 
   Widget _infoChip(String text, Color bg, double fontSize) {
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.25),
+      constraints: BoxConstraints(
+        maxWidth: MediaQuery.of(context).size.width * 0.25,
+      ),
       child: Container(
         decoration: BoxDecoration(
           color: bg,

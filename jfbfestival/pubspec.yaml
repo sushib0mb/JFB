@@ -99,8 +99,15 @@ flutter:
     - assets/sponsors/openwater.png
     - assets/sponsors/idamerica.png
     - assets/sponsors/downtown.png
+    - assets/sponsors/redsox.png
+
+    - assets/sponsors/imperial.png
+    - assets/sponsors/ogawashou.png
+    - assets/sponsors/sapporostream.png
+
     - assets/sponsors/showa.jpg
     - assets/sponsors/bosJapan.png
+
     - assets/sponsors/JAGB.jpg
     - assets/sponsors/consultatejapan.jpg
     - assets/sponsors/JSoc.jpg

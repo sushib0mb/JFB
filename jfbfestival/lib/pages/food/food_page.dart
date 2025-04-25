@@ -7,7 +7,6 @@ import 'package:jfbfestival/data/food_booths.dart';
 import 'package:jfbfestival/models/food_booth.dart';
 import 'dart:ui';
 
-
 class AnimatedBoothDetailWrapper extends StatefulWidget {
   final FoodBooth booth;
   final VoidCallback onClose;
@@ -260,48 +259,50 @@ class _FoodPageState extends State<FoodPage> {
       ),
     );
   }
-Widget _buildIconButton({
-  IconData? icon,
-  String? iconAsset,
-  required VoidCallback onPressed,
-}) {
-  final screenWidth = MediaQuery.of(context).size.width;
-  final isTablet    = screenWidth >= 600;
 
-  // bump sizes on tablet
-  final double btnSize   = isTablet ? 70.0 : 55.0;
-  final double padding   = isTablet ? 14.0 : 10.0;
-  final double iconSize  = isTablet ? 36.0 : 30.0;
-  final double elevation = isTablet ? 12.0 : 10.0;
+  Widget _buildIconButton({
+    IconData? icon,
+    String? iconAsset,
+    required VoidCallback onPressed,
+  }) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isTablet = screenWidth >= 600;
 
-  return GestureDetector(
-    onTap: onPressed,
-    child: Material(
-      color: Colors.transparent,
-      child: Container(
-        width: btnSize,
-        height: btnSize,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(btnSize / 2),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.15),
-              blurRadius: elevation,
-              spreadRadius: 1,
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(padding),
-          child: iconAsset != null
-              ? Image.asset(iconAsset, fit: BoxFit.contain)
-              : Icon(icon, size: iconSize),
+    // bump sizes on tablet
+    final double btnSize = isTablet ? 70.0 : 55.0;
+    final double padding = isTablet ? 14.0 : 10.0;
+    final double iconSize = isTablet ? 36.0 : 30.0;
+    final double elevation = isTablet ? 12.0 : 10.0;
+
+    return GestureDetector(
+      onTap: onPressed,
+      child: Material(
+        color: Colors.transparent,
+        child: Container(
+          width: btnSize,
+          height: btnSize,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(btnSize / 2),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.15),
+                blurRadius: elevation,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(padding),
+            child:
+                iconAsset != null
+                    ? Image.asset(iconAsset, fit: BoxFit.contain)
+                    : Icon(icon, size: iconSize),
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _buildSearchBar() {
     final pad = MediaQuery.of(context).size.height * 0.070;
@@ -394,7 +395,7 @@ Widget _buildIconButton({
 
   String getSafeSectionTitle() {
     if (veganOnly! && selectedAllergens.isNotEmpty) {
-      return "✅ Vegatarian & Allergen-Safe Options";
+      return "✅ Vegetarian & Allergen-Safe Options";
     } else if (veganOnly!) {
       return "✅ Vegan Options";
     } else if (selectedAllergens.isNotEmpty) {
@@ -597,7 +598,9 @@ Widget _buildIconButton({
             }).toList(),
       ),
     );
-  }void _showBoothDetails(BuildContext context, FoodBooth booth) {
+  }
+
+  void _showBoothDetails(BuildContext context, FoodBooth booth) {
     final height = MediaQuery.of(context).size.height;
 
     showModalBottomSheet(
@@ -621,263 +624,295 @@ Widget _buildIconButton({
     });
   }
 
-void _showFilterPopup() {
-  if (_isFilterPopupOpen) return; // Prevent re-entry
-  _isFilterPopupOpen = true;
+  void _showFilterPopup() {
+    if (_isFilterPopupOpen) return; // Prevent re-entry
+    _isFilterPopupOpen = true;
 
-  Future.delayed(const Duration(milliseconds: 50), () {
-    if (!mounted) return;
+    Future.delayed(const Duration(milliseconds: 50), () {
+      if (!mounted) return;
 
-    final screenSize = MediaQuery.of(context).size;
-    final isTablet   = screenSize.width >= 600;
-    // compute fixed popup dimensions
-    final popupWidth  = screenSize.width  * (isTablet ? 0.8  : 0.85);
-    final popupHeight = screenSize.height * (isTablet ? 0.85 : 0.785);
+      final screenSize = MediaQuery.of(context).size;
+      final isTablet = screenSize.width >= 600;
+      // compute fixed popup dimensions
+      final popupWidth = screenSize.width * (isTablet ? 0.8 : 0.85);
+      final popupHeight = screenSize.height * (isTablet ? 0.85 : 0.785);
 
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: true,
-      barrierLabel: 'FilterPopup',
-      transitionDuration: const Duration(milliseconds: 200),
-      pageBuilder: (_, __, ___) => const SizedBox.shrink(),
-      transitionBuilder: (context, anim, _, __) {
-        final curved = CurvedAnimation(parent: anim, curve: Curves.easeOut);
+      showGeneralDialog(
+        context: context,
+        barrierDismissible: true,
+        barrierLabel: 'FilterPopup',
+        transitionDuration: const Duration(milliseconds: 200),
+        pageBuilder: (_, __, ___) => const SizedBox.shrink(),
+        transitionBuilder: (context, anim, _, __) {
+          final curved = CurvedAnimation(parent: anim, curve: Curves.easeOut);
 
-        return FadeTransition(
-          opacity: curved,
-          child: Stack(
-            children: [
-              // dimmed backdrop
-              GestureDetector(
-                onTap: () => Navigator.of(context).maybePop(),
-                child: Container(color: Colors.black.withOpacity(curved.value * 0.5)),
-              ),
+          return FadeTransition(
+            opacity: curved,
+            child: Stack(
+              children: [
+                // dimmed backdrop
+                GestureDetector(
+                  onTap: () => Navigator.of(context).maybePop(),
+                  child: Container(
+                    color: Colors.black.withOpacity(curved.value * 0.5),
+                  ),
+                ),
 
-              // centered popup
-              Center(
-                child: ScaleTransition(
-                  scale: curved,
-                  child: Material(
-                    color: Colors.transparent,
-                    child: Container(
-                      width: popupWidth,
-                      height: popupHeight,
-                      margin: EdgeInsets.symmetric(horizontal: isTablet ? 30 : 24),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: isTablet ? 24 : 16,
-                        vertical: isTablet ? 16 : 10,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.surface,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 10)],
-                      ),
+                // centered popup
+                Center(
+                  child: ScaleTransition(
+                    scale: curved,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: Container(
+                        width: popupWidth,
+                        height: popupHeight,
+                        margin: EdgeInsets.symmetric(
+                          horizontal: isTablet ? 30 : 24,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: isTablet ? 24 : 16,
+                          vertical: isTablet ? 16 : 10,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.surface,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: const [
+                            BoxShadow(color: Colors.black26, blurRadius: 10),
+                          ],
+                        ),
 
-                      child: StatefulBuilder(
-                        builder: (context, setModalState) {
-                          return Column(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              // — Header —
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: isTablet ? 24 : 16,
-                                  vertical: isTablet ? 12 : 8,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Filters",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge!
-                                          .copyWith(fontSize: isTablet ? 24 : 20),
-                                    ),
-                                    IconButton(
-                                      icon: Icon(Icons.close, size: isTablet ? 28 : 24),
-                                      onPressed: () => Navigator.of(context).pop(),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              // — Scrollable body —
-                              Expanded(
-                                child: SingleChildScrollView(
+                        child: StatefulBuilder(
+                          builder: (context, setModalState) {
+                            return Column(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                // — Header —
+                                Padding(
                                   padding: EdgeInsets.symmetric(
                                     horizontal: isTablet ? 24 : 16,
                                     vertical: isTablet ? 12 : 8,
                                   ),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      // Payment
-                                      SizedBox(height: isTablet ? 12 : 5),
-                                      Center(child: _buildSectionTitle("Payment")),
-                                      SizedBox(height: isTablet ? 16 : 10),
-                                      PaymentFilterRow(
-                                        selectedPayments: selectedPayments,
-                                        onPaymentSelected: (method, isSel) {
-                                          setModalState(() {
-                                            if (isSel)
-                                              selectedPayments.add(method);
-                                            else
-                                              selectedPayments.remove(method);
-                                          });
-                                        },
+                                      Text(
+                                        "Filters",
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.titleLarge!.copyWith(
+                                          fontSize: isTablet ? 24 : 20,
+                                        ),
                                       ),
-
-                                      // Vegan
-                                      SizedBox(height: isTablet ? 20 : 12),
-                                      Center(child: _buildSectionTitle("Vegan")),
-                                      SizedBox(height: isTablet ? 16 : 12),
-                                      VeganFilterOption(
-                                        isVegan: veganOnly ?? false,
-                                        onChanged: (v) => setModalState(() => veganOnly = v),
+                                      IconButton(
+                                        icon: Icon(
+                                          Icons.close,
+                                          size: isTablet ? 28 : 24,
+                                        ),
+                                        onPressed:
+                                            () => Navigator.of(context).pop(),
                                       ),
-
-                                      // Allergens
-                                      SizedBox(height: isTablet ? 20 : 10),
-                                      Center(child: _buildSectionTitle("Allergens")),
-                                      SizedBox(height: isTablet ? 16 : 8),
-                                      AllergyFilterGrid(
-                                        selectedAllergens: selectedAllergens,
-                                        onAllergenSelected: (all, isSel) {
-                                          setModalState(() {
-                                            if (isSel)
-                                              selectedAllergens.add(all);
-                                            else
-                                              selectedAllergens.remove(all);
-                                          });
-                                        },
-                                      ),
-
-                                      SizedBox(height: isTablet ? 24 : 16),
                                     ],
                                   ),
                                 ),
-                              ),
 
-                              // — Action buttons —
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: isTablet ? 24 : 16,
-                                  vertical: isTablet ? 16 : 8,
+                                // — Scrollable body —
+                                Expanded(
+                                  child: SingleChildScrollView(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: isTablet ? 24 : 16,
+                                      vertical: isTablet ? 12 : 8,
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: [
+                                        // Payment
+                                        SizedBox(height: isTablet ? 12 : 5),
+                                        Center(
+                                          child: _buildSectionTitle("Payment"),
+                                        ),
+                                        SizedBox(height: isTablet ? 16 : 10),
+                                        PaymentFilterRow(
+                                          selectedPayments: selectedPayments,
+                                          onPaymentSelected: (method, isSel) {
+                                            setModalState(() {
+                                              if (isSel)
+                                                selectedPayments.add(method);
+                                              else
+                                                selectedPayments.remove(method);
+                                            });
+                                          },
+                                        ),
+
+                                        // Vegan
+                                        SizedBox(height: isTablet ? 20 : 12),
+                                        Center(
+                                          child: _buildSectionTitle("Vegan"),
+                                        ),
+                                        SizedBox(height: isTablet ? 16 : 12),
+                                        VeganFilterOption(
+                                          isVegan: veganOnly ?? false,
+                                          onChanged:
+                                              (v) => setModalState(
+                                                () => veganOnly = v,
+                                              ),
+                                        ),
+
+                                        // Allergens
+                                        SizedBox(height: isTablet ? 20 : 10),
+                                        Center(
+                                          child: _buildSectionTitle(
+                                            "Allergens",
+                                          ),
+                                        ),
+                                        SizedBox(height: isTablet ? 16 : 8),
+                                        AllergyFilterGrid(
+                                          selectedAllergens: selectedAllergens,
+                                          onAllergenSelected: (all, isSel) {
+                                            setModalState(() {
+                                              if (isSel)
+                                                selectedAllergens.add(all);
+                                              else
+                                                selectedAllergens.remove(all);
+                                            });
+                                          },
+                                        ),
+
+                                        SizedBox(height: isTablet ? 24 : 16),
+                                      ],
+                                    ),
+                                  ),
                                 ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  children: [
-                                    ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.white,
-                                        foregroundColor: Colors.black,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(30),
+
+                                // — Action buttons —
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: isTablet ? 24 : 16,
+                                    vertical: isTablet ? 16 : 8,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.white,
+                                          foregroundColor: Colors.black,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              30,
+                                            ),
+                                          ),
+                                          padding: EdgeInsets.symmetric(
+                                            vertical:
+                                                screenSize.height *
+                                                (isTablet ? 0.02 : 0.017),
+                                            horizontal:
+                                                screenSize.width *
+                                                (isTablet ? 0.08 : 0.06),
+                                          ),
+                                          elevation: isTablet ? 12 : 10,
+                                        ).copyWith(
+                                          shadowColor:
+                                              MaterialStateProperty.all(
+                                                Colors.black.withOpacity(0.3),
+                                              ),
                                         ),
-                                        padding: EdgeInsets.symmetric(
-                                          vertical: screenSize.height *
-                                              (isTablet ? 0.02 : 0.017),
-                                          horizontal: screenSize.width *
-                                              (isTablet ? 0.08 : 0.06),
-                                        ),
-                                        elevation: isTablet ? 12 : 10,
-                                      ).copyWith(
-                                        shadowColor: MaterialStateProperty.all(
-                                          Colors.black.withOpacity(0.3),
+                                        onPressed: () {
+                                          setModalState(() {
+                                            selectedPayments.clear();
+                                            veganOnly = false;
+                                            selectedAllergens.clear();
+                                          });
+                                        },
+                                        child: Text(
+                                          "Reset",
+                                          style: TextStyle(
+                                            fontSize: isTablet ? 17 : 15,
+                                            fontWeight: FontWeight.bold,
+                                            letterSpacing: 1.2,
+                                          ),
                                         ),
                                       ),
-                                      onPressed: () {
-                                        setModalState(() {
-                                          selectedPayments.clear();
-                                          veganOnly = false;
-                                          selectedAllergens.clear();
-                                        });
-                                      },
-                                      child: Text(
-                                        "Reset",
-                                        style: TextStyle(
-                                          fontSize: isTablet ? 17 : 15,
-                                          fontWeight: FontWeight.bold,
-                                          letterSpacing: 1.2,
-                                        ),
-                                      ),
-                                    ),
 
-                                    _buildApplyButton(
-                                      addedText: "Apply Filters",
-                                      onApply: _applyFilters,
-                                      closeModal: () => Navigator.of(context).pop(),
-                                    ),
-                                  ],
+                                      _buildApplyButton(
+                                        addedText: "Apply Filters",
+                                        onApply: _applyFilters,
+                                        closeModal:
+                                            () => Navigator.of(context).pop(),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          );
-                        },
+                              ],
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        );
-      },
-    ).then((_) {
-      _isFilterPopupOpen = false;
-    });
-  });
-}
-Widget _buildSectionTitle(String title) {
-  final screenWidth = MediaQuery.of(context).size.width;
-  final bool isTablet = screenWidth >= 600;
-
-  // Adjust these values as you see fit
-  final double horizontalPadding = isTablet ? 32.0 : 24.0;
-  final double containerWidth    = isTablet ? 160.0 : 120.0;
-  final double containerHeight   = isTablet ? 40.0  : 30.0;
-  final double borderRadius      = isTablet ? 30.0  : 25.0;
-  final double blurRadius        = isTablet ? 8.0   : 5.0;
-  final double fontSize          = isTablet ? 24.0  : 20.0;
-  final double bottomSpacing     = isTablet ? 4.0   : 2.0;
-
-  return Padding(
-    padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Center(
-          child: Container(
-            width: containerWidth,
-            height: containerHeight,
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              borderRadius: BorderRadius.circular(borderRadius),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.45),
-                  blurRadius: blurRadius,
-                  spreadRadius: 0,
-                ),
               ],
             ),
-            child: Center(
-              child: Text(
-                title,
-                style: TextStyle(
-                  fontSize: fontSize,
-                  fontWeight: FontWeight.w300,
+          );
+        },
+      ).then((_) {
+        _isFilterPopupOpen = false;
+      });
+    });
+  }
+
+  Widget _buildSectionTitle(String title) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final bool isTablet = screenWidth >= 600;
+
+    // Adjust these values as you see fit
+    final double horizontalPadding = isTablet ? 32.0 : 24.0;
+    final double containerWidth = isTablet ? 160.0 : 120.0;
+    final double containerHeight = isTablet ? 40.0 : 30.0;
+    final double borderRadius = isTablet ? 30.0 : 25.0;
+    final double blurRadius = isTablet ? 8.0 : 5.0;
+    final double fontSize = isTablet ? 24.0 : 20.0;
+    final double bottomSpacing = isTablet ? 4.0 : 2.0;
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Container(
+              width: containerWidth,
+              height: containerHeight,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surface,
+                borderRadius: BorderRadius.circular(borderRadius),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.45),
+                    blurRadius: blurRadius,
+                    spreadRadius: 0,
+                  ),
+                ],
+              ),
+              child: Center(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: fontSize,
+                    fontWeight: FontWeight.w300,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        SizedBox(height: bottomSpacing),
-      ],
-    ),
-  );
-}
+          SizedBox(height: bottomSpacing),
+        ],
+      ),
+    );
+  }
 
   Widget _buildApplyButton({
     required VoidCallback onApply,
@@ -1003,10 +1038,10 @@ Widget _buildSectionTitle(String title) {
       } else if (veganOnly == true) {
         filteredBooths = [...safeVeganBooths];
       }
-    filteredBooths.sort((a, b) => a.name.compareTo(b.name));
-    safeBooths.sort((a, b) => a.name.compareTo(b.name));
-    unsafeBoothsWithAllergens.sort((a, b) => a.name.compareTo(b.name));
-    safeVeganBooths.sort((a, b) => a.name.compareTo(b.name));
+      filteredBooths.sort((a, b) => a.name.compareTo(b.name));
+      safeBooths.sort((a, b) => a.name.compareTo(b.name));
+      unsafeBoothsWithAllergens.sort((a, b) => a.name.compareTo(b.name));
+      safeVeganBooths.sort((a, b) => a.name.compareTo(b.name));
     });
   }
 }
