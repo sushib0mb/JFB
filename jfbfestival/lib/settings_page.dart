@@ -3,9 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'dart:io' show Platform;
 
-import 'theme_notifier.dart';
+// import 'theme_notifier.dart';
 import 'pages/survey/survey_page.dart';
-import 'package:flutter/foundation.dart';
 import 'providers/reminder_provider.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -29,7 +28,7 @@ class _SettingsPageState extends State<SettingsPage> {
     final double subtitleSize = isTablet ? 18 : 14;
     final double headerSize = isTablet ? 24 : 20;
 
-    final theme = context.watch<ThemeNotifier>();
+    // final theme = context.watch<ThemeNotifier>();
     final reminderProv = context.watch<ReminderProvider>();
 
     return Scaffold(
@@ -41,8 +40,14 @@ class _SettingsPageState extends State<SettingsPage> {
         children: [
           // Event reminders
           SwitchListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: padH, vertical: padV),
-            title: Text('Event Reminders', style: TextStyle(fontSize: titleSize)),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: padH,
+              vertical: padV,
+            ),
+            title: Text(
+              'Event Reminders',
+              style: TextStyle(fontSize: titleSize),
+            ),
             subtitle: Text(
               reminderProv.enabled ? 'On' : 'Off',
               style: TextStyle(fontSize: subtitleSize),
@@ -55,16 +60,21 @@ class _SettingsPageState extends State<SettingsPage> {
 
           // Share this app
           ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: padH, vertical: padV),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: padH,
+              vertical: padV,
+            ),
             leading: Icon(Icons.share, size: iconSize),
-            title: Text('Share this App', style: TextStyle(fontSize: titleSize)),
+            title: Text(
+              'Share this App',
+              style: TextStyle(fontSize: titleSize),
+            ),
             onTap: () {
-              final iosUrl = 'https://testflight.apple.com/join/ABC12345';
-              final androidUrl =
-                  'https://play.google.com/store/apps/details?id=com.example.jfbfestival';
-              final link = Platform.isAndroid ? androidUrl : iosUrl;
+              final iosUrl =
+                  'https://apps.apple.com/us/app/jfboston/id6744838556';
+              final link = iosUrl;
               Share.share(
-                'Check out the JFB Festival app! Download it now and plan your visit:\n\$link',
+                'Check out the JFB Festival app! Download it now and plan your visit:\n$link',
                 subject: 'JFB Festival App',
               );
             },
@@ -72,9 +82,15 @@ class _SettingsPageState extends State<SettingsPage> {
 
           // Fill Out Survey
           ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: padH, vertical: padV),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: padH,
+              vertical: padV,
+            ),
             leading: Icon(Icons.poll, size: iconSize),
-            title: Text('Fill Out Survey', style: TextStyle(fontSize: titleSize)),
+            title: Text(
+              'Fill Out Survey',
+              style: TextStyle(fontSize: titleSize),
+            ),
             onTap: () => Navigator.pushNamed(context, SurveyPage.routeName),
           ),
 
@@ -95,7 +111,10 @@ class _SettingsPageState extends State<SettingsPage> {
           Center(
             child: Text(
               'Credits',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: headerSize),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: headerSize,
+              ),
               textAlign: TextAlign.center,
             ),
           ),
@@ -108,34 +127,76 @@ class _SettingsPageState extends State<SettingsPage> {
             children: [
               Text(
                 'Application Development Team',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: titleSize),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: titleSize,
+                ),
               ),
               SizedBox(height: padV / 2),
-              Text('Taizo Azuchi — Team Leader', style: TextStyle(fontSize: subtitleSize)),
-              Text('Jordan Lin — Lead Developer', style: TextStyle(fontSize: subtitleSize)),
-              Text('Soi Hirose — Lead Developer', style: TextStyle(fontSize: subtitleSize)),
-              Text('Ryusei Okamoto — Developer', style: TextStyle(fontSize: subtitleSize)),
-              Text('Umi Imai — Developer', style: TextStyle(fontSize: subtitleSize)),
+              Text(
+                'Taizo Azuchi — Team Leader',
+                style: TextStyle(fontSize: subtitleSize),
+              ),
+              Text(
+                'Jordan Lin — Lead Developer',
+                style: TextStyle(fontSize: subtitleSize),
+              ),
+              Text(
+                'Soi Hirose — Lead Developer',
+                style: TextStyle(fontSize: subtitleSize),
+              ),
+              Text(
+                'Ryusei Okamoto — Developer',
+                style: TextStyle(fontSize: subtitleSize),
+              ),
+              Text(
+                'Umi Imai — Developer',
+                style: TextStyle(fontSize: subtitleSize),
+              ),
 
               SizedBox(height: padV),
               Text(
                 'Application Design Team',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: titleSize),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: titleSize,
+                ),
               ),
               SizedBox(height: padV / 2),
-              Text('Hiroharu Okabe — UI/UX Designer', style: TextStyle(fontSize: subtitleSize)),
-              Text('Chikada Hanezu — UI/UX Designer', style: TextStyle(fontSize: subtitleSize)),
-              Text('Mina Baba — UI/UX Designer', style: TextStyle(fontSize: subtitleSize)),
-              Text('Hayate Kosuga — Logo Animator', style: TextStyle(fontSize: subtitleSize)),
+              Text(
+                'Hiroharu Okabe — UI/UX Designer',
+                style: TextStyle(fontSize: subtitleSize),
+              ),
+              Text(
+                'Chikada Hanezu — UI/UX Designer',
+                style: TextStyle(fontSize: subtitleSize),
+              ),
+              Text(
+                'Mina Baba — UI/UX Designer',
+                style: TextStyle(fontSize: subtitleSize),
+              ),
+              Text(
+                'Hayate Kosuga — Logo Animator',
+                style: TextStyle(fontSize: subtitleSize),
+              ),
 
               SizedBox(height: padV),
               Text(
                 'Special Thanks To',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: titleSize),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: titleSize,
+                ),
               ),
               SizedBox(height: padV / 2),
-              Text('Nobuhiro Mitsuoka', style: TextStyle(fontSize: subtitleSize)),
-              Text('Yoshiatsu Murata', style: TextStyle(fontSize: subtitleSize)),
+              Text(
+                'Nobuhiro Mitsuoka',
+                style: TextStyle(fontSize: subtitleSize),
+              ),
+              Text(
+                'Yoshiatsu Murata',
+                style: TextStyle(fontSize: subtitleSize),
+              ),
 
               SizedBox(height: padV * 2),
             ],
