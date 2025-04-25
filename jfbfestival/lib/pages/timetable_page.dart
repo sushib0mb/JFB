@@ -90,8 +90,8 @@ class _TimetablePageState extends State<TimetablePage> {
     // Day buttons adapt
     final dayBtnHeight = h * (tablet?0.10:0.082);
     final dayBtnWidth = w * (tablet?0.4:0.52);
-    final dayFont = tablet?48.0:40.0;
-    final topPad = dayBtnHeight + MediaQuery.of(context).padding.top;
+    final dayFont = tablet?48.0:30.0;
+    final topPad = dayBtnHeight;
 
     final svc = Provider.of<ScheduleDataService>(context);
     final schedule = selectedDay==1?svc.day1ScheduleData:svc.day2ScheduleData;
@@ -116,7 +116,7 @@ class _TimetablePageState extends State<TimetablePage> {
             ),
             Positioned(
               right: w*0.06, top: h*0.002,
-              child: _dayButton('Day 2',2, dayBtnWidth,dayBtnHeight, dayFont)
+              child: _day2Button('Day 2',2, dayBtnWidth,dayBtnHeight, dayFont)
             ),
             // Schedule list
             Column(children:[
@@ -185,7 +185,7 @@ Widget _dayButton(
     child: Container(
       width: width,
       height: height,
-      alignment: Alignment.center,
+      alignment: Alignment(-0.3,0),
       decoration: ShapeDecoration(
         color: selectedDay == day
             ? Colors.red.withOpacity(0.15)
@@ -211,7 +211,51 @@ Widget _dayButton(
   );
 }
 
+Widget _day2Button(
+  String text,
+  int day,
+  double w,
+  double h,
+  double fs,
+) {
+  final screenWidth = MediaQuery.of(context).size.width;
+  final isTablet    = screenWidth >= 600;
 
+  // scale up a bit on tablets
+  final width  = isTablet ? w * 1.2 : w;
+  final height = isTablet ? h * 1.2 : h;
+  final font   = isTablet ? fs * 1.2 : fs;
+
+  return GestureDetector(
+    onTap: () => setState(() => selectedDay = day),
+    child: Container(
+      width: width,
+      height: height,
+      alignment: Alignment(0.3,0),
+      decoration: ShapeDecoration(
+        color: selectedDay == day
+            ? Colors.red.withOpacity(0.15)
+            : Colors.grey.withOpacity(0.7),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(100),
+          side: selectedDay == day
+              ? BorderSide(
+                  color: day == 1 ? const Color(0xFFBF1C23) : const Color(0xFF0B3775),
+                  width: 2,
+                )
+              : BorderSide.none,
+        ),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: font,
+          fontWeight: FontWeight.w400,
+        ),
+      ),
+    ),
+  );
+}
   Widget _buildStageHeader({required double fontSize}){
     return Padding(
       padding: const EdgeInsets.only(top:25,bottom:10),
